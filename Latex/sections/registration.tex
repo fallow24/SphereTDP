@@ -36,7 +36,7 @@ We then choose the center point of the convex hull of the plane as $\vec{x}_i$.
 There are many ways of finding correspondences between points and planes.
 However, even with the result not being perfect, we assume already globally registered scans, which is why a simplistic algorithm is sufficient:
 For each plane, consider adding a correspondence for all points that are closer to the plane than a threshold $\epsilon$.
-Depending on the threshold value, some points now have multiple correspondences if their distance to multiple planes is less then $\epsilon$. We then simply omit all points that have correspondences to multiple planes from the optimizations, to avoid introducing errors due to the plane ambiguity.
+Depending on the threshold value, some points now have multiple correspondences if their distance to multiple planes is less then $\epsilon$. We then simply omit all points that have correspondences to multiple planes from the optimization, to avoid introducing errors due to the plane ambiguity.
 
 \subsection{Optimization}
 
