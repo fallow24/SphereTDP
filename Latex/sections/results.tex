@@ -35,7 +35,7 @@ Any such errors tend to occur at the back and the front of the corridor where th
 
 \subsection{Floating Sphere Results}
 
-Figure~\ref{fig:cylon-corrected} shows the results obtained after employing the plane base registration on the dataset acquired by the floating sphere.
+Figure~\ref{fig:cylon-corrected} shows the results obtained before  and after employing the plane base registration on the dataset acquired by the floating sphere.
 \begin{figure*}
 	\centering
 	\includegraphics[width=0.49\textwidth]{./images/cylon_uncorr_corner}\hfill
@@ -47,13 +47,16 @@ Figure~\ref{fig:cylon-corrected} shows the results obtained after employing the 
 \end{figure*}
 After the registration the walls of the room are significantly more prominent in the point-cloud. 
 In particular the noise in the top left corner of the top view (cf. figure~\ref{fig:cylon-corrected}) has been visibly reduced.
-Further, the noise around the walls is notably reduced as the points are moved on the plane.
+Further, the deviation of points around the walls is notably smaller as the points are moved on the plane.
 
 However, some imprecisions remain. 
-At the same location a few points cannot be matched to the plane as they are clustered with some other points that are bound to a different pose. 
-Hence this error stems from the imprecise interpolation in between scans. 
-\todo[inline]{More comments here}
+In particular, at the initially very noisy top left corner of the top view, a few points cannot be matched to the plane. 
+The scans that cause these imprecisions are problematic as they measure a number of plane like structures in the interior of the room. 
+When relabeling those scans the interior points are associated to a plane and hence the corresponding distance minimized. 
 
+
+% This section is commented out
+\iffalse
 \subsection{RADLER Results}
 
 \subsection{Experimental Results REMOVE THIS SECTION}
@@ -76,3 +79,4 @@ Here also the point distances to the ground truth (in this case the terrestriall
 	\caption{Evaluation of point distances before (left) and after (right) the plane based registration on a experimentally acquired dataset. A maximal distance of \SI{5}{m} is set, such that all points that display a higher distance value are excluded. The left column shows a heat map of distances while the right shows the corresponding histogram. The color mapping is equivalent in both. An animation of the matching process can be seen \href{todo}{here}}
 	\label{fig:experimentalEvaluation}
 \end{figure}
+\fi

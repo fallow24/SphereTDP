@@ -38,9 +38,6 @@ However, even with the result not being perfect, we assume already globally regi
 For each plane, consider adding a correspondence for all points that are closer to the plane than a threshold $\epsilon$.
 Depending on the threshold value, some points now have multiple correspondences if their distance to multiple planes is less then $\epsilon$. We then simply omit all points that have correspondences to multiple planes from the optimizations, to avoid introducing errors due to the plane ambiguity.
 
-\todo[inline]{Add section about the local plane, k-means normal based region growing aka clustering for point2plane correspondences. 
-Basically, if a point is correspondence to a global plane than all other points that lie on its local plane should be too. The local plane is constructed by region growing, i.e. if the difference in normal and the distance of the points are close enough they are clustered to one local plane.}
-
 \subsection{Optimization}
 
 Assuming we now know the Hesse-normal form of all planes and all points that are assigned to these planes, we register the points to have a minimal distance to their respective planes.
@@ -74,12 +71,12 @@ Hence the error function $E$ is chosen as follows:
 Its gradient follows then immediately:
 \begin{align}
 	&\nabla E =  \sum_{\forall \mathcal{P}_i}\sum_{\vec{p}_k \in \mathcal{P}_i} \resizebox{0.28\textwidth}{!}{$\begin{bmatrix}\pardiff{\varphi} E&\pardiff{\vartheta} E&\pardiff{\psi} E&\pardiff{t_x} E&\pardiff{t_y} E&\pardiff{t_z} E\end{bmatrix}^T$}\\
-    &\Rightarrow\nabla E = \sum_{\forall \mathcal{P}_i} \sum_{\vec{p}_k \in \mathcal{P}_i}\resizebox{0.28\textwidth}{!}{$2D(\vec{\Pi}, \vec{p}_k)\begin{bmatrix}\nabla E_\varphi &\nabla E_\vartheta & \nabla E_\psi & n_{\mathcal{P}_i}^x&n_{\mathcal{P}_i}^y&n_{\mathcal{P}_i}^z\end{bmatrix}^T$}
+    &\Rightarrow\nabla E = \resizebox{0.35\textwidth}{!}{$\sum_{\forall \mathcal{P}_i} \sum_{\vec{p}_k \in \mathcal{P}_i}2D(\vec{\Pi}, \vec{p}_k)\begin{bmatrix}\nabla E_\varphi &\nabla E_\vartheta & \nabla E_\psi & n_{\mathcal{P}_i}^x&n_{\mathcal{P}_i}^y&n_{\mathcal{P}_i}^z\end{bmatrix}^T$}
 \end{align}
 Where
 \begin{align}
     &\begin{alignedat}{3}
-        \nabla E_\varphi = & n_{\mathcal{P}_i}^x y S_\varphi S_\psi \\
+        \nabla E_\varphi = & n_{\mathcal{P}_i}^x&&y S_\varphi S_\psi \\
         &+ n_{\mathcal{P}_i}^y&&(x[-S_\varphi S_\psi+C_\varphi C_\psi S_\vartheta] \\&&&+y[-S_\varphi C_\psi -C_\varphi S_\vartheta S\psi] \\&&&- z C_\varphi C_\vartheta)\\
         &+ n_{\mathcal{P}_i}^z&&(x[C_\varphi S_\psi+C_\varphi C_\psi S_\vartheta] \\&&&+y[C_\varphi C_\psi -S_\varphi S_\vartheta S\psi] \\&&&- z S_\varphi C_\vartheta)
     \end{alignedat} \\
@@ -89,9 +86,11 @@ Where
         &+ n_{\mathcal{P}_i}^z(-xC_\varphi C_\psi C_\vartheta + yC_\varphi C_\vartheta S_\psi - z C_\varphi S_\vartheta)
     \end{alignedat}\\
     &\begin{alignedat}{3}
-       \nabla E_\psi =& n_{\mathcal{P}_i}^x\left(-xC_\vartheta S_\psi - yC_\varphi C_\psi\right) \\
-       &+ n_{\mathcal{P}_i}^y\left(x[C_\varphi C_\psi - S_\varphi S_\vartheta S_\psi] + y[-C_\varphi S_\psi - S_\varphi S_\theta C_\psi]\right)  \\
-       &+ n_{\mathcal{P}_i}^z\left(x[S_\varphi C_\psi + C_\varphi S_\psi S_\theta] + y[-S_\psi S_ \varphi + C_\varphi S_\vartheta C_\psi] \right) 
+       \nabla E_\psi =& n_{\mathcal{P}_i}^x&&\left(-xC_\vartheta S_\psi - yC_\varphi C_\psi\right) \\
+       &+ n_{\mathcal{P}_i}^y&&(x[C_\varphi C_\psi - S_\varphi S_\vartheta S_\psi] \\
+       &&&+ y[-C_\varphi S_\psi - S_\varphi S_\theta C_\psi]) \\
+       &+ n_{\mathcal{P}_i}^z&&(x[S_\varphi C_\psi + C_\varphi S_\psi S_\theta] \\
+       &&&+ y[-S_\psi S_ \varphi + C_\varphi S_\vartheta C_\psi]) 
     \end{alignedat}
 \end{align}
 and $\vec{\Pi}=\begin{bmatrix}\varphi & \vartheta & \psi & t_x & t_y & t_z\end{bmatrix}^T$.
