@@ -1,4 +1,15 @@
-﻿@INPROCEEDINGS{9233654,
+﻿@article{bosse2012zebedee,
+  title={Zebedee: Design of a spring-mounted 3-d range sensor with application to mobile mapping},
+  author={Bosse, Michael and Zlot, Robert and Flick, Paul},
+  journal={Robotics, IEEE Transactions on},
+  volume={28},
+  number={5},
+  pages={1104--1119},
+  year={2012},
+  publisher={IEEE}
+}
+
+@INPROCEEDINGS{9233654,
   author={Guo, Jian and Chen, Xiangyu and Guo, Shuxiang and Xu, Jigang},
   booktitle={2020 IEEE International Conference on Mechatronics and Automation (ICMA)}, 
   title={Study on Map Construction of Spherical Robot based on Statistical Filtering}, 
@@ -10,12 +21,14 @@
 
 % FIXME: take my bib-file and complete the other references as much as possible.
 
-@inbook{Borrmann2020-RADLER,
+@inproceedings{Borrmann2020-RADLER,
+  title = "{RADLER -- A RADial LasER scanning device}",
+  BookTitle = {{Proceedings of the International Symposium on Experimental Research}},
+  address = "{Buenos Aires, Argentina}",
   author = {Borrmann, Dorit and Jörissen, Sven and Nuchter, Andreas},
   year = {2020},
   month = {01},
   pages = {655-664},
-  title = {RADLER - A RADial LasER Scanning Device},
   isbn = {978-3-030-33949-4},
   doi = {10.1007/978-3-030-33950-0_56}
 }
@@ -40,23 +53,38 @@ year = {2018},
 month = {05},
 pages = {3019-3026},
 title = {Probabilistic Terrain Mapping for Mobile Robots With Uncertain Localization},
+journal={IEEE Robotics and Automation Letters}, 
 volume = {3},
+number = {4},
 doi = {10.1109/LRA.2018.2849506}
 }
 
-@online{SpotRobot,
-  author = {Boston Dynamics},
+
+@Misc{WWWLeicaBackpack,
+  key = {Leica},
+  author = {Leica},
+  title = {Leica Pegasus:Backpack},
+  howpublished = {{\small{\url{www.leica-geosystems.com/de/Leica-PegasusBackpack_106730.htm}}}},
+  month = {{May}},
+  year = {{2015}},
+  address = {{Switzerland}}
+}
+
+@misc{SpotRobot,
+  key = {{Boston Dynamics}},
+  author = {{Boston Dynamics}},
   title = {Spot Robot},
   year = 2021,
-  url = {https://www.bostondynamics.com/spot},
+  howpublished = {\url{https://www.bostondynamics.com/spot}},
   urldate = {2021-03-30}
 }
 
-@online{LivoxMid40-100,
+@misc{LivoxMid40-100,
+  key = {Livox},
   author = {Livox},
-  title = {Livox Mid40 and Mid100},
+  title = {{Livox Mid40 and Mid100}},
   year = 2021,
-  url = {https://www.livoxtech.com/mid-40-and-mid-100},
+  howpublished = {\url{https://www.livoxtech.com/mid-40-and-mid-100}},
   urldate = {2021-03-30}
 }
 
@@ -131,6 +159,7 @@ doi = {10.1109/LRA.2018.2849506}
   author = {Zhang, Ji and Singh, Sanjiv},
   year = {2014},
   month = {07},
+  booktitle = {Robotics: Science and Systems Conference (RSS)},
   pages = {},
   title = {LOAM: Lidar Odometry and Mapping in Real-time},
   doi = {10.15607/RSS.2014.X.007}
