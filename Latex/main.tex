@@ -1,0 +1,119 @@
+\documentclass[5p]{elsarticle}
+
+\usepackage{lineno,hyperref}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Packages and custom commands added by Authors %%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{todonotes}
+\usepackage{xifthen}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{breqn}
+\usepackage{siunitx}
+\usepackage[ruled,vlined]{algorithm2e}
+
+\renewcommand{\vec}[1]{\mathbf{#1}}
+
+\def\block(#1,#2)#3{\multicolumn{#2}{c}{\multirow{#1}{*}{$ #3 $}}}
+
+\newcommand{\norm}[2][]{%
+\ifthenelse{\equal{#1}{}}{\left|\left| #2 \right|\right|}{\left|\left| #2 \right|\right|_{#1}}}
+\newcommand{\pardiff}[1]{\frac{\partial}{\partial #1}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\modulolinenumbers[5]
+
+\journal{IOJPRS}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+%% Elsevier bibliography styles
+%%%%%%%%%%%%%%%%%%%%%%%
+%% To change the style, put a % in front of the second line of the current style and
+%% remove the % from the second line of the style you would like to use.
+%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Numberedss
+%\bibliographystyle{model1-num-names}
+
+%% Numbered without titlesbb
+%\bibliographystyle{model1a-num-names}
+
+%% Harvard
+%\bibliographystyle{model2-names.bst}\biboptions{authoryear}
+
+%% Vancouver numbered
+%\usepackage{numcompress}\bibliographystyle{model3-num-names}
+
+%% Vancouver name/year
+%\usepackage{numcompress}\bibliographystyle{model4-names}\biboptions{authoryear}
+
+%% APA style
+%\bibliographystyle{model5-names}\biboptions{authoryear}
+
+%% AMA style
+%\usepackage{numcompress}\bibliographystyle{model6-num-names}
+
+%% `Elsevier LaTeX' style
+\bibliographystyle{elsarticle-num}
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{Towards Spherical Robots For Mobile Mapping In Human Made Environments\tnoteref{mytitlenote}}
+\tnotetext[mytitlenote]{To abide the \href{https://www.go-fair.org/fair-principles/}{FAIR-Principles} of science, all data and code used to produce the results are given in this \href{https://github.com/fallow24/SphereTDP}{github} repository.}
+
+%% Group authors per affiliation:
+\author{Fabian Arzberger, Anton Bredenbeck, Jasper Zevering, Dorit Borrmann, Andreas Nüchter}
+\address{Informatics VII: Robotics and Telematics,
+Julius-Maximilians-University Würzburg, Germany\\
+%One contact suffices
+e-mail: dorit.borrmann@uni-wuerzburg.de}
+
+%% or include affiliations in footnotes:
+%\author[mymainaddress,mysecondaryaddress]{Elsevier Inc}
+%\ead[url]{www.elsevier.com}
+
+%\author[mysecondaryaddress]{Global Customer Service\corref{mycorrespondingauthor}}
+%\cortext[mycorrespondingauthor]{Corresponding author}
+%\ead{support@elsevier.com}
+
+%\address[mymainaddress]{1600 John F Kennedy Boulevard, Philadelphia}
+%\address[mysecondaryaddress]{360 Park Avenue South, New York}
+
+\begin{abstract}
+Spherical robots are a format that hasn't been thoroughly explored for the application of mobile mapping. 
+In contrast to other designes it provides some unique advantages. 
+Among those are a protective spherical shell which protects internal sensors and actuators from possible harsh environments as well as an inherent rotation for locomotion that enables measurements in all directions.
+Mobile mapping always requires a high-precise pose knowledge to obtain consistent and correct environment maps. 
+This is typically be done by a combination of external reference sensors such as GNSS measurements and inertial measurements, or by post processing the data and registering the different measurements to each other. 
+In indoor environments the GNSS reference is not an option, hence many mobile mapping applications turn to the second option.
+An advantage of indoor environments is, that human made environments usually have a certain structure, such as parallel planes and right angles.
+We propose a registration procedure that exploits this structure by minimizing the distance of measured points to a corresponding plane. 
+Further we evaluate the procedure on a simulated dataset of an ideal corridor as well as in experimentally acquired datasets with different motion profiles. 
+We show that we nearly reproduce the ground truth for the simulated dataset and improve the average point-to-point distance to a reference scan in the experimental dataset.
+The presented algorithms are required to work completely autonomous.
+\end{abstract}
+
+\begin{keyword}
+\texttt{Mobile Mapping}\sep \texttt{SLAM}\sep \texttt{Spherical Robot}
+\MSC[2021] 00-01\sep  99-00
+\end{keyword}
+
+\end{frontmatter}
+
+\linenumbers
+
+\input{sections/introduction}
+\input{sections/stateOfTheArt}
+\input{sections/registration}
+\input{sections/simulation}
+\input{sections/realData}
+\input{sections/results}
+\input{sections/conclusion}
+
+\bibliography{mybibfile,andreas_publications}
+
+\end{document}

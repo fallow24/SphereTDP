@@ -1,0 +1,169 @@
+%!TEX root = ../main.tex
+\section{Registration Algorithm}
+
+We start with transforming each line scan into the project coodinate system , which is defined by the pose of the first acquired line scan.
+With line scan, we mean the smallest chunk of range data, we obtain from the scanner device driver.
+In case of a SICK LMS1xx it is a line and in case of a Livox scanner it has a flower shape.
+More details are provided in the following sections.
+%
+For map improvement the individual scans need to be registered to another. 
+We propose an algorithm that consist of multiple steps outlined in algorithm~\ref{algo:registration-algorithm}. 
+Based on ideas described in~\cite{Borrmann2010} we first rigidly register the scans and then further improve the overall map by exploiting the fact that man made environments often consist of planes. 
+We then find the planes in the pre-registered point-cloud and then optimize the poses associated with the scans to minimize the distance of all points to their respective planes. 
+
+\begin{algorithm}
+    \SetAlgoLined
+    \KwResult{A corrected map}
+    1. Rigidly register the scans\;
+    2. Extract planes from the registered map\;
+    3. Further improve map by solving the optimization that minimizes the distance of all points to their respective planes\;
+    \caption{Registration algorithm for man-made environments}
+    \label{algo:registration-algorithm}
+\end{algorithm}
+
+\subsection{Plane Extraction}
+
+After having done the rigid registration the scans are aligned well-enough to make statements about the potential planes in the environment.
+To find the planes in the environment a Hough transform with an accumulator ball as described in~\cite{Borrmann2011The3H} is used. 
+In the next subsection the Hesse-normal form of the plane is required.
+For an ideal plane the distance parameter $\rho_{\mathcal{P}_i}$ is computed via $\vec{n}_{\mathcal{P}_i}\cdot\vec{x}_i$, where $\vec{x}_i$ is an arbitrary point on the plane.
+To find this point we first define a convex hull that encloses the plane.
+It is defined by the points that lie on the plane with the furthest distance to one another.
+We then choose the center point of the convex hull of the plane as $\vec{x}_i$.
+
+\subsection{Point-to-Plane Correspondences}
+
+There are many ways of finding correspondences between points and planes.
+However, even with the result not being perfect, we assume already globally registered scans, which is why a simplistic algorithm is sufficient:
+For each plane, consider adding a correspondence for all points that are closer to the plane than a threshold $\epsilon$.
+Depending on the threshold value, some points now have multiple correspondences if their distance to multiple planes is less then $\epsilon$. We then simply omit all points that have correspondences to multiple planes from the optimizations, to avoid introducing errors due to the plane ambiguity.
+
+\todo[inline]{Add section about the local plane, k-means normal based region growing aka clustering for point2plane correspondences. 
+Basically, if a point is correspondence to a global plane than all other points that lie on its local plane should be too. The local plane is constructed by region growing, i.e. if the difference in normal and the distance of the points are close enough they are clustered to one local plane.}
+
+\subsection{Optimization}
+
+Assuming we now know the Hesse-normal form of all planes and all points that are assigned to these planes, we register the points to have a minimal distance to their respective planes.
+The transformation $T(\vec{p}_k)$ of each point $\vec{p}_k$ with respect to a 6 DoF motion is described in homogeneous coordinates using the roll-pitch-yaw ($\varphi-\vartheta-\psi$) Tait-Brian angles as in~\cite{diebel2006representing}. Transforming the result back from homogeneous coordinates and using $C_k$ and $S_k$ to denote the cosine and sine of the angle in the subscript yields:
+\begin{align}
+	T(\vec{p}_k)  =
+    \resizebox{0.35\textwidth}{!}{$\begin{bmatrix}
+        x C_\vartheta C_\psi - yC_\varphi S_\psi + z S_\vartheta + t_x\\
+        x (C_\varphi S_\psi + C_\psi S_\varphi S_\vartheta) + y(C_\varphi C_\psi - S_\varphi S_\vartheta S_\psi) - z C_\vartheta S_\varphi + t_y\\
+        x(S_\varphi S_\psi - C_\varphi C_\psi S_\vartheta) + y(C_\psi S_\varphi + C_\varphi S_\vartheta S_\psi) + z C_\varphi C_\vartheta + t_z
+    \end{bmatrix}$}
+\end{align}
+From this we define the function $D(\varphi,\vartheta,\psi,t_x,t_y,t_z, \vec{p}_k)$ that computes the distance of a point $\vec{p}_k$ to its corresponding plane $\mathcal{P}_i$. Omitting the arguments of the function for simplicity:
+\begin{align}
+\begin{aligned}
+    D &= T(\vec{p}_k) \cdot \vec{n}_{\mathcal{P}_i} \\
+      &= n_{\mathcal{P}_i}^x (x C_\vartheta C_\psi - yC_\varphi S_\psi + z S_\vartheta + t_x)\\
+       &+ n_{\mathcal{P}_i}^y(x (C_\varphi S_\psi + C_\psi S_\varphi S_\vartheta)\\
+       &\qquad+ y(C_\varphi C_\psi - S_\varphi S_\vartheta S_\psi) - z C_\vartheta S_\varphi + t_y)\\
+       &+ n_{\mathcal{P}_i}^z (x(S_\varphi S_\psi - C_\varphi C_\psi S_\vartheta)\\
+       &\qquad+ y(C_\psi S_\varphi + C_\varphi S_\vartheta S_\psi) + z C_\varphi C_\vartheta + t_z)\\
+       &- \rho_{\mathcal{P}_i}
+\end{aligned}
+\end{align}
+
+This distance function is what we want to minimize for all points and their respective planes.
+Hence the error function $E$ is chosen as follows:
+\begin{align}
+	E = \sum_{\forall \mathcal{P}_i}\sum_{\vec{p}_k \in \mathcal{P}_i} \norm[2]{D(\varphi,\vartheta,\psi,t_x,t_y,t_z, \vec{p}_k)}^2
+\end{align}
+Its gradient follows then immediately:
+\begin{align}
+	&\nabla E =  \sum_{\forall \mathcal{P}_i}\sum_{\vec{p}_k \in \mathcal{P}_i} \resizebox{0.28\textwidth}{!}{$\begin{bmatrix}\pardiff{\varphi} E&\pardiff{\vartheta} E&\pardiff{\psi} E&\pardiff{t_x} E&\pardiff{t_y} E&\pardiff{t_z} E\end{bmatrix}^T$}\\
+    &\Rightarrow\nabla E = \sum_{\forall \mathcal{P}_i} \sum_{\vec{p}_k \in \mathcal{P}_i}\resizebox{0.28\textwidth}{!}{$2D(\vec{\Pi}, \vec{p}_k)\begin{bmatrix}\nabla E_\varphi &\nabla E_\vartheta & \nabla E_\psi & n_{\mathcal{P}_i}^x&n_{\mathcal{P}_i}^y&n_{\mathcal{P}_i}^z\end{bmatrix}^T$}
+\end{align}
+Where
+\begin{align}
+    &\begin{alignedat}{3}
+        \nabla E_\varphi = & n_{\mathcal{P}_i}^x y S_\varphi S_\psi \\
+        &+ n_{\mathcal{P}_i}^y&&(x[-S_\varphi S_\psi+C_\varphi C_\psi S_\vartheta] \\&&&+y[-S_\varphi C_\psi -C_\varphi S_\vartheta S\psi] \\&&&- z C_\varphi C_\vartheta)\\
+        &+ n_{\mathcal{P}_i}^z&&(x[C_\varphi S_\psi+C_\varphi C_\psi S_\vartheta] \\&&&+y[C_\varphi C_\psi -S_\varphi S_\vartheta S\psi] \\&&&- z S_\varphi C_\vartheta)
+    \end{alignedat} \\
+    &\begin{alignedat}{3}
+        \nabla E_\vartheta = & n_{\mathcal{P}_i}^x(-xS_\vartheta C_\psi + zC_\vartheta) \\
+        &+ n_{\mathcal{P}_i}^y(xC_\psi S_\varphi C_\vartheta - yS_\varphi C_\vartheta S_\psi + z S_\vartheta S_\varphi)  \\
+        &+ n_{\mathcal{P}_i}^z(-xC_\varphi C_\psi C_\vartheta + yC_\varphi C_\vartheta S_\psi - z C_\varphi S_\vartheta)
+    \end{alignedat}\\
+    &\begin{alignedat}{3}
+       \nabla E_\psi =& n_{\mathcal{P}_i}^x\left(-xC_\vartheta S_\psi - yC_\varphi C_\psi\right) \\
+       &+ n_{\mathcal{P}_i}^y\left(x[C_\varphi C_\psi - S_\varphi S_\vartheta S_\psi] + y[-C_\varphi S_\psi - S_\varphi S_\theta C_\psi]\right)  \\
+       &+ n_{\mathcal{P}_i}^z\left(x[S_\varphi C_\psi + C_\varphi S_\psi S_\theta] + y[-S_\psi S_ \varphi + C_\varphi S_\vartheta C_\psi] \right) 
+    \end{alignedat}
+\end{align}
+and $\vec{\Pi}=\begin{bmatrix}\varphi & \vartheta & \psi & t_x & t_y & t_z\end{bmatrix}^T$.
+
+As the gradient is well-defined we minimize the error function with any gradient based method. 
+The commonly used, well-known stochastic gradient descent (SDG) algorithm computes 
+\begin{align}
+    \vec{\Pi}_{k+1} = \vec{\Pi}_{k} - \alpha \nabla E
+\end{align}
+To accelerate convergence and to improve the found solution further modifications are made.
+
+Since we have vastly different effects on the error function by each dimension, the first consideration for improving the SDG is the following:
+Typically, changes in orientation, i.e., the first three elements of the gradient vector $\pardiff{\varphi}E$, $\pardiff{\vartheta}E$, and $\pardiff{\psi}E$, have much more impact on the error function than a change in position.
+This is intuitively explained since translating the scan makes the error grow linearly for all points.
+However, when rotating the scan, points with a larger distance to the robot are moved drastically, leading to a higher sensibility on the error function.
+For this reason, the $\alpha$ applied on orientation has to be much smaller than the $\alpha$ applied on the position.
+It becomes obvious that $\alpha$ needs to be extended into vector form, $\boldsymbol\alpha$, therefore weighting each dimension differently.
+
+Another consideration to speed up SDG is to adaptively recalculate $\boldsymbol\alpha$ for each iteration. 
+We employ and modify ADADELTA as a technique to do so, which is described in detail in~\cite{zeiler2012adadelta}.
+The main idea is the following:
+It extends the SDG algorithm by two terms.
+First, an exponentially decaying average of past gradients, which is recursively defined as
+\begin{align}
+    \vec{G}_{k+1} = \rho \vec{G}_{k} + (1 - \rho) {\nabla E}^2
+\end{align}
+and second, an exponentially decaying average of past changes, which is defined as
+\begin{align}
+    \vec{X}_{k+1} = \rho \vec{X}_{k} + (1 - \rho) {\boldsymbol\alpha \nabla E}^2
+\end{align}
+where $\rho \leq 1$ is a decay constant, typically close to $1$.
+The root mean squared (RMS) of these quantities are
+\begin{align}
+    RMS[\vec{G}]_{k} = \sqrt{\vec{G}_{k} + \epsilon}
+\end{align}
+and 
+\begin{align}
+    RMS[\vec{X}]_{k} = \sqrt{\vec{X}_{k} + \epsilon}
+\end{align}
+where $\epsilon > 0$ is a very small constant, typically close to $0$.
+It will prevent dividing by zero in the recalculation of $\boldsymbol\alpha$, which is as follows:
+\begin{align}
+    \boldsymbol\alpha_{k} = \frac{RMS[X]_{k-1}}{RMS[G]_{k}}
+    \label{eq:adadeltaalphaupdate}
+\end{align} 
+For our particular application ADADELTA behaves a little too aggressively.
+Despite giving a good measure on how to adabt $\boldsymbol\alpha$, the algorithm sometimes overshoots, and convergence doesn't happen.
+Therefore, we employ another scaling factor, typically not found in ADADELTA, extending eq.~\eqref{eq:adadeltaalphaupdate} to:
+\begin{align}
+    \boldsymbol\alpha_{k} = \boldsymbol\alpha_0 \cdot \frac{RMS[X]_{k-1}}{RMS[G]_{k}}
+    \label{eq:adafinalized}
+\end{align} 
+where $\boldsymbol\alpha_0 $ holds the scaling factors for each dimension.
+
+Finally, the SDG model is improved using eq.~\eqref{eq:adafinalized} and extends to 
+\begin{align}
+    \vec{\Pi}_{k+1} = \vec{\Pi}_{k} - \boldsymbol\alpha_0  \frac{RMS[X]_{k-1}}{RMS[G]_{k}} \cdot \nabla E
+\end{align}
+Using this algorithm once after finding correspondences from points to planes leads to convergence to a local minimum, which often isn't an optimal solution.
+Even if the number of iterations is dramatically increased, no better solution than the local minimum is found.
+That is, unless you consider updating the correspondence model after $i$ iterations of gradient descent.
+Re-assigning point-to-plane correspondences this way $k$ times, and if $k$ is chosen large enough, it leads to an optimal solution after maximum $n = k\cdot i$ iterations of gradient descent.
+
+\subsection{Further Optimizations of the Algorithm}
+
+The algorithm was extended by two further optmizations which are useful in different scenarios.
+
+Firstly, we introduce a lock on some dimensions from being optimized by setting the corresponding $\alpha_i$ to zero.
+Although 6D optimization generally works, reducing the optimization space is particularly useful if the source of error in the system is known and a model exists.
+That way, e.g. a point cloud from a terrestrial lasescanner that experiences irregularites in its spinning mirror is registered by optimizing only over the axis of rotation as no other movement is to be expected.
+
+Secondly we employ a continuous iteration, where the scans are processed sequentially. 
+This is especially useful for mobile systems, where pose error accumulates due to increasing tracking uncertainties.
+The assumption is that the the error in one scan is also present in the next scan, plus some unknown new error.
+We eliminate the error from scan $m$ which is also present in scan $m+1$ by applying the pose change from scan $m$, $\vec{\Pi}_{n,m} - \vec{\Pi}_{0,m}$ after $n$ gradient descent iterations, to scan $m+1$, before restarting gradient descent.
