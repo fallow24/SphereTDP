@@ -1,11 +1,12 @@
 %!TEX root = ../main.tex
 \section{Conclusion}
 
-In this paper, we propose a registration method for man made environments that exploits the structure of the environments. 
-Given in man-made environments parallel planes and right angles are abundantly available we employ point-to-plane correspondences to improve a pre-registered 3D point-cloud. 
-We evaluate the procedure on a simulated dataset as well as on a experimentally acquired dataset with different motion profiles. 
-In this evaluation we show that the procedure improves both datasets and yields more human-made structure like maps. 
+In this paper, we propose a registration method for man made environments that exploits the structure of those environments. 
+Given that in man-made environments parallel planes and right angles are abundantly available we employ point-to-plane correspondences to improve a pre-registered 3D point-cloud. 
+We evaluate the procedure on a simulated dataset as well as on an experimentally acquired dataset with different motion profiles. 
+In this evaluation we show that the procedure improves both datasets and yields more human-made, structure like maps. 
+In particular, the qualitative structure of the environments is reconstructed well, that is, in the resulting maps the parallel walls are clearly improved.
 Currently not all steps in the procedure are autonomous, in particular the parameter tuning. 
 In the future one goal is to increase the autonomy of the system.
 One approach is to introduce soft-locks for the optimization dimensions.
-I.e., instead of locking the some dimensions entirely from being used for optimization, adding weighting factors based on the dynamics of the system that encode which noise source is more likely.  
+I.e., instead of locking some dimensions entirely from being used for optimization, they are weighted based on the dynamics of the system that encode which noise source is more likely.  
