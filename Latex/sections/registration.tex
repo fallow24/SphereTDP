@@ -8,26 +8,27 @@ We start with transforming each line scan into the project coordinate system, wh
 %
 For map improvement, the individual scans need to be registered to another. 
 We propose an algorithm that consists of multiple steps outlined in algorithm~\ref{algo:registration-algorithm}. 
-Based on ideas described in~\cite{Borrmann2010} we first rigidly register the scans and then further improve the overall map by exploiting the fact that human-made environments often consist of planes. 
+Based on ideas described in~\cite{Borrmann2010} we first pre-register the scans and then further improve the overall map by exploiting the fact that human-made environments often consist of planes. 
 We then find the planes in the pre-registered point cloud and then optimize the poses associated with the scans to minimize the distance of all points to their respective planes. 
 
 \begin{algorithm}
     \SetAlgoLined
     \KwResult{A corrected map}
-    1. Rigidly register the scans\;
+    1. Pre-register the scans\;
     2. Extract planes from the registered map\;
     3. Further improve map by solving the optimization that minimizes the distance of all points to their respective planes\;
     \caption{Registration algorithm for man-made environments}
     \label{algo:registration-algorithm}
 \end{algorithm}
 
-\subsection{Rigid Registration}
+\subsection{Pre-Registration}
 
-\todo[inline]{Die Rigid Registration sollte kurz erwähnt werden. Welcher Algorithmus? Werden dafür Linescans zusammengefasst?}
+We perform a coarse registration with the continuous-time SLAM approach from~\cite{REMSEN2013}.
+This yields maps that can be used for plane registration and hence a point-to-plane correspondences base registration.
 
 \subsection{Plane Extraction}
 
-After having done the rigid registration, the scans are aligned well enough to make statements about the potential planes in the environment.
+After having done the pre-registration, the scans are aligned well enough to make statements about the potential planes in the environment.
 To find the planes in the environment, a Randomized Hough transform with an accumulator ball as described in~\cite{3DRESEARCH2011} is used. 
 In the next subsection, the Hesse-normal form of the plane is required.
 For an ideal plane the distance parameter $\rho_{\mathcal{P}_i}$ is computed via $\vec{n}_{\mathcal{P}_i}\cdot\vec{x}_i$, where $\vec{x}_i$ is an arbitrary point on the plane.
