@@ -1,10 +1,10 @@
 %!TEX root = ../main.tex
 \section{Registration Algorithm}
 
-We start with transforming each line scan into the project coordinate system, which is defined by the pose of the first acquired line scan.
-With line scan, we mean the smallest chunk of range data we obtain from the scanner device driver.
+Consider a line scan as the smallest chunk of range data we obtain from the scanner device driver.
 In the case of a SICK LMS1xx it is a line, and in case of a Livox scanner it has a flower shape.
 More details are provided in the following sections.
+We start with transforming each line scan into the project coordinate system, which is defined by the pose of the first acquired line scan.
 %
 For map improvement, the individual scans need to be registered to another. 
 We propose an algorithm that consists of multiple steps outlined in algorithm~\ref{algo:registration-algorithm}. 
@@ -21,10 +21,14 @@ We then find the planes in the pre-registered point cloud and then optimize the 
     \label{algo:registration-algorithm}
 \end{algorithm}
 
+\subsection{Rigid Registration}
+
+\todo[inline]{Die Rigid Registration sollte kurz erwähnt werden. Welcher Algorithmus? Werden dafür Linescans zusammengefasst?}
+
 \subsection{Plane Extraction}
 
 After having done the rigid registration, the scans are aligned well enough to make statements about the potential planes in the environment.
-To find the planes in the environment, a Hough transform with an accumulator ball as described in~\cite{3DRESEARCH2011} is used. 
+To find the planes in the environment, a Randomized Hough transform with an accumulator ball as described in~\cite{3DRESEARCH2011} is used. 
 In the next subsection, the Hesse-normal form of the plane is required.
 For an ideal plane the distance parameter $\rho_{\mathcal{P}_i}$ is computed via $\vec{n}_{\mathcal{P}_i}\cdot\vec{x}_i$, where $\vec{x}_i$ is an arbitrary point on the plane.
 To find this point, we first define a convex hull that encloses the plane.
@@ -40,7 +44,7 @@ Depending on the threshold value, some points now have multiple correspondences 
 
 \subsection{Optimization}
 
-Assuming we now know the Hesse-normal form of all planes and all assigned points to these planes, we register the points to have a minimal distance to their respective planes.
+Assuming we know now the Hesse-normal form of all planes and all assigned points to these planes, we register the points to have a minimal distance to their respective planes.
 The transformation $T(\vec{p}_k)$ of each point $\vec{p}_k$ with respect to a 6 DoF motion is described in homogeneous coordinates using the roll-pitch-yaw ($\varphi-\vartheta-\psi$) Tait-Brian angles as in~\cite{diebel2006representing}. Transforming the result back from homogeneous coordinates and using $C_k$ and $S_k$ to denote the cosine and sine of the angle in the subscript yields:
 \begin{align}
 	T(\vec{p}_k)  =
