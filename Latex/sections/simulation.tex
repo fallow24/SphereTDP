@@ -4,7 +4,17 @@ To quantify the quality of the proposed registration method, it is tested on sim
 \section{Simulation}
 
 For the simulated data, we implemented a noisy world-robot-sensor model.  
-We are simulating a LIVOX-Mid100~\cite{LivoxMid40-100} laser scanner with customizable noise level on the range measurements inside a robot with different motion capabilities, subject to noise in its pose estimation. This yields scan results similar to the ones obtained in the real world.
+We are simulating a Livox-Mid100~\cite{LivoxMid40-100} laser scanner with customizable noise level on the range measurements inside a robot with different motion capabilities, subject to noise in its pose estimation. 
+This yields scan results similar to the ones obtained in the real world.
+
+\subsection{Simulated Sensor}
+
+The Livox-Mid100 laser scanner consists of three smaller-sized Mid40 scanners arranged to provide an overall field-of-view of \SI{98.4}{\degree} (Horizontal) by \SI{38.4}{\degree} (Vertical).
+It provides a range precision of \SI{2}{\centi\meter} up to \SI{20}{\meter} range and yields \SI[per-mode=symbol]{300,000}{\pts\per\second}.
+A particular advantage of the Livox laser scanners is their unique scanning pattern.
+The scanners use two motorized, so-called Risley prisms to steer the beam deflectance.
+For the specific ratio of rotation speeds used in the Livox scanners, the beam traces out a non-repetitive, flower-shaped scanning pattern~\cite{thorlabs}.
+Since the pattern is non-repetitive, the point density increases with integration time, enabling denser measurements.
 
 \subsection{Range Noise Model}
 
