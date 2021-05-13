@@ -35,8 +35,11 @@ Any such errors tend to occur at the back and the front of the corridor where th
 
 \subsection{Floating Sphere Results}
 
-Figure~\ref{fig:cylon-corrected} shows the results obtained before  and after employing the plane base registration on the dataset acquired by the floating sphere.
-To increase convergence speed, we always combined ten scans into one meta-scan that is then globally registered. 
+Figure~\ref{fig:cylon-corrected} shows the results obtained before and after employing the plane base registration on the dataset acquired by the floating sphere.
+We combine ten scans into one meta-scan, which is then globally registered.
+This does not only speed up convergence due to the proportional effect on the error function, but also decreases the risk of transforming the scan in a sensless way.
+Transformations like these happen when points that have been labled incorrectly have a huge effect on the error gradient, which is especially the case when considering only a few points.
+
 \begin{figure*}
 	\centering
 	\includegraphics[width=0.49\textwidth]{./images/cylon_uncorr_corner}\hfill
