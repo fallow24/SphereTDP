@@ -2,24 +2,24 @@
 \section{Introduction}
 
 Today's robots for mobile mapping come in all shapes and sizes.
-The state of the art for urban environments are laser scanners mounted to cars.
+State of the art for urban environments are laser scanners mounted to cars.
 Smaller robotic systems are particularly used when cars no longer have access.
 Examples for this are human operated systems such as Zebedee~\cite{Bosse2012-zebedee}, a Hokuyo scanner on a spring, VILMA~\cite{JPRS2016}, a rolling FARO scanner, RADLER~\cite{Borrmann2020-RADLER}, a 2D laser scanner mounted to a unicycle, or a backpack mounted ``personal laser scanning system'' as in~\cite{LauterbackEtAl2015-Backpack}.
 Recently more and more autonomous systems gained maturity.
 A stunning example is Boston Dynamics' quadruped ``Spot'' that autonomously navigates and maps human environments~\cite{SpotRobot}.
-Also the mobile mapping approaches implemented on the ANYmal platform such as~\cite{Fankhauser2018-ANYmal} were very successful.
+Also, the mobile mapping approaches implemented on the ANYmal platform such as~\cite{Fankhauser2018-ANYmal} were very successful.
 Of all these formats, one hasn't been explored thoroughly in the scientific community: The spherical mobile mapping robot.
 Yet this provides some very promising advantages over the other formats.
-For one, the locomotion of a spherical robot inherently results in a rotation.
-That way a sensor fixed inside the spherical structure will cover the entire environment, given the required locomotion without the need for additional actuators for the sensors.
+For one, the locomotion of a spherical robot inherently results in rotation.
+That way, a sensor fixed inside the spherical structure will cover the entire environment, given the required locomotion without the need for additional actuators for the sensors.
 This requires a solution for the spherical simultaneous localization and mapping (SLAM) problem given the six degrees of freedom of the robot.
-Secondly a spherical shell, that encloses all sensors protects these from possible hazardous environments.
-For example, any dust that deteriorates sensors or actuators when settling at sensitive locations is stopped by a shell.
-This is be particularly useful for unknown and dangerous environments.
-E.g., for space applications this is also proposed in the DAEDALUS study~\cite{RossiMaurelliUnnithanetal.2021}, a spherical robot that is to be lowered into a lunar cave and create a 3D map of the environment. The authors choose this format as the present moon regolith is known to damage instruments and other components.
+Secondly, a spherical shell that encloses all sensors protects these from possible hazardous environments.
+For example, the shell stops any dust that deteriorates sensors or actuators when settling at sensitive locations.
+This is particularly useful for unknown and dangerous environments.
+E.g., for space applications, this is also proposed in the DAEDALUS study~\cite{RossiMaurelliUnnithanetal.2021}, a spherical robot that is to be lowered into a lunar cave and create a 3D map of the environment. The authors choose this format as the present moon regolith is known to damage instruments and other components.
 
-This paper proposes to use such a spherical robot for mobile mapping man made environments.
-In such environments one advantage are architectural shapes following standard conventions arising from tradition or utility, i.e., there are many flat surfaces such as walls, floors etc. that are sensed.
+This paper proposes to use such a spherical robot for mobile mapping man-made environments.
+In such environments, one advantage are architectural shapes following standard conventions arising from tradition or utility, i.e., there are many flat surfaces such as walls, floors, etc. that are sensed.
 Exploiting this fact yields more opportunities for registration as point-to-plane correspondences can be used.
-The proposed registration method minimizes the distances of each point to its corresponding plane as objective function.
+The proposed registration method minimizes the distances of each point to its corresponding plane as an objective function.
 The method is evaluated on a simulated dataset as well as on experimentally acquired datasets.
