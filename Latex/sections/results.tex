@@ -9,19 +9,19 @@ Figure~\ref{fig:simulatedEvaluation} shows the different point-to-point distance
 
 \begin{figure*}
  	\centering
- 	\begin{minipage}[c]{0.49\textwidth}
+ 	\begin{minipage}[c]{0.495\textwidth}
  		\centering
 		\includegraphics[width=\textwidth]{./images/uncorr_bottom_pose}\\
 		\includegraphics[width=\textwidth]{./images/uncorr_side_view}\\
   		\includegraphics[width=\textwidth]{./images/uncorr_hist}
   	\end{minipage}\hfill
-  	\begin{minipage}[c]{0.49\textwidth}
+  	\begin{minipage}[c]{0.495\textwidth}
   		\centering
 		\includegraphics[width=\textwidth]{./images/corr_bottom_pose}\\
 		\includegraphics[width=\textwidth]{./images/corr_side_view}\\
   		\includegraphics[width=\textwidth]{./images/corr_hist}
   	\end{minipage} 	
- 	\caption{Evaluation of point distances before (left) and after (right) the plane-based registration on a simulated dataset. A maximal distance of \SI{2}{m} is set, such that all points that display a higher distance value are excluded from the analysis. Further, the histogram joins all values with a distance greater than \SI{1}{m} into the last bucket. The top two columns show a heat map of distances, while the bottom shows the corresponding histogram. The color mapping is equivalent in both. An animation of the matching process is given at~\href{https://youtu.be/0ps5Pg4qo4E}{here}}
+ 	\caption{Evaluation of point distances before (left) and after (right) the plane-based registration on a simulated dataset. A maximal distance of \SI{2}{m} is set, such that all points that display a higher distance value are excluded from the analysis. Further, the histogram joins all values with a distance greater than \SI{1}{m} into the last bucket. The top two columns show a heat map of distances, while the bottom shows the corresponding histogram. The color mapping is equivalent in both. An animation of the matching process is given at \url{https://youtu.be/0ps5Pg4qo4E} .}
  	\label{fig:simulatedEvaluation}
 \end{figure*} 
 
@@ -42,11 +42,11 @@ Transformations like these happen when incorrectly labeled points have a huge ef
 
 \begin{figure*}
 	\centering
-	\includegraphics[width=0.49\textwidth]{./images/cylon_uncorr_corner}\hfill
-	\includegraphics[width=0.49\textwidth]{./images/cylon_corr_corner}\\
-	\includegraphics[width=0.49\textwidth]{./images/cylon_uncorr_top}\hfill
-	\includegraphics[width=0.49\textwidth]{./images/cylon_corr_top}
-	\caption{The point cloud acquired by the floating sphere before (left) and after (right) applying the plane based registration. View from the interior that shows the used planes (top) and a birds-eye view (bottom). An animation of the registration process is given at \href{https://youtu.be/8XdIUN_9VpY}{here}.}
+	\includegraphics[width=0.495\textwidth]{./images/cylon_uncorr_corner}\hfill
+	\includegraphics[width=0.495\textwidth]{./images/cylon_corr_corner}\\
+	\includegraphics[width=0.495\textwidth]{./images/cylon_uncorr_top}\hfill
+	\includegraphics[width=0.495\textwidth]{./images/cylon_corr_top}
+	\caption{The point cloud acquired by the floating sphere before (left) and after (right) applying the plane based registration. View from the interior that shows the used planes (top) and a birds-eye view (bottom). An animation of the registration process is given at \url{https://youtu.be/8XdIUN_9VpY} .}
 	\label{fig:cylon-corrected}
 \end{figure*}
 After the registration, the walls of the room are significantly more prominent in the point cloud. 
