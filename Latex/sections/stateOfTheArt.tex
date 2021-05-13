@@ -3,11 +3,11 @@
 
 \subsection{Spherical SLAM}
 
-Up to the best of our knowledge, SLAM with spherical robots and laser scanners was not done before, while there exists camera-based approaches~\cite{9233654}.
+While there exist camera-based approaches~\cite{9233654}, to the best of our knowledge, SLAM with spherical robots and laser scanners was not done before.
 However, laser-based SLAM algorithms for motions in six degrees of freedom (DoF) have been thoroughly studied.
 For outdoor environments~\cite{JFR2006} provides a first baseline.
 Adding a heuristic for closed-loop detection and a global relaxation Borrmann et al. yield highly precise maps of the scanned environment~\cite{RAS2007}.
-Zhang et al. propose a real-time version of the SLAM algorithm in~\cite{Zhang2014}.
+Zhang et al. propose a real-time solution to the SLAM problem in~\cite{Zhang2014}.
 They achieve the performance at a lower computational load by dividing the SLAM algorithm into two different algorithms: one performing odometry at a high frequency but low fidelity and another running at a lower frequency performing fine matching and registration of the point clouds.
 More recently Dröschel et al. also propose an online method using a novel combination of a hierarchical graph structure with local multi-resolution maps to overcome problems due to sparse scans~\cite{Droeschel2018}.
 
@@ -20,7 +20,13 @@ Further, none of the approaches exploit the structure inherent to human-made env
 The de-facto standard for many SLAM algorithms is the Iterative-Closest-Point (ICP) algorithm~\cite{Besl1992} that employs point-to-point correspondences using closest points, as the name suggests. 
 To overcome the requirements on point-density imposed by the point-to-point correspondences instead other correspondences are used. 
 In human-made environments, planes are abundantly available and hence provide an attractive base for correspondences.
-Förster et al. use this property of human-made environment successfully in~\cite{Foerstner2017}.
+
+Pathak et al.~\cite{Pathak:2010} propose to reduce the complexity of the registration by using correspondences between planar patches instead of points.
+They demonstrate the effectiveness of their approach even with noisy data in cluttered environments.
+However, their approach is designed for data acquired in stop-scan-go fashion and not for mobile mapping applications.
+As they use a region growing procedure with randomized initialization for detecting planar patches the distortions in the data introduced by pose uncertainties are likely to effect the shape of the planar patches and lead to faulty correspondences.
+
+Förster et al. use the planarity of human-made environment successfully in~\cite{Foerstner2017}.
 They register point clouds using plane-to-plane correspondences and include uncertainty measures for the detected planes and the estimated motion.
 Thereby, they propose a costly exact algorithm and cheaper approximations that yield high-quality maps.
 Favre et al.~\cite{favre2021} use point-to-plane correspondences after preprocessing the point clouds using plane-to-plane correspondences to register two scans with each other successfully.
