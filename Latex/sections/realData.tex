@@ -9,7 +9,7 @@ Hence, in this experiment the optimization space can be reduced to a rotation.
 Further, without the motion, the 2D laser cannot obtain a 3D model from the environment, thus requiring registration. 
 The sphere is equipped with a low-cost IMU, i.e., a PhidgetSpatial Precision 3/3/3, to estimate the orientation, a battery pack and a raspberry pie for processing. 
 
-Figure~\ref{fig:float-sat-sphere} shows the experimental setup. The left column of figure~\ref{fig:cylon-corrected} shows the pre-registered resulting point cloud . 
+Figure~\ref{fig:float-sat-sphere} shows the experimental setup. The left column of figure~\ref{fig:cylon-corrected} shows the pre-registered resulting point cloud. 
 We see that the point cloud is rather noisy, and in particular, the walls are sensed multiple times, hence appearing very blurry. 
 
 \begin{figure}
@@ -61,7 +61,7 @@ We see that the point cloud is rather noisy, and in particular, the walls are se
 	The setup was then brought into a high indoor building (\href{https://www.sfs-w.de/feuerwehrschule/virtueller-rundgang.html}{Firefighter School in Würzburg}) where the system was manually descended from a balcony scanning the building interior.
 	The robot covered a distance of approximately \SI{22}{\meter} in about \SI{402}{\second}.
 	Additionally, the building was scanned using a terrestrial laser scanner to provide a reference.
-	The measurements were then rigidly corrected before applying our plane-based correction. 
+	The measurements were then pre-registered before applying our plane-based correction. 
 	Figure~\ref{fig:experimental-setup} shows the acquired 3D point clouds and the experimental setup. 
 
 	\begin{figure}
@@ -73,7 +73,7 @@ We see that the point cloud is rather noisy, and in particular, the walls are se
 	  	\begin{minipage}[c]{0.2075\textwidth}
 	  		\includegraphics[width=\textwidth]{./images/lidarsetup}
 	  	\end{minipage}
-		\caption{Reference 3D point cloud acquired with a RIEGL 3D terrestrial laser scanner (top left). The 3D point cloud acquired by the test sphere after the rigid registration (bottom left) and a picture of the test setup (right).}
+		\caption{Reference 3D point cloud acquired with a RIEGL 3D terrestrial laser scanner (top left). The 3D point cloud acquired by the test sphere after the pre-registration (bottom left) and a picture of the test setup (right).}
 		\label{fig:experimental-setup}
 	\end{figure}
 \fi
