@@ -6,9 +6,15 @@ Given that in man-made environments parallel planes and right angles are abundan
 We evaluate the procedure on a simulated dataset as well as on an experimentally acquired dataset with different motion profiles. 
 In this evaluation we show that the procedure improves both datasets and yields more human-made, structure like maps. 
 In particular, the qualitative structure of the environments is reconstructed well, that is, in the resulting maps the parallel walls are clearly improved.
-Currently not all steps in the procedure are autonomous, in particular the parameter tuning. 
+
+However, as \ref{sec:floatres} shows, some outliers remain due to the simplistic point-to-plane correspondence model, which is to be improved in future studies.
+One idea to do so is to employ a local clustering technique onto the individual scans, before registering them globaly. 
+Points from the scan with a similar normal get clustered together if their distance is small enough.
+This way, a cluster represents a local plane, while at the same time storing all the points that belong to that plane.
+Point-to-plane correspondences then arise from the intersection of local clusters with global planes.
+
+Furthermore, currently not all steps in the procedure are autonomous, in particular the parameter tuning. 
 In the future one goal is to increase the autonomy of the system.
 One approach is to introduce soft-locks for the optimization dimensions.
 I.e., instead of locking some dimensions entirely from being used for optimization, they are weighted based on the dynamics of the system that encode which noise source is more likely.  
 
-\todo[inline]{@Fabi add future work}
