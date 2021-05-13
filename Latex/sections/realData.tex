@@ -1,16 +1,16 @@
 %!TEX root = ../main.tex
 \section{Experimental Setup}\label{sec:experimentalSetup}
 
-Our algorithm was also tested on a real-world datasets that adheres to different motion profile and laser scanners type with different scanning patterns than the simulated data.  
+We also tested out algorithm on a real-world dataset that adheres to different motion profiles and laser scanners type with different scanning patterns than the simulated data.  
 
 The dataset is collected by a line scanner, in particular a SICK LMS141 industrial scanner, inside a sphere of a diameter of \SI{20}{\centi\meter} that lies on a floating desk, which is air-pressurized, such that the sphere is hovering.
-On this floating desk the sphere can rotate freely about all axis while being fixed in position. 
+On this floating desk, the sphere can rotate freely about all axis while being fixed in position. 
 Hence, in this experiment the optimization space can be reduced to a rotation.
-Further, without the motion the 2D laser also cannot obtain a 3D model from the environment, thus requiring registration. 
+Further, without the motion, the 2D laser cannot obtain a 3D model from the environment, thus requiring registration. 
 The sphere is equipped with a low-cost IMU, i.e., a PhidgetSpatial Precision 3/3/3, to estimate the orientation. 
 
 Figure~\ref{fig:float-sat-sphere} shows the experimental setup. TThe left column of figure~\ref{fig:cylon-corrected} shows the pre-registered resulting point cloud . 
-We see, that the point cloud is rather noisy and in particular the walls are sensed multiple times, hence appearing very blurry. 
+We see that the point cloud is rather noisy, and in particular, the walls are sensed multiple times, hence appearing very blurry. 
 
 \begin{figure}
 	\centering
@@ -33,10 +33,10 @@ We see, that the point cloud is rather noisy and in particular the walls are sen
 
 	The second dataset is recorded using the RADLER system as described in~\cite{Borrmann2020-RADLER}.
 	While not a spherical robot, this system shows many similarities with respect to its motion with a spherical robot.
-	The system was manually steered along a squared set of hallways that loop back to the initial starting point inside the old mathematics building at the University of Würzburg (denoted ``The Circle'' in~\cite{Borrmann2020-RADLER}).
+	The system was manually steered along with a squared set of hallways that loop back to the initial starting point inside the old mathematics building at the University of Würzburg (denoted ``The Circle'' in~\cite{Borrmann2020-RADLER}).
 
 	Figure~\ref{fig:radler-mathe} shows the system setup as well as the resulting point cloud.
-	We see that with continuing measurement time the drift increases and the hallways are senses multiple times with a clear offset to each other. 
+	We see that with continuing measurement time, the drift increases, and the hallways are senses multiple times with a clear offset to each other. 
 
 	\begin{figure*}
 		\centering
@@ -51,12 +51,12 @@ We see, that the point cloud is rather noisy and in particular the walls are sen
 	\subsection{Descend Sphere REMOVE THIS SECTION}
 
 	This was recorded using a LIVOX-Mid 100 laser scanner mounted inside a transparent shell. 
-	The robot contained three Phidget 3/3/3 Spatial IMUs and was attached to a \SI{50}{\meter} tether cable that was rolled on a spool which in turn was connected to a angular encoder. 
-	From these sensors we obtained orientation information as well as height information. 
+	The robot contained three Phidget 3/3/3 Spatial IMUs and was attached to a \SI{50}{\meter} tether cable that was rolled on a spool which in turn was connected to an angular encoder. 
+	From these sensors, we obtained orientation information as well as height information. 
 	The setup was then brought into a high indoor building (\href{https://www.sfs-w.de/feuerwehrschule/virtueller-rundgang.html}{Firefighter School in Würzburg}) where the system was manually descended from a balcony scanning the building interior.
 	The robot covered a distance of approximately \SI{22}{\meter} in about \SI{402}{\second}.
-	Additionally the building was scanned using a terrestrial laser scanner to provide a reference.
-	The measurements were then rigidly corrected before applying our plane based correction. 
+	Additionally, the building was scanned using a terrestrial laser scanner to provide a reference.
+	The measurements were then rigidly corrected before applying our plane-based correction. 
 	Figure~\ref{fig:experimental-setup} shows the acquired 3D point clouds and the experimental setup. 
 
 	\begin{figure}
