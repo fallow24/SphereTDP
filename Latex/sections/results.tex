@@ -29,7 +29,20 @@ Before the registration, the corridor is only represented acceptably in the fron
 The further into the corridor, i.e., the longer the robot accumulates errors, the more imprecise the data becomes. 
 Finally, we see that a large portion of the data even exceeds either the \SI{1}{\meter} error, contributing to the large spike in the histogram or even the \SI{2}{\meter} error limit; thus, being cut from the representation. 
 After registration, we see that, qualitatively, the ideal corridor was nearly restored from the noisy data. 
-In particular a very large portion (95\%) have less than \SI{16.53}{\centi\meter} distances whereas in the uncorrected dataset the same portion of the points have an error of \SI{38.19}{\centi\meter} or less.
+In particular a very large portion of points (95\%) have less than \SI{16.53}{\centi\meter} distances.
+Table~\ref{tab:percentiles} shows the comparison of further percentiles of both datasets. 
+
+\begin{table}
+	\centering
+	\begin{tabular}{@{}lcccc@{}}\hline
+		& P90 & P95 & P98 & Mean\\ \hline\hline
+		Uncorrected & \SI{24.12}{\centi\meter} &  \SI{38.19}{\centi\meter} &  \SI{61.46}{\centi\meter} & \SI{9.97}{\centi\meter}\\
+		Corrected & \SI{12.78}{\centi\meter} &  \SI{16.53}{\centi\meter} &  \SI{21.55}{\centi\meter} & \SI{6.36}{\centi\meter}\\ \hline
+	\end{tabular}
+	\caption{Comparison of point-distances in the uncorrected and corrected simulated dataset.}
+	\label{tab:percentiles}
+\end{table}
+
 Further, the square and straight shape of the corridor is restored well, and especially the large spike at errors of greater than \SI{1}{m} is removed. 
 Any such errors tend to occur at the back and the front of the corridor where the measured range is the largest hence has the largest contribution of the range error. 
 
