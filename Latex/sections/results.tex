@@ -29,15 +29,15 @@ Before the registration, the corridor is only represented acceptably in the fron
 The further into the corridor, i.e., the longer the robot accumulates errors, the more imprecise the data becomes. 
 Finally, we see that a large portion of the data even exceeds either the \SI{1}{\meter} error, contributing to the large spike in the histogram or even the \SI{2}{\meter} error limit; thus, being cut from the representation. 
 After registration, we see that, qualitatively, the ideal corridor was nearly restored from the noisy data. 
-In particular a very large portion of points (95\%) have less than \SI{16.53}{\centi\meter} distances.
+In particular a very large portion of points (95\%) have distances of less than \SI{16.6}{\centi\meter}.
 Table~\ref{tab:percentiles} shows the comparison of further percentiles of both datasets. 
 
 \begin{table}
 	\centering
 	\begin{tabular}{@{}lcccc@{}}\hline
 		& P90 & P95 & P98 & Mean\\ \hline\hline
-		Uncorrected & \SI{24.12}{\centi\meter} &  \SI{38.19}{\centi\meter} &  \SI{61.46}{\centi\meter} & \SI{9.97}{\centi\meter}\\
-		Corrected & \SI{12.78}{\centi\meter} &  \SI{16.53}{\centi\meter} &  \SI{21.55}{\centi\meter} & \SI{6.36}{\centi\meter}\\ \hline
+		Uncorrected & \SI{24.2}{\centi\meter} &  \SI{38.2}{\centi\meter} &  \SI{61.5}{\centi\meter} & \SI{9.7}{\centi\meter}\\
+		Corrected & \SI{12.8}{\centi\meter} &  \SI{16.6}{\centi\meter} &  \SI{21.6}{\centi\meter} & \SI{6.3}{\centi\meter}\\ \hline
 	\end{tabular}
 	\caption{Comparison of point-distances in the uncorrected and corrected simulated dataset.}
 	\label{tab:percentiles}
