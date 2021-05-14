@@ -26,7 +26,7 @@ Figure~\ref{fig:simulatedEvaluation} shows the different point-to-point distance
 \end{figure*} 
 
 Before the registration, the corridor is only represented acceptably in the front part. 
-The further into the corridor, i.e., the longer the robot accumulates error, the more imprecise the date becomes. 
+The further into the corridor, i.e., the longer the robot accumulates errors, the more imprecise the data becomes. 
 Finally, we see that a large portion of the data even exceeds either the \SI{1}{\meter} error, contributing to the large spike in the histogram or even the \SI{2}{\meter} error limit; thus, being cut from the representation. 
 After registration, we see that, qualitatively, the ideal corridor was nearly restored from the noisy data. 
 In particular a very large portion (95\%) have less than \SI{16.53}{\centi\meter} distances whereas in the uncorrected dataset the same portion of the points have an error of \SI{38.19}{\centi\meter} or less.
@@ -35,7 +35,7 @@ Any such errors tend to occur at the back and the front of the corridor where th
 
 \subsection{Floating Sphere Results}
 
-Figure~\ref{fig:cylon-corrected} shows the results obtained before and after employing the plane base registration on the dataset acquired by the floating sphere.
+Figure~\ref{fig:cylon-corrected} shows the results obtained before and after employing the plane based registration on the dataset acquired by the floating sphere.
 We combine ten scans into one meta-scan, which is then globally registered.
 This does not only speed up convergence due to the proportional effect on the error function but also decreases the risk of transforming the scan in a senseless way.
 Transformations like these happen when incorrectly labeled points have a huge effect on the error gradient, which is especially the case when considering only a few points.

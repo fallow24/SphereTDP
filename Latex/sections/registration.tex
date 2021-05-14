@@ -143,7 +143,7 @@ It will prevent dividing by zero in the recalculation of $\boldsymbol\alpha$, wh
     \label{eq:adadeltaalphaupdate}
 \end{align} 
 For our particular application, ADADELTA behaves a little too aggressively.
-Despite giving a good measure on how to adapt $\boldsymbol\alpha$, the algorithm sometimes overshoots, and convergence doesn't happen.
+Despite giving a good measure on how to adapt $\boldsymbol\alpha$, the algorithm sometimes overshoots, and does not converge.
 Therefore, we employ another scaling factor, typically not found in ADADELTA, extending eq.~\eqref{eq:adadeltaalphaupdate} to:
 \begin{align}
     \boldsymbol\alpha_{k} = \boldsymbol\alpha_0 \cdot \frac{RMS[X]_{k-1}}{RMS[G]_{k}}
@@ -155,10 +155,10 @@ Finally, the SDG model is improved using eq.~\eqref{eq:adafinalized} and extends
 \begin{align}
     \vec{\Pi}_{k+1} = \vec{\Pi}_{k} - \boldsymbol\alpha_0  \frac{RMS[X]_{k-1}}{RMS[G]_{k}} \cdot \nabla E
 \end{align}
-Using this algorithm once after finding correspondences from points to planes leads to convergence to a local minimum, which often isn't an optimal solution.
-Even if  we increase the number of iterations dramatically, no better solution than the local minimum is found.
+Using this algorithm once after finding correspondences from points to planes leads to convergence to a local minimum, which is often not an optimal solution.
+Even if we increase the number of iterations dramatically, no better solution than the local minimum is found.
 That is unless you consider updating the correspondence model after $i$ iterations of gradient descent.
-Re-assigning point-to-plane correspondences this way $k$ times, and if $k$ is chosen large enough, it leads to an optimal solution after maximum $n = k\cdot i$ iterations of gradient descent.
+Re-assigning point-to-plane correspondences this way $k$ times, with a large enough $k$, leads to an optimal solution after maximum $n = k\cdot i$ iterations of gradient descent.
 
 \subsection{Further Optimizations of the Algorithm}
 
@@ -169,6 +169,6 @@ Although 6D optimization generally works, reducing the optimization space is par
 That way, e.g., a point cloud from a terrestrial laserscanner that experiences irregularities in its spinning mirror is registered by optimizing only over the axis of rotation as no other movement is to be expected.
 
 Secondly, we employ a continuous iteration, where the scans are processed sequentially. 
-This is especially useful for mobile systems, where pose error accumulates due to increasing tracking uncertainties.
+This is especially useful for mobile systems, where pose errors accumulate due to increasing tracking uncertainties.
 The assumption is that the error in one scan is also present in the following scan, plus some unknown new error.
 We eliminate the error from scan $m$ which is also present in scan $m+1$ by applying the pose change from scan $m$, $\vec{\Pi}_{n,m} - \vec{\Pi}_{0,m}$ after $n$ gradient descent iterations, to scan $m+1$, before restarting gradient descent.

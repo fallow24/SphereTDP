@@ -33,7 +33,7 @@ For the pose measurement, one cannot simply add white noise to the current pose 
 Therefore we assume a disturbance torque about the two axes that lie in the ground plane. 
 This is equivalent to a case where a slightly shifted ground plane or an unbalanced locomotion system of the robot is present.  
 
-Accordingly, a spherical robot that is assumed to be translating exactly along one axis by rotation exactly about one other axis at an angular velocity $\omega$  experiences random disturbance torques at each time instant that accelerate the sphere's rotation about the respective axes. 
+Accordingly, a spherical robot that is assumed to be translating exactly along one axis by rotation exactly about one other axis at an angular velocity $\omega$  experiences random disturbance torques at each time instant that accelerate the rotation of the sphere about the respective axes. 
 This additional motion is determined by integrating the disturbance torques, which are sampled from some normal distribution $n_\phi, n_\psi \in \mathcal{N}(\mu,\sigma^2)$ each.  
 The pose update in the discrete simulation is therefore given by: 
 \begin{align}
@@ -43,7 +43,7 @@ The pose update in the discrete simulation is therefore given by:
 \end{align}
 
 Assuming intended locomotion along the $z$-axis and unintended locomotion along the $x$-axis where $R$ is the sphere radius.
-No movement upwards is possible since the robot moves on a flat ground, hence the entry is zero.
+No upwards movement is possible since the robot moves on a flat ground, hence the entry is zero.
 
 \subsection{Simulated Datasets}
 
