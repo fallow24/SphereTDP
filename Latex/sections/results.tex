@@ -49,6 +49,7 @@ Any such errors tend to occur at the back and the front of the corridor where th
 \subsection{Floating Sphere Results}
 
 Figure~\ref{fig:cylon-corrected} shows the results obtained before and after employing the plane based registration on the dataset acquired by the floating sphere.
+The pre-registration is obtained by determining the orientation of the sphere via Madgwick filtered~\cite{madgwick2010efficient} IMU measurements.
 We combine ten scans into one meta-scan, which is then globally registered.
 This does not only speed up convergence due to the proportional effect on the error function but also decreases the risk of transforming the scan in a senseless way.
 Transformations like these happen when incorrectly labeled points have a huge effect on the error gradient, which is especially the case when considering only a few points.
