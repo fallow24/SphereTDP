@@ -12,7 +12,7 @@
 \overrideIEEEmargins                                      % Needed to meet printer requirements.
 \usepackage{graphicx}
 \usepackage{amsmath}
-\usepackage{enumitem}
+%\usepackage{enumitem}
 \newcommand{\M}[1]{\mathbf{#1}} % Bold for matrix
 \newcommand{\V}[1]{\mathbf{#1}} % Bold for vector
 %In case you encounter the following error:
@@ -255,11 +255,11 @@ These factors are heuristically defined as:
 \begin{equation}
 f_k =
 \left\{
-\begin{align}
+\begin{aligned}
 0& & g_k \leq 0.1  \\ 
 0.25\cdot (g_x&-0.1)^2& \quad 0.1< g_k <2.1 \\
  1& & g_k \geq 2.1
-\end{align}
+\end{aligned}
 \label{eq:factors}
 \right\}
 \end{equation}
