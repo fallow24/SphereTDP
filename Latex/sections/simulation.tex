@@ -4,13 +4,13 @@ To quantify the quality of the proposed registration method, it is tested on sim
 \section{Simulation}
 
 For the simulated data, we implemented a noisy world-robot-sensor model.  
-We are simulating a Livox-Mid100~\cite{LivoxMid40-100} laser scanner with customizable noise level on the range measurements inside a robot with different motion capabilities, subject to noise in its pose estimation. 
+The simulated sensor is modeled after a Livox-Mid100~\cite{LivoxMid40-100} laser scanner with customizable noise level on the range measurements inside a robot with different motion capabilities, subject to noise in its pose estimation. 
 This yields scan results similar to the ones obtained in the real world.
 
 \subsection{Simulated Sensor}
 
-The Livox-Mid100 laser scanner consists of three smaller-sized Mid40 scanners arranged to provide an overall field-of-view of \SI{98.4}{\degree} (Horizontal) by \SI{38.4}{\degree} (Vertical).
-It provides a range precision of \SI{2}{\centi\meter} up to \SI{20}{\meter} range and yields \SI[per-mode=symbol]{300,000}{\pts\per\second}.
+The Livox-Mid100 laser scanner consists of three Mid40 scanners arranged to provide an overall field-of-view of \SI{98.4}{\degree} (horizontal) by \SI{38.4}{\degree} (vertical).
+With a range precision of \SI{2}{\centi\meter} up to \SI{20}{\meter} range it provides \SI[per-mode=symbol]{300,000}{\pts\per\second} with a range precision of \SI{2}{\centi\meter} up to \SI{20}{\meter} range.
 A particular advantage of the Livox laser scanners is their unique scanning pattern.
 The scanners use two motorized, so-called Risley prisms to steer the beam deflectance.
 For the specific ratio of rotation speeds used in the Livox scanners, the beam traces out a non-repetitive, flower-shaped scanning pattern~\cite{thorlabs}.
@@ -29,11 +29,11 @@ For each measurement ray the noise percentage is sampled independently.
 
 \subsection{Pose Estimation Noise Model} 
 
-For the pose measurement, one cannot simply add white noise to the current pose estimate as this does not capture the integration error, which is common among inertial measurement units (IMU). 
+Regarding the pose measurement, one cannot simply add white noise to the current pose estimate as this does not capture the integration error, which is common among inertial measurement units (IMU). 
 Therefore we assume a disturbance torque about the two axes that lie in the ground plane. 
 This is equivalent to a case where a slightly shifted ground plane or an unbalanced locomotion system of the robot is present.  
 
-Accordingly, a spherical robot that is assumed to be translating exactly along one axis by rotation exactly about one other axis at an angular velocity $\omega$  experiences random disturbance torques at each time instant that accelerate the rotation of the sphere about the respective axes. 
+Accordingly, a spherical robot that is assumed to be translating exactly along one axis by rotating about one other axis at an angular velocity $\omega$  experiences random disturbance torques at each time instant that accelerate the rotation of the sphere about the respective axes. 
 This additional motion is determined by integrating the disturbance torques, which are sampled from some normal distribution $n_\phi, n_\psi \in \mathcal{N}(\mu,\sigma^2)$ each.  
 The pose update in the discrete simulation is therefore given by: 
 \begin{align}

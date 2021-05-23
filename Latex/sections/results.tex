@@ -29,13 +29,27 @@ Before the registration, the corridor is only represented acceptably in the fron
 The further into the corridor, i.e., the longer the robot accumulates errors, the more imprecise the data becomes. 
 Finally, we see that a large portion of the data even exceeds either the \SI{1}{\meter} error, contributing to the large spike in the histogram or even the \SI{2}{\meter} error limit; thus, being cut from the representation. 
 After registration, we see that, qualitatively, the ideal corridor was nearly restored from the noisy data. 
-In particular a very large portion (95\%) have less than \SI{16.53}{\centi\meter} distances whereas in the uncorrected dataset the same portion of the points have an error of \SI{38.19}{\centi\meter} or less.
+In particular a very large portion of points (95\%) have distances of less than \SI{16.6}{\centi\meter}.
+Table~\ref{tab:percentiles} shows the comparison of further percentiles of both datasets. 
+
+\begin{table}
+	\centering
+	\begin{tabular}{@{}lccc@{}}\hline
+		& P90 & P95 & P98 \\ \hline\hline
+		Uncorrected & \SI{24.2}{\centi\meter} &  \SI{38.2}{\centi\meter} &  \SI{61.5}{\centi\meter} \\%& \SI{9.7}{\centi\meter}\\
+		Corrected & \SI{12.8}{\centi\meter} &  \SI{16.6}{\centi\meter} &  \SI{21.6}{\centi\meter} \\\hline%& \SI{6.3}{\centi\meter}\\ \hline
+	\end{tabular}
+	\caption{Comparison of point-distances in the uncorrected and corrected simulated dataset.}
+	\label{tab:percentiles}
+\end{table}
+
 Further, the square and straight shape of the corridor is restored well, and especially the large spike at errors of greater than \SI{1}{m} is removed. 
 Any such errors tend to occur at the back and the front of the corridor where the measured range is the largest hence has the largest contribution of the range error. 
 
 \subsection{Floating Sphere Results}
 
 Figure~\ref{fig:cylon-corrected} shows the results obtained before and after employing the plane based registration on the dataset acquired by the floating sphere.
+The pre-registration is obtained by determining the orientation of the sphere via Madgwick filtered~\cite{madgwick2010efficient} IMU measurements.
 We combine ten scans into one meta-scan, which is then globally registered.
 This does not only speed up convergence due to the proportional effect on the error function but also decreases the risk of transforming the scan in a senseless way.
 Transformations like these happen when incorrectly labeled points have a huge effect on the error gradient, which is especially the case when considering only a few points.
