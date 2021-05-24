@@ -443,7 +443,7 @@ To evaluate specifically the change between slow motion and standstill, a furthe
 Figure \ref{distance} show the distance to a precise external reference over a short excerpt of the experiment with three phases of slow motion and rotation at second 7, 9 and 11. 
 For external reference, we used a precise optical tracking system. 
 The definition and proposed calculation of the distance of 2 quaternions of \cite{kuffner} was used.
-It describes the direct angle between both quaternions,
+It describes the direct angle between two quaternions.
 The optical system matches the overall orientation of both IMU-based algorithms quite well and lacks the perturbations of the pure Madgwick filter.
 The transformation of the orientation by the optical tracking system and the IMU-based algorithms yield two unknown transformations, the relative orientation of the coordinate system of IMU to optical coordinate system and how the axes are interpreted on the tracked structure itself.
 Therefore, the algorithm proposed in \cite{dornaika} was used to solve these two unknown transformations on basis of the resulting data, to match the orientations of optical and IMU-based data.
