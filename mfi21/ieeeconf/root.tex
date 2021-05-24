@@ -152,7 +152,7 @@ Simple orientation estimations of quadrocopters often just change the $\alpha$ g
 
 
 
-\begin{figure}[thpb]
+\begin{figure}
 \includegraphics[width=\linewidth]{./graphics/MadgwickVsComplementaryNoMovement.eps}
 \caption{Quaternion values of Madgwick filter and complementary filter with default gains when IMU is at a standstill. The Madgwick filter has clearly visible jitter, the complementary filter not}
 \label{madgVsComp1}
@@ -426,26 +426,27 @@ Hence no overwhelming computational load is to be expected.
 
 \section{Evaluation}
 The proposed algorithm is evaluated by two sets of experiments performed with three Phidgets 3/3/3 IMUs mounted on a round acrylic glass plate.
-For position experiments, the plate is put inside an acrylic glass sphere where the plate exactly fits in the middle, as the radii are the same.
+For position experiments, the plate is put inside an acrylic glass sphere with the same radius as the glass plate.
 First, the fusion of Madgwick and complementary filter, here denoted as Autogain, is compared to a Madgwick only estimate. Second, the trajectory computation using both gyroscope and accelerometer is evaluated.
 
 \subsection{Orientation}
 A first experiment is performed to show the overall performance of the Autogain computation for the orientation. The IMU was manually rotated in arbitrary directions, and the orientation plotted using the Madgwick filter and the Autogain filter.
 As expected, the overall behavior of the presented algorithm and the Madgwick filter is very similar in the dynamic case, as shown in Figure \ref{quaternion1}.
-\begin{figure}[thpb]
+\begin{figure}
 \includegraphics[width=\linewidth]{./graphics/AutoVsMad.eps}
 \caption{Quaternion-values of the presented fusion of complementary and Madgwick filter and only the Madgwick filter}
 \label{quaternion1}
 \end{figure}
-Therefore the more exciting part is the change between motion and standstill, as in motion, both filters use the same algorithm but differ during standstill and slow motion.
-As described in Section \ref{sec:SOA}, the Madgwick filter has a rather string jitter during slow movements and standstill. 
-To evaluate specifically the change between slow motion and standstill, a further experiment was performed.
-The results in Figure \ref{distance} show a short excerpt of the experiment with three phases of slow motion and rotation at second 7, 9 and 11. 
+Therefore the more expressive part is the change between motion and standstill, as in motion, both filters use the same algorithm but differ during standstill and slow motion.
+As described in Section \ref{sec:SOA}, the Madgwick filter has a rather strong jitter during slow movements and standstill. 
+To evaluate specifically the change between slow motion and standstill, a further experiment is performed.
+Figure \ref{distance} show the distance to a precise external reference over a short excerpt of the experiment with three phases of slow motion and rotation at second 7, 9 and 11. 
 For external reference, we used a precise optical tracking system. 
 The definition and proposed calculation of the distance of 2 quaternions of \cite{kuffner} was used.
+It describes the direct angle between both quaternions,
 The optical system matches the overall orientation of both IMU-based algorithms quite well and lacks the perturbations of the pure Madgwick filter.
 The transformation of the orientation by the optical tracking system and the IMU-based algorithms yield two unknown transformations, the relative orientation of the coordinate system of IMU to optical coordinate system and how the axes are interpreted on the tracked structure itself.
-Therefore, the algorithm proposed in \cite{dornaika} was used to solve these two unknown transformations on basis of the resulting data, to match the orientations of optical and imu-based data.
+Therefore, the algorithm proposed in \cite{dornaika} was used to solve these two unknown transformations on basis of the resulting data, to match the orientations of optical and IMU-based data.
 As this matching of the optical system happens on basis of one of the two IMU orientation data-sets, the comparison of absolute differences may be misleading, as the transformations were matched on basis of the autogain filter. 
 To stress the jitter behavior of the Madgwick without relying on absolute orientation, which will be part of further research, Figure \ref{diffdistance} shows the derivative of the distance.
 Here the change of direction due to small oscillations and the smoother fusion algorithm in comparison to the tracking is even more apparent.
@@ -471,7 +472,7 @@ Slip behavior was manually provoked.
 Figure \ref{LTest} shows the resulting trajectories.
 Pure rotation integration leads to an enlarged L by about 50 percent, as the manually provoked rotation is just integrated and therefore interpreted as linear motion.
 The fusion between the accelerometer and gyroscope interprets an L with dimensions much closer to the original.
-The estimation leaves room for improvement, as in one direction, it misses the actual length about -10 percent, and in the other direction overestimates it by 10 percent. This should be improvable by parameter tuning.
+The estimation leaves room for improvement, as in one direction, it misses the actual length about -10 percent, and in the other direction overestimates it by 10 percent.
 But it shows the overall capability of the algorithm to compensate for slip. 
 
 \begin{figure}
@@ -482,13 +483,14 @@ But it shows the overall capability of the algorithm to compensate for slip.
 
 The same experiment was performed with added slide, i.e., more translation than just the rotation would produce.
 Here the results shown in Figure \ref{LTestSlide} were not as reliably good as with the slip experiment.
-This is due to the timing of the acceleration. In order to recognize the acceleration as translation, there needs to be a little bit of rotation, as the algorithm does not allow any translation without rotation at all.
-As the translation computed using the accelerometer is by double integration, the acceleration of the slide movement needs to be at the same time as a minimal amount of rotation.
+This is due to the timing of the acceleration. In order to recognize the acceleration as translation, the rotation needs to be above a certain threshold, as the algorithm does not allow any translation without rotation at all.
+The translation is computed using the accelerometer via double integration.
+Therefore the acceleration of the slide movement needs to be at the same time as a minimal amount of rotation. 
 If the rotation starts after the sliding, the double integration of the acceleration is suppressed.
 When the rotation starts and the translation could be double integrated, it is already zero as the velocity is constant.
 This can be seen in Figure \ref{LTestSlide} where the one side of the L was interpreted exactly as long as the pure integration, i.e., approx. 50 cm, and therefore the slide was not recognized, and the other part was correctly interpreted longer than just the integration and with 1.02 m as long as the actual trajectory.
 This is to be blamed on the execution of the experiment, as it was not perfectly ensured only to start sliding with ongoing rotation, which is hard to achieve when manually guiding a sphere.
-But the sliding behavior in a real environment could be in both ways, too, so sliding while rolling and starting sliding before rolling.
+However, the sliding behavior in a real environment could be in both ways, too, so sliding while rolling and starting sliding before rolling.
 With slip, this is not a problem, as, by definition, the translation cannot begin before the rotation when slipping.
 If so, it would be sliding.
 \begin{figure}
