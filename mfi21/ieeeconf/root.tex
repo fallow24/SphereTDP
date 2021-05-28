@@ -382,7 +382,7 @@ Note that the two-dimensional velocities $v_{xz\text{GyroWorld}}$ and $v_{zz\tex
  The last step for calculating the velocity is taking the velocity in $z$-direction into account for the velocity by rotation.
  This velocity in $z$ is from the noisy double integration, as this is the only indication for change of the $z$-axis.
  To avoid large errors and unlimited double error integration, $v_{z\text{AccWorld}} $ is limited to the mean of $v_{xz\text{GyroWorld}} $ and $ v_{yz\text{GyroWorld}}$.
-With the Pythagorean theorem the velocity in x and y is calculated accepting the velocity in z-direction, which can not be derived by the velocity from gyro:
+With the Pythagorean theorem the velocity in $x$ and $y$ is calculated accepting the velocity in $z$-direction, which can not be derived by the velocity from gyro:
  \begin{equation}
 \begin{bmatrix}
 v_{x\text{GyroWorld}} \\ v_{y\text{GyroWorld}}
@@ -404,7 +404,7 @@ p_x \\ p_y \\p_z
  v_{z\text{AccWorld}} 
  \end{bmatrix} dt
 \end{equation}.
-Depending on the practical circumstances and quality of measurement, the factor $\beta$ can be chosen, that the position relies more on the accelerometer calculated velocity or the gyro.
+Depending on the practical circumstances and quality of measurement, the factor $\beta$ is chosen, that the position relies more on the accelerometer calculated velocity or the gyro.
 There should always be a mixture of both if there is slipping and sliding.
 $\beta =0.5$ would result in just the mean of both approaches.
 
@@ -426,7 +426,7 @@ First, the fusion of Madgwick and complementary filter, here denoted as Autogain
 
 \subsection{Orientation}
 A first experiment is performed to show the overall performance of the Autogain computation for the orientation. The IMU was manually rotated in arbitrary directions, and the orientation plotted using the Madgwick filter and the Autogain filter.
-As expected, the overall behavior of the presented algorithm and the Madgwick filter is very similar in the dynamic case, as shown in Figure \ref{quaternion1}.
+As expected, the overall behavior of the presented algorithm and the Madgwick filter is very similar in the dynamic case, as shown in Figure~\ref{quaternion1}.
 \begin{figure}
 \includegraphics[width=\linewidth]{./graphics/AutoVsMad.eps}
 \caption{Quaternion-values of the presented fusion of complementary and Madgwick filter and only the Madgwick filter}
@@ -462,11 +462,11 @@ Here the change of direction due to small oscillations and the smoother fusion a
 
 \subsection{Position}
 The primary evaluation for the position focuses on slip- and slide-behavior.
-Here the plate with the IMU(s) is fixed inside a sphere with a diameter of 29 cm and rolled along an L-shaped track of one meter by one meter.
+Here the plate with the IMU(s) is fixed inside a sphere with a diameter of 29 cm and rolled along an ``L''-shaped track of one meter by one meter.
 Slip behavior was manually provoked.
 Figure \ref{LTest} shows the resulting trajectories.
-Pure rotation integration leads to an enlarged L by about 50 percent, as the manually provoked rotation is just integrated and therefore interpreted as linear motion.
-The fusion between the accelerometer and gyroscope interprets an L with dimensions much closer to the original.
+Pure rotation integration leads to an enlarged ``L'' by about 50 percent, as the manually provoked rotation is just integrated and therefore interpreted as linear motion.
+The fusion between the accelerometer and gyroscope interprets an ``L'' with dimensions much closer to the original.
 The estimation leaves room for improvement, as in one direction, it misses the actual length about -10 percent, and in the other direction overestimates it by 10 percent.
 But it shows the overall capability of the algorithm to compensate for slip. 
 
