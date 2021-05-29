@@ -12,6 +12,7 @@
 \overrideIEEEmargins                                      % Needed to meet printer requirements.
 \usepackage{graphicx}
 \usepackage{amsmath}
+\usepackage{hyperref}
 %\usepackage{enumitem}
 \newcommand{\M}[1]{\mathbf{#1}} % Bold for matrix
 \newcommand{\V}[1]{\mathbf{#1}} % Bold for vector
@@ -76,7 +77,7 @@ Evaluating the position and orientation estimates with given ground truth frames
 \section{INTRODUCTION}
 
 Spherical robots are a relatively narrow field of robotics. Still, they could be useful in situations where the measurement equipment needs to be protected against harsh environments.
-As an example, the 2021 CDF study LunarCaves by ESA about the feasibility of a spherical robot, called DAEDALUS, for exploration of lunar-lava tubes \cite{c2} shows the need for orientation and position estimation of spherical robots with the limitations on resources common for space-applications.
+As an example, the 2021 CDF study LunarCaves by ESA about the feasibility of a spherical robot, called DAEDALUS, for exploration of lunar-lava tubes \cite{rossi2021daedalus} shows the need for orientation and position estimation of spherical robots with the limitations on resources common for space-applications.
 Although a purely Inertial Measurement Unit (IMU)-based estimation is not recommended for various reasons, the lack of an absolute reference among others, IMU-based pose estimation are used as part of an overall multi-sensor-fusion-based estimation.
 IMUs are sensors with higher refresh rates than Simultaneous Localization and Mapping (SLAM) based algorithms, such as optical or Light Detection and Ranging (LIDAR) SLAM. This makes them suitable for interpolating the more precise and absolute position reference points of these slower algorithms.
 The limited computational power of space-qualified CPUs further imposes the need for good orientation estimation without complex algorithms like Kalman filters.
@@ -110,7 +111,7 @@ As the code is considered to be applied to space missions, the magnetometer data
 \paragraph*{Short Term Mobility}
 As the code still relies on integration parts, the sphere is not considered to have a straight motion for a long period but rather makes multiple short paths. This will also be necessary, as in further extension, the fusion of a pose estimation by the laser scanner will be merged. 
 \paragraph*{Non-reliablity of locomotion}
-The sphere from the DAEDALUS example has two completely different locomotion methods; therefore, we will not take locomotion itself into account of pose estimation. Also, the same locomotion approach leads to heavily different behavior with the same input to the controller~\cite{c2}.
+The sphere from the DAEDALUS example has two completely different locomotion methods; therefore, we will not take locomotion itself into account of pose estimation. Also, the same locomotion approach leads to heavily different behavior with the same input to the controller \cite{rossi2021daedalus}.
 \paragraph*{Classification of Data}
 The generated data is a compromise between simple filtration of data and heavy calculation post-record. It is easy to calculate and adapt, but due to the number of pre-assumptions, as it makes assumptions about the dynamics of the system, it still delivers reliable data which takes physical behavior into account. It is real-time capable and does not rely on delay steps.
 \paragraph*{Field of Use}
@@ -121,14 +122,14 @@ The use is restricted to spherical or cylindrical robots. It is optimized for ga
 \label{sec:SOA}
 For pose estimation on embedded hardware, there are three main algorithms.
 \subsection{Kalman Filter}
-The Kalman Filter or the more suitable Extended Kalman Filter (EKF) uses state prediction and merges with sensor data for orientation estimation.
+The Kalman Filter or the more suitable Extended Kalman Filter (EKF) uses state prediction and merges with sensor data for orientation estimation \cite{Kalman1960}.
 For the defined limitations, the Kalman Filter is not suitable.
 First, the EKF requires a considerable amount of computational power, mainly because of its matrix inversion. For this, the needed calculations grow exponentially for input data.
 Further, the Kalman Filter relies on input to a system to calculate an estimation of the pose for the next iterative step.
 But, as we described in the preliminary section, we can not take the input to locomotion control as a reference to pose estimation as the behavior is not linear or even predictable without exact knowledge of the surface.
 Therefore it is not possible to implement a physical behavior of the system to the filter, as easily as it is for other robotic applications.
 \subsection{Madgwick Filter}
-The Madgwick filter is a widely used filter for orientation estimation with IMUs~\cite{c1}.
+The Madgwick filter is a widely used filter for orientation estimation with IMUs \cite{madgwick2010}.
 It is efficient and easy to calculate but does not consider the physics of the motion.
 It does nearly provide the sought-after classification for the orientation.
 The problem is the optimization for movement. The Madgwick filter has a jittering behavior at the standstill of the IMU.
@@ -148,7 +149,7 @@ A commonly used value for $\alpha$ is 0.02, meaning every iteration, 2 percent o
 An $\alpha$ of 1 means the resulting data is completely the one of the accelerometers, and the gyroscope has no influence. \\
 The complementary filter is best for orientation calculation without position change as the accelerometer value relies on calculating the gravity value.
 With an acceleration in one direction, this leads to a miscalculation of the gravitational vector and, therefore, a false orientation estimation.
-Simple orientation estimations of quadrocopters often just change the $\alpha$ gain to 0 while moving to avoid the miscalculation of the gravity vector \cite{complementary}.
+Simple orientation estimations of quadrocopters often just change the $\alpha$ gain to 0 while moving to avoid the miscalculation of the gravity vector \cite{mahony2005complementary}.
 
 
 
@@ -162,8 +163,8 @@ Simple orientation estimations of quadrocopters often just change the $\alpha$ g
 
 \subsection{Position Estimation}
 Position estimation purely by IMU is not recommended as the double integration of the accelerometer measurements leads to exponential error summation.
-Therefore there are very few approaches targeting this way of position calculating \cite{c3}.
-The very impressive work in \cite{Valencia2017ASM} also uses IMUs for 6D pose estimation.
+Therefore there are very few approaches targeting this way of position calculating \cite{kok2017IMU}.
+The very impressive work in \cite{valencia2017simpleIMU} also uses IMUs for 6D pose estimation.
 They follow a pre-specified trajectory with a manipulator and manage to estimate its pose within 10\% of the ground truth.
 Given their application is rather broad, they do not exploit known dynamics of the system, which could be helpful for spherical robots.
 
@@ -235,7 +236,7 @@ As the representation is still valid (0 degree and 360-degree roll being the sam
 %\end{bmatrix}
 %\end{equation}
 not used, as it implies a transition of each value independently.
-Hence, the RPY-orientation is transformed to a quaternion, and then a quaternion slerp is performed \cite{c4}.
+Hence, the RPY-orientation is transformed to a quaternion, and then a quaternion slerp is performed \cite{dam1998quaternions}.
  The quaternion slerp works over the representation of two quaternions on a sphere. The transition from one quaternion to the other is now not done directly but always over the surface of the sphere.
  This leads to the same handling of quaternions as the Madgwick-filter without endangering robustness due to using two different quaternions with very different values representing nearly the same position.
  
@@ -426,7 +427,7 @@ First, the fusion of Madgwick and complementary filter, here denoted as Autogain
 
 \subsection{Orientation}
 A first experiment is performed to show the overall performance of the Autogain computation for the orientation. The IMU was manually rotated in arbitrary directions, and the orientation plotted using the Madgwick filter and the Autogain filter.
-As expected, the overall behavior of the presented algorithm and the Madgwick filter is very similar in the dynamic case, as shown in Figure~\ref{quaternion1}.
+As expected, the overall behavior of the presented algorithm and the Madgwick filter is very similar in the dynamic case, as shown in Figure \ref{quaternion1}.
 \begin{figure}
 \includegraphics[width=\linewidth]{./graphics/AutoVsMad.eps}
 \caption{Quaternion-values of the presented fusion of complementary and Madgwick filter and only the Madgwick filter}
@@ -437,11 +438,11 @@ As described in Section \ref{sec:SOA}, the Madgwick filter has a rather strong j
 To evaluate specifically the change between slow motion and standstill, a further experiment is performed.
 Figure \ref{distance} show the distance to a precise external reference over a short excerpt of the experiment with three phases of slow motion and rotation at second 7, 9 and 11. 
 For external reference, we used a precise optical tracking system. 
-The definition and proposed calculation of the distance of 2 quaternions of \cite{kuffner} was used.
+The definition and proposed calculation of the distance of 2 quaternions of \cite{kuffner2004effectiveDistance} was used.
 It describes the direct angle between two quaternions.
 The optical system matches the overall orientation of both IMU-based algorithms quite well and lacks the perturbations of the pure Madgwick filter.
 The transformation of the orientation by the optical tracking system and the IMU-based algorithms yield two unknown transformations, the relative orientation of the coordinate system of IMU to optical coordinate system and how the axes are interpreted on the tracked structure itself.
-Therefore, the algorithm proposed in \cite{dornaika} was used to solve these two unknown transformations on basis of the resulting data, to match the orientations of optical and IMU-based data.
+Therefore, the algorithm proposed in \cite{dornaika1998calibration} was used to solve these two unknown transformations on basis of the resulting data, to match the orientations of optical and IMU-based data.
 As this matching of the optical system happens on basis of one of the two IMU orientation data-sets, the comparison of absolute differences may be misleading, as the transformations were matched on basis of the autogain filter. 
 To stress the jitter behavior of the Madgwick without relying on absolute orientation, which will be part of further research, Figure \ref{diffdistance} shows the derivative of the distance.
 Here the change of direction due to small oscillations and the smoother fusion algorithm in comparison to the tracking is even more apparent.
@@ -449,13 +450,13 @@ Here the change of direction due to small oscillations and the smoother fusion a
 
 \begin{figure}
 \includegraphics[width=\linewidth]{./graphics/distance.eps}
-\caption{Distance of the proposed and the Madgwick algorithm to the optical tracking system, using the distance definiton of \cite{kuffner}}
+\caption{Distance of the proposed and the Madgwick algorithm to the optical tracking system, using the distance definiton of \cite{kuffner2004effectiveDistance}}
 \label{distance}
 \end{figure}
 
 \begin{figure}
 \includegraphics[width=\linewidth]{./graphics/diffdistance.eps}
-\caption{Derivative of the distance of the proposed and the Madgwick algorithm to the optical tracking system, using the distance definiton of \cite{kuffner}}
+\caption{Derivative of the distance of the proposed and the Madgwick algorithm to the optical tracking system, using the distance definiton of \cite{kuffner2004effectiveDistance}}
 \label{diffdistance}
 \end{figure}
 
@@ -504,6 +505,7 @@ Needless to say, a lot of work remains to be done.
 The fusion of complementary and Madgwick orientation filter solves the shortcomings of the Madgwick when at a standstill, particularly the jitter.
 A first qualitative evaluation shows the functionality of the filter.
 In further experiments, a quantitative Orientation comparison with a synchronized optical system needs to be performed.
+Also as further work, all puzzle pieces, this filter, a locomotion system, a scanning system,  need to be combined to an overall working prototypes.
 The position estimation, as well as the combination of the integration by rotation of the gyroscope and the linear acceleration of the accelerometer, shows the capability to overcome the problem of the missing absolute reference of IMUs partly, which mainly improves the measurements in the ground plane with slip behavior present.
 Still, there is a need for parameter tuning. 
 Sliding was not detected all the time reliably.
@@ -540,24 +542,8 @@ The approach for, at least roughly, indicating the change in the $z$-direction, 
 
 
 
-\begin{thebibliography}{99}
-\bibitem{c2} Rossi, A.P. et al., "DAEDALUS - Descent And Exploration in Deep Autonomy of Lava Underground Structures", Wuerzburger Forschungsberichte in Robotik und Telematik (21), 978-3-945459-33-1, (2021).
-\bibitem{c1} Madgwick, Sebastian O. H., "An efficient orientation filter for inertial and inertial / magnetic sensor arrays", (2010).
-\bibitem{complementary}Mahony, R. ; Hamel, T.; Pflimlin, J.-M.,"Complementary filter design on the special orthogonal group SO(3)", Proceedings of the 44th IEEE Conference on Decision and Control, (2005).
-\bibitem{c3} Kok, Manon; Hol, Jeroen D.;  Schoen,Thomas B.,  "Using Inertial Sensors for Position and Orientation Estimation", Foundations and Trends in Signal Processing: Vol. 11.(2017).
-\bibitem{Valencia2017ASM} Botero Valencia, J.-S. ; Garc{\'i}a, M. R. ; Ceballos, J. V., "A simple method to estimate the trajectory of a low cost mobile robotic platform using an IMU", International Journal on Interactive Design and Manufacturing (ijidem), (2017).
-\bibitem{c4}Dam, Erik B.; Koch, Martin;  Lillholm, Martin, "Quaternions, Interpolation and Animation", (1998).
-\bibitem{FastInvSqrt}"Origin of Quake3's Fast InvSqrt()", beyond3d.com/content/articles/8/, Accessed: 2021-05-01.
-\bibitem {kuffner}Kuffner, James, "Effective sampling and distance metrics for 3D rigid body path planning", Proceedings - IEEE International Conference on Robotics and Automation, pp. 3993 - 3998 Vol.4, (2004).
-\bibitem{dornaika}Dornaika, F.; Horaud, R., Simultaneous robot-world and hand-eye calibration, IEEE Transactions on Robotics and Automation 14(4), pp. 617-622, (1998).
-
-
-
-
-
-
-\end{thebibliography}
-
+\bibliographystyle{unsrt}
+\bibliography{bibliographyJasper}
 
 
 \end{document}
