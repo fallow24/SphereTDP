@@ -179,6 +179,7 @@ The orientation estimation is the combination of the Madgwick and a complementar
 The weaknesses and strengths of both described in Section \ref{sec:SOA} are combined. 
 The general idea is to distinguish between motion and standstill.
 In motion, the Madgwick filter is used, and without motion, the complementary filter.
+This approach of distinguising the evalutation alogorithm depending on the state of motion of a robot has been done before like in \cite{Hertzberg2012}.
 The transition needs to be in a differentiable way, as this is one of our limitations.  
 As both filters are applied with weights, this is done by an allocation of a given gain towards one or the other filter depending on the likelihood the sphere is moving or standing still. 
 Therefore, this requires some adapting mechanism and an estimation of how likely the sphere is to rotate and hence translate.
