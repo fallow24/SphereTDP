@@ -179,7 +179,7 @@ The orientation estimation is the combination of the Madgwick and a complementar
 The weaknesses and strengths of both described in Section \ref{sec:SOA} are combined. 
 The general idea is to distinguish between motion and standstill.
 In motion, the Madgwick filter is used, and without motion, the complementary filter.
-This approach of distinguising the evalutation alogorithm depending on the state of motion of a robot has been done before like in \cite{Hertzberg2012}.
+This approach of distinguishing the evaluation algorithm depending on the state of motion of a robot has been done before, like in \cite{Hertzberg2012}.
 The transition needs to be in a differentiable way, as this is one of our limitations.  
 As both filters are applied with weights, this is done by an allocation of a given gain towards one or the other filter depending on the likelihood the sphere is moving or standing still. 
 Therefore, this requires some adapting mechanism and an estimation of how likely the sphere is to rotate and hence translate.
@@ -506,7 +506,8 @@ Needless to say, a lot of work remains to be done.
 The fusion of complementary and Madgwick orientation filter solves the shortcomings of the Madgwick when at a standstill, particularly the jitter.
 A first qualitative evaluation shows the functionality of the filter.
 In further experiments, a quantitative Orientation comparison with a synchronized optical system needs to be performed.
-Also as further work, all puzzle pieces, this filter, a locomotion system, a scanning system,  need to be combined to an overall working prototypes.
+Also, as further work, all puzzle pieces, this filter, a locomotion system, a scanning system need to be combined to an overall working prototype.
+
 The position estimation, as well as the combination of the integration by rotation of the gyroscope and the linear acceleration of the accelerometer, shows the capability to overcome the problem of the missing absolute reference of IMUs partly, which mainly improves the measurements in the ground plane with slip behavior present.
 Still, there is a need for parameter tuning. 
 Sliding was not detected all the time reliably.
