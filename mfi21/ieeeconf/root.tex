@@ -497,6 +497,21 @@ If so, it would be sliding.
 \end{figure}
 The experiments for sliding did not reliably detect the slide event and, on some occasions, interpreted the distance as shorter than just the integration, as the acceleration of the linear motion was missed.
 However, the deceleration of the sphere was still recognized while rotation existed, and therefore, the sphere miscalculated a couple of centimeters.
+To test the algorithm in a real spherical robot with working laserscanners, the prototype shown in Figure \ref{fig:prototype}
+was build.
+The Plate in the middle is equal to the one used to perform the position evaluation.
+The IMUs and the micrococontroller are at the exact same position inside the sphere.
+The Livox Lidar-Mid-100 laser-scanner was mounted under the plate and the battery above it.
+Due to the lack of a locomotion-system, the sphere needs to be rolled externally.
+
+\begin{figure}
+\includegraphics[width=\linewidth]{./graphics/photoReal1.jpeg}
+\includegraphics[width=\linewidth]{./graphics/photoReal2.jpeg}
+\caption{Prototype to test algorithm in envisaged technical environment.}
+\label{fig:prototype}
+\end{figure}
+
+%TODO Fabian, put input of laserscanns here
 
 
 \subsection{Conclusion}
