@@ -76,6 +76,7 @@ Evaluating the position and orientation estimates with given ground truth frames
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{INTRODUCTION}
 
+
 Spherical robots are a relatively narrow field of robotics. Still, they could be useful in situations where the measurement equipment needs to be protected against harsh environments.
 As an example, the 2021 CDF study LunarCaves by ESA about the feasibility of a spherical robot, called DAEDALUS, for exploration of lunar-lava tubes \cite{rossi2021daedalus} shows the need for orientation and position estimation of spherical robots with the limitations on resources common for space-applications.
 Although a purely Inertial Measurement Unit (IMU)-based estimation is not recommended for various reasons, the lack of an absolute reference among others, IMU-based pose estimation are used as part of an overall multi-sensor-fusion-based estimation.
@@ -85,6 +86,17 @@ Lastly, the geometry of a spherical robot opens the possibility for the not ofte
 
 This paper introduces an IMU-based orientation and position algorithm for spherical robots with limited computational power and the need for real-time estimations.
 Also, the algorithm does not rely on one specific locomotion approach, but it assumes a rotation of the IMU together with at least the shell of the robot, if not the whole robot. 
+Such as the prototype developed at the computer science chair VII of the University of Wuerzburg,  depicted in Figure \ref{fig:prototype}, which is inspired by previous work such as Daedalus \cite{rossi2021daedalus}.
+The evaluations made in this paper were done with the setup of the IMUs of this prototype.
+The Livox Mid-100 was used as laser scanner.
+Due to the lack of a locomotion system, the sphere needs to be rolled externally. 
+The evaluation will also show and discuss the resulting point clouds of this prototype with the presented pose estimation.
+\begin{figure}[b]
+\includegraphics[width=0.49\linewidth]{./graphics/photoReal1.jpeg}
+\includegraphics[width=0.50\linewidth]{./graphics/photoReal3.jpeg}
+\caption{Prototype to test the algorithm in an envisaged technical environment. The main payload is the Livox Mid-100 laser-scanner. For pose-estimation, three IMUs of the manufacturer Phidget are placed on the middle plate and a Raspberry Pi 4 for the calculations. On the top are two batteries, and on the bottom one voltage stabilizer and breakout box of the laser-scanner. }
+\label{fig:prototype}
+\end{figure}
 
 
 \section{Assumptions and Prelimitations}
@@ -497,19 +509,8 @@ If so, it would be sliding.
 \end{figure}
 The experiments for sliding did not reliably detect the slide event and, on some occasions, interpreted the distance as shorter than just the integration, as the acceleration of the linear motion was missed.
 However, the deceleration of the sphere was still recognized while rotation existed, and therefore, the sphere miscalculated a couple of centimeters.
-To test the algorithm in a real spherical robot with working laserscanners, the prototype shown in Figure \ref{fig:prototype}
-was build.
-The Plate in the middle is equal to the one used to perform the position evaluation.
-The IMUs and the micrococontroller are at the exact same position inside the sphere.
-The Livox Lidar-Mid-100 laser-scanner was mounted under the plate and the battery above it.
-Due to the lack of a locomotion-system, the sphere needs to be rolled externally.
 
-\begin{figure}
-\includegraphics[width=\linewidth]{./graphics/photoReal1.jpeg}
-\includegraphics[width=\linewidth]{./graphics/photoReal2.jpeg}
-\caption{Prototype to test algorithm in envisaged technical environment.}
-\label{fig:prototype}
-\end{figure}
+
 
 %TODO Fabian, put input of laserscanns here
 
