@@ -511,8 +511,33 @@ The experiments for sliding did not reliably detect the slide event and, on some
 However, the deceleration of the sphere was still recognized while rotation existed, and therefore, the sphere miscalculated a couple of centimeters.
 
 
+\subsection{Impact on 3D mapping}
 
-%TODO Fabian, put input of laserscanns here
+\begin{figure}
+\begin{center}
+\includegraphics[width=\linewidth]{./graphics/jasperhome1.png} \\
+\vspace{0.2cm}
+\includegraphics[width=\linewidth]{./graphics/jasperhome1madw.png}
+\caption{(Top) Resulting 3D map using the presented algorithm for pose filtering. (Bottom) Resulting 3D map using Madgwick + double integrator for pose filtering. Both images were shot from the exact same point of view. }
+\label{fig:mapping}
+\end{center}
+\end{figure}
+
+One major design driver for the presented algorithm is the suitability for spherical SLAM purposes.
+Therefore, a pose estimate is prefered to be slightly wrong, if it is more continuous, i.e. less noisy and with less jumping values, than the exact pose would be.
+
+To test the impact of the filter on 3D mapping, we used the prototype in Figure \ref{fig:prototype}.
+After 2 s of initial standstill, the sphere rolled aprox. 4 m within 5 s in an indoor environment from one corner of the room to the opposing one.
+We extracted the laserscan data, as well as the filtered pose using the presented algorithm.
+Without further pre- or post-processing, the pose data is combined with the laserscan data to create a 3D map.
+Figure \ref{fig:mapping} compares the result with another 3D map, which is generated the exact same way, but using a different pose filter.
+Namely a combination of the Madgwick filter for orientation and a double integration of the accelerometer mean for position.
+The result of this filter clearly got improved by the presented algorithm as it provides a better pose estimation.
+The more detailed part of the map, as seen in the bottom left corner of the top image of Figure \ref{fig:mapping}, corresponds to the initial standstill.
+It is more detailed than the rest of the map because of the non-repeating flower-shaped scanning pattern, where point density increases with time.
+Note that the same detailed part is also present in the bottom image.
+However, it is out of view (at the bottom right corner) as the Madgwick filter misses the initial pose estimation by a lot. 
+The presented algorithm also performs better when the sphere is moving, as the walls and the ceiling are more recognizable, which is favourable for many SLAM algorithms.
 
 
 \subsection{Conclusion}
