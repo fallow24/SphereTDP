@@ -518,7 +518,7 @@ However, the deceleration of the sphere was still recognized while rotation exis
 \includegraphics[width=\linewidth]{./graphics/jasperhome1.png} \\
 \vspace{0.2cm}
 \includegraphics[width=\linewidth]{./graphics/jasperhome1madw.png}
-\caption{(Top) Resulting 3D map using the presented algorithm for pose filtering. (Bottom) Resulting 3D map using Madgwick + double integrator for pose filtering. Both images were shot from the exact same point of view. }
+\caption{Above: resulting 3D map using the presented algorithm for pose filtering. Below: resulting 3D map using Madgwick + double integrator for pose filtering. Both images were shot from the exact same point of view. }
 \label{fig:mapping}
 \end{center}
 \end{figure}
@@ -533,9 +533,9 @@ Without further pre- or post-processing, the pose data is combined with the lase
 Figure \ref{fig:mapping} compares the result with another 3D map, which is generated the exact same way, but using a different pose filter.
 Namely a combination of the Madgwick filter for orientation and a double integration of the accelerometer mean for position.
 The result of this filter clearly got improved by the presented algorithm as it provides a better pose estimation.
-The more detailed part of the map, as seen in the bottom left corner of the top image of Figure \ref{fig:mapping}, corresponds to the initial standstill.
+The more detailed part of the map, as seen in the bottom left corner of the above image of Figure \ref{fig:mapping}, corresponds to the initial standstill.
 It is more detailed than the rest of the map because of the non-repeating flower-shaped scanning pattern, where point density increases with time.
-Note that the same detailed part is also present in the bottom image.
+Note that the same detailed part is also present in the below image.
 However, it is out of view (at the bottom right corner) as the Madgwick filter misses the initial pose estimation by a lot. 
 The presented algorithm also performs better when the sphere is moving, as the walls and the ceiling are more recognizable, which is favourable for many SLAM algorithms.
 
