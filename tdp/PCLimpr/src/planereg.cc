@@ -100,7 +100,8 @@ int parse_options(  int argc,
                     double& d_growth,
                     int& n_min_clusterpoints, 
                     double& eps_norm_similarity,
-                    string& clusters_outputpath)
+                    string& clusters_outputpath,
+                    bool& use_normal_cor)
 {
     // Add program option descriptions and reference variables accordingly
     po::options_description generic("Generic options");
@@ -112,7 +113,7 @@ int parse_options(  int argc,
         ("help,h", "Display a very helpful message");
     input.add_options()
         ("format,f", po::value<IOType>(&type)->default_value(UOS, "uos"),
-            "chose input format from {uos, uosr, uos_rgb, old, xyz}")
+            "chose input format from {uos, uosr, uos_rgb, ous_normal, old, xyz}")
         ("start,s", po::value<int>(&start)->default_value(0),
             "Skip the first <arg> scans.")
         ("end,e", po::value<int>(&end)->default_value(-1),
@@ -157,6 +158,8 @@ int parse_options(  int argc,
             "Use minimum distance to plane for correspondence in case of ambiguity.")
         ("use_frames", po::bool_switch(&use_frames)->default_value(false),
             "Use pose specified in .frames file instead of .pose file.")
+        ("use_normal_cor", po::bool_switch(&use_normal_cor)->default_value(false),
+            "Use direct normals for better point-2-plane correspondences. Uses k nearest neighbours for normal calculation. Or you can read normals using -f uos_normal")
         ("use_clustering", po::bool_switch(&use_clustering)->default_value(false),
             "Use clustering for better point-2-plane correspondences. Utilizes local normal calculation using k-nearest neighbours.")
         ("k_nearest,K", po::value(&k_nearest)->default_value(20),
@@ -250,13 +253,15 @@ int main(int argc, char **argv)
     int n_min_clusterpoints = 100;
     double eps_norm_similarity = 5;
     string cluster_output_path = "";
+    bool use_normal_cor = false;
 
     parse_options(argc, argv, scandir, planedir, type, 
         quiet, maxDist, minDist, octree, red, scanserver,
         eps_dist, startScan, endScan, n_iter, eps_crit, alpha,
         rPos_alpha_scale, anim, nthreads, dims, autoAlpha, updateCor,
         continuous, use_min_cor, use_frames, k_nearest, use_clustering,
-        d_growth, n_min_clusterpoints, eps_norm_similarity, cluster_output_path);
+        d_growth, n_min_clusterpoints, eps_norm_similarity, cluster_output_path,
+        use_normal_cor);
     
     omp_set_num_threads(nthreads);
 
@@ -295,6 +300,7 @@ int main(int argc, char **argv)
     }
     std::cout << "Scaling alpha applied to position about " << rPos_alpha_scale << std::endl;  
     Optimizer::setRPosAlphaScale( rPos_alpha_scale );
+    Optimizer::setUpdateCor( updateCor ); // k iteration value 
     if (quiet) {
         std::cout << "Quiet mode." << std::endl;
         Optimizer::setQuiet(true);
@@ -304,16 +310,37 @@ int main(int argc, char **argv)
         Optimizer::setAnim(true);
     }
     std::cout << "Updating correspondences " << updateCor << " times." << std::endl;
-    Optimizer::setUpdateCor( updateCor );
-    std::cout << "Using " << k_nearest << " nearest neighbours for normal calculation." << endl;
-    PlaneScan::setKNearest( k_nearest );
+    if (use_normal_cor && use_clustering) 
+    {
+        cout << "Both normals and clustering correspondences are activated.";
+        cout << " Please deactivate one of them. You cannot use both of them at the same time.";
+        cout << endl;
+        return 1;
+    }
+    PlaneScan::setUseNormalCor( use_normal_cor );
     PlaneScan::setUseClustering( use_clustering );
+    PlaneScan::setKNearest( k_nearest );
     PlaneScan::setGrowthThresh( d_growth );
     PlaneScan::setEpsSimilarity( eps_norm_similarity );
     PlaneScan::setMinClusterPoints( n_min_clusterpoints );
+    
+    // You can read normals to save time during clustering.
+    if (type == IOType::UOS_NORMAL) {
+        PlaneScan::setReadNormals(true);
+        cout << "Using normals." << endl;
+    } 
+    // You can read entire clusters 
+    else if (type == IOType::UOS_RGB) {
+        PlaneScan::setReadClusters(true);
+        cout << "Reading clusters." << endl;
+    }
+    else if (use_clustering) {
+        std::cout << "Using " << k_nearest << " nearest neighbours for normal calculation." << endl;
+    }
 
     // Open and pre-process all scans
     Scan::openDirectory(scanserver, scandir, type, startScan, endScan);
+    // Very very important 2 lines below!!
     bool use_pose = !use_frames;
     readFramesAndTransform( scandir, startScan, endScan, -1, use_pose, red > -1);
     // Converting the Scan objects into PlaneScan objects

@@ -15,10 +15,11 @@
 #include "ioplanes.h"
 #include "ANN/ANN.h"
 
-#define EPS_POINT_2_PLANE_DIST 100 // distance in cm (?)
+#define EPS_POINT_2_PLANE_DIST 100 // distance in cm
 
 typedef std::pair<double*, NormalPlane*> Correspondence;
 typedef std::vector< std::vector<int> > Clusters;
+typedef std::vector<int> Cluster;
 
 class PlaneScan 
 {
@@ -57,6 +58,7 @@ public:
     bool isEmpty();
     unsigned int index();
 
+    // Static functions    
     static void setUseCorrespondenceMin(bool);
     static void setPlanes(Planes&);
     static void setEpsDist(double);
@@ -74,12 +76,14 @@ public:
     static void setEpsSimilarity(double);
     static void setMinClusterPoints(int);
     static void setClusterVisualizationPath(string);
+    static void setReadNormals(bool);
+    static void setReadClusters(bool);
+    static void setUseNormalCor(bool);
 
     double calcErr();
     void addFrame(Scan::AlgoType); // adds the current transMat to the .frames file 
     string getFrameData();
 
-    void calcNormals(DataXYZ&);
     /*
      * Label points to planes. 
      * This is initially done by the constructor, so you dont have to explicitly call the function
@@ -88,6 +92,7 @@ public:
     void labelPoints(bool);
     void labelDistEuklid();
     void labelUseClusters();
+    void labelUseNormals();
 
 private:
     /*
@@ -99,11 +104,26 @@ private:
     unsigned int idx;
 
     Clusters clusters;
+    vector<double*> ncm_cache;
+    // ann trees used for point-2-cluster distance calculation
+    vector<ANNpointArray> ann_cache;
+    // ann tree used for region growing, i.e. iteration order 
+    ANNpointArray ann_pts;
+    ANNkd_tree* tree;
 
+    void calcNormals(DataXYZ&);
+    double* calcNormalOnDemand(vector<int>&); // only used when there is a cluster without normal information
+    
     // Instance helper functions for local clustering
+    int readClusters(DataRGB&);
+    double clusterDist(Cluster&, Cluster&);
+    void mergeClusters(int, int);
+    void update_ncm_cache(int, int);
+    double * normalClusterMeanCached(int);
     double * normalClusterMean(vector<int>&);
-    double * normalVariance(ANNidxArray, int);
+    double * normalVariance(Cluster&);
     double clusterPointDist(vector<int>&, double*);
+    // This recursive thing was a nice idea.. however its no longer existent due to inefficency
     void growRegionRecursive(int, ANNpointArray&, bool*);
     void calcLocalClusters();
 
@@ -115,11 +135,14 @@ private:
     static bool reduce;
     static bool use_correspondence_min;
     static bool use_clustering;
+    static bool use_normal_cor;
     static int k_neighbours;
     static double d_growth;
     static int n_min_clusterpoints;
     static double eps_similarity;
     static string cluster_outpath;
+    static bool read_normals;
+    static bool read_clusters;
 
     // Private static helper functions
     static bool inline isInPlane(double*, double* trans, const NormalPlane*);
