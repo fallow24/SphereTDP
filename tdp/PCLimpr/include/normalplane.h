@@ -26,7 +26,10 @@ static inline double dot(Point p1, Point p2)
     p2d[0] = p2.x;
     p2d[1] = p2.y;
     p2d[2] = p2.z;
-    return Dot(p1d, p2d);
+    double res = Dot(p1d, p2d);
+    delete[] p1d;
+    delete[] p2d;
+    return res;
 }
 
 class NormalPlane

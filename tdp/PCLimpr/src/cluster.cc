@@ -55,7 +55,7 @@ int main(int argc, char **argv)
     // Read the scans and setup save directory
 
     Scan::openDirectory(scanserver, scandir, type, start, end);
-    readFramesAndTransform( scandir, start, end, -1, true, red > -1);
+    //readFramesAndTransform( scandir, start, end, -1, true, red > -1);
     std::string save_dir = scandir + "clusters/";
     if ( !existsDir( save_dir.c_str() ) ) 
     {

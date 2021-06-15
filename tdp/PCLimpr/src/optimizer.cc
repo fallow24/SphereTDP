@@ -331,6 +331,9 @@ void Optimizer::updateJacobian()
     // Sum over correspondences
     Matrix sum = ColumnVector(6);
     sum << 0 << 0 << 0 << 0 << 0 << 0; // just to be sure.
+    Point n, Tp, projection, p2d, p1, p2;
+    Point *polygon;
+
     for (const auto& cor : ps->correspondences)
     {
         double x = cor.first[0];
@@ -359,7 +362,7 @@ void Optimizer::updateJacobian()
         double cps = cos(psi);
 
         // Coordinates of the transformed point:
-        double Tpx = x*ct*cps - y*cph*sps + z*st + tx;
+        double Tpx = x*ct*cps - y*ct*sps + z*st + tx;
         double Tpy = x*(cph*sps+cps*sph*st) + y*(cph*cps-sph*st*sps) - z*ct*sph + ty;
         double Tpz = x*(sph*sps-cph*cps*st) + y*(cps*sph+cph*st*sps) + z*cph*ct + tz;
         
@@ -373,13 +376,15 @@ void Optimizer::updateJacobian()
         
         // The gradient of that distance is: 
 
-        double dEdPhi = nx*y*sph*sps 
-            + ny*(x*(cps*cph*st-sps*sph) + y*(-sph*cps-cph*st*sps) - z*ct*cph)
+        double dEdPhi = 
+              ny*(x*(cps*cph*st-sps*sph) + y*(-sph*cps-cph*st*sps) - z*ct*cph)
             + nz*(x*(cph*sps+sph*cps*st) + y*(cps*cph-sph*st*sps) - z*ct*sph);
-        double dEdTheta = nx*(-x*st*cps+z*ct)
-            + ny*(x*(ct*cps*cph) + y*(-ct*sph*sps) + z*st*sph)
+        double dEdTheta = 
+              nx*(-x*st*cps+y*st*sps+z*ct)
+            + ny*(x*(ct*cps*sph) + y*(-ct*sph*sps) + z*st*sph)
             + nz*(-x*ct*cph*cps + y*ct*cph*sps - z*st*cph);
-        double dEdPsi = nx*(-x*sps*ct - y*cps*cph)
+        double dEdPsi = 
+              nx*(-x*sps*ct - y*cps*ct)
             + ny*(x*(cps*cph-sps*sph*st) + y*(-sps*cph-cps*sph*st))
             + nz*(x*(cps*sph+sps*cph*st) + y*(-sps*sph+cps*cph*st));
 
@@ -390,18 +395,17 @@ void Optimizer::updateJacobian()
         // First, check if the projected point is inside the polygon.
 
         char direction = cor.second->direction;
-        Point n(nx, ny, nz);
-        Point Tp(Tpx, Tpy, Tpz);
+        n = Point(nx, ny, nz);
+        Tp = Point(Tpx, Tpy, Tpz);
 
         // Project the transformed 3D point onto the corresponding plane 
         // by shifting it in normal direction with the min distance to the plane.
-        Point projection( Tp - D*n );
+        projection = Point( Tp - D*n );
 
         // Project the 3D polygon (which represents a 2D plane) and 
         // the projected point into a 2D representation.  
-        Point p2d;
         int polysize = cor.second->hull.size();
-        Point* polygon = cor.second->hullAsPointArr();
+        polygon = cor.second->hullAsPointArr();
         Point polygon2d[polysize];
         NormalPlane::convert3Dto2D(
             projection, // input: 3D projection onto the corresponding plane.
@@ -415,18 +419,17 @@ void Optimizer::updateJacobian()
             polygon2d // output: 2D projection of the convex hull.
         );
         
-        // In the 2D representation, use winding number algorithm to check
-        // if the point is inside or outside of the polygon.
+        // // In the 2D representation, use winding number algorithm to check
+        // // if the point is inside or outside of the polygon.
         bool outside = NormalPlane::wn_PnPoly(p2d, polygon2d, polysize) == 0;
 
-        // If the point is outside the polygon in 2D representation, it needs to
-        // get closer to the plane, therefore we seek to minimize point-2-polygon
-        // distance.
+        // // If the point is outside the polygon in 2D representation, it needs to
+        // // get closer to the plane, therefore we seek to minimize point-2-polygon
+        // // distance.
         if (outside)
         {   
-            Point p1, p2;
             double DIST = NormalPlane::nearestLineSegment(projection, polygon, polysize, p1, p2);
-            cout << DIST << endl;
+            //cout << DIST << endl;
             double D1x = Tpx*(1-nx*nx)-ax*nx*nx-p1.x; 
             double D1y = Tpx*(1-nx*nx)-ax*nx*nx-p1.x;
             double D1z = Tpx*(1-nx*nx)-ax*nx*nx-p1.x;
@@ -440,9 +443,9 @@ void Optimizer::updateJacobian()
         // TODO: do it like that. but only use it for tx, ty, and tz.
         // i.e. jacobians 4th , 5th and 6th elem should be dEdtx, dEdty, dEdtz
         // TODO: think about that. maybe its not true. Mybe we should combine the whole gradient?
-        double dE2dPhi = 2*(Tpx-ax)*y*sph*sps 
-            + 2*(Tpy-ay)*(x*(cps*cph*st-sps*sph) + y*(-sph*cps-cph*st*sps) - z*ct*cph)
-            + 2*(Tpz-az)*(x*(cph*sps+sph*cps*st) + y*(cps*cph-sph*st*sps) - z*ct*sph);
+        // double dE2dPhi = 2*(Tpx-ax)*y*sph*sps 
+        //     + 2*(Tpy-ay)*(x*(cps*cph*st-sps*sph) + y*(-sph*cps-cph*st*sps) - z*ct*cph)
+        //     + 2*(Tpz-az)*(x*(cph*sps+sph*cps*st) + y*(cps*cph-sph*st*sps) - z*ct*sph);
 
         Matrix jacobian = ColumnVector(6);
         jacobian << 2*D*dEdPhi

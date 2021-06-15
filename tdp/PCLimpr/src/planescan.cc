@@ -137,7 +137,7 @@ PlaneScan::PlaneScan(Scan *scan)
                 normals = new double*[nrpts];
                 calcNormals(xyz);
             }	
-            // Setup clusters, initialize with one cluster
+            // Setup clusters, initialize with one clusterlabelUseNorm
             clusters = Clusters(1);
             // Setup normal cluster mean cache 
             ncm_cache = vector<double*>(0);
@@ -202,7 +202,7 @@ int PlaneScan::readClusters(DataRGB &scan_color)
             clusters[ clusters.size() - 1].push_back(i);
         }
     } 
-    cout << colors.size() << " clusters found." << endl;    
+    //cout << colors.size() << " clusters found." << endl;    
 }
 
 // Calculates the distance from a transformed point "xyz" to plane "p"
@@ -620,8 +620,8 @@ void PlaneScan::labelDistEuklid()
             {
                 NormalPlane* min = planeList->at(0);
                 for ( unsigned int j = 0; j < planeList->size(); ++j)
-                    if ( dist2Plane(points[i], transMat, planeList->at(j)) 
-                        < dist2Plane(points[i], transMat, min) )
+                    if ( sqr(dist2Plane(points[i], transMat, planeList->at(j))) 
+                        < sqr(dist2Plane(points[i], transMat, min)) )
                         min = planeList->at(j);
                 // Store a correspondence (unordered)
                 correspondences.insert( Correspondence( points[i], min ) );
@@ -798,19 +798,21 @@ void PlaneScan::labelUseNormals()
     {
         double min_alpha = DBL_MAX;
         int min_j;
-        double dist_at_min_alpha;
         for (int j = 0; j < allPlanes.size(); ++j)
         {
-            double alpha = angleBetweenNormals(normals[i], allPlanes[j]->n);
-            if (alpha < min_alpha) 
+            if ( dist2Plane(points[i], transMat, allPlanes[j]) < _eps_dist )
             {
-                min_j = j;
-                min_alpha = alpha;
-                dist_at_min_alpha = dist2Plane(points[i], allPlanes[j]);
+                double alpha = angleBetweenNormals(normals[i], allPlanes[j]->n);
+                if (alpha < min_alpha) 
+                {
+                    min_j = j;
+                    min_alpha = alpha;
+                }
             }
-            if (deg(min_alpha) < eps_similarity && dist_at_min_alpha < _eps_dist) 
-                correspondences.insert( Correspondence(points[i], allPlanes[min_j]) );
         }
+        //cout << "Min angle between point " << i+1 << " and plane " << min_j << ": " << deg(min_alpha) << endl;
+        if ( min_alpha != DBL_MAX && deg(min_alpha) < eps_similarity ) 
+            correspondences.insert( Correspondence(points[i], allPlanes[min_j]) );
     }
 }
 
@@ -858,8 +860,11 @@ double PlaneScan::calcErr()
 {
 	double sum = 0.0;
 	map<double*, NormalPlane*>::iterator it = correspondences.begin();
-	for (; it != correspondences.end() ; ++it ) sum += sqr( dist2Plane( it->first, transMat, it->second ) );
-	return sum;
+	for (; it != correspondences.end() ; ++it ) 
+    {
+        sum += sqr(dist2Plane(it->first, transMat, it->second));
+    }
+	return sqrt(sum);
 }
 
 // static function, calculates total point-2-plane distance of all Scans
@@ -867,7 +872,7 @@ double PlaneScan::totalError()
 {
 	double sum = 0.0;
 	for ( const auto& pscan : allPlaneScans) sum += pscan->calcErr();
-	return sqrt(sum);
+	return sum;
 }
 
 void PlaneScan::addFrame(Scan::AlgoType type)

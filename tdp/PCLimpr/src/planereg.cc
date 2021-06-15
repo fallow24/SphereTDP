@@ -340,9 +340,18 @@ int main(int argc, char **argv)
 
     // Open and pre-process all scans
     Scan::openDirectory(scanserver, scandir, type, startScan, endScan);
+    
     // Very very important 2 lines below!!
-    bool use_pose = !use_frames;
-    readFramesAndTransform( scandir, startScan, endScan, -1, use_pose, red > -1);
+    // Or actually: think about that again.
+    // Conclusion: This is very bad. We dont need the transformed points for optimization.
+    // Instead, inital transformation is read automatically using .pose files.
+    // It can be applied later using PlaneScan::rPos and PlaneScan::rPosTheta,
+    // i.e. the state vector X of the optimizer.
+    // However, it would be nice to have a way to read the .frames files and 
+    // continue with the correction...
+    // bool use_pose = !use_frames;
+    // readFramesAndTransform( scandir, startScan, endScan, -1, use_pose, red > -1);
+    
     // Converting the Scan objects into PlaneScan objects
     PlaneScan::setEpsDist( eps_dist );
     PlaneScan::setReduce( red != -1 );

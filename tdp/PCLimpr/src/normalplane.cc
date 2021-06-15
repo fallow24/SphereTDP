@@ -130,16 +130,17 @@ void NormalPlane::convert3Dto2D(Point* ps, int n, char dir, Point* out)
 
 double NormalPlane::nearestLineSegment(const Point& p, const Point* polygon, int n, Point& p1, Point& p2)
 {
+    Point pch2_1;
+    Point p_pch1;
+    Point pch2_p;
     double D_min = __DBL_MAX__;
     int j_min = 0, i_min = 1;
          int j = j_min;
     for (int i = i_min; i < n; )
     {
-        Point pch1 = polygon[j];
-        Point pch2 = polygon[i];
-        Point pch2_1 = pch2 - pch1;
-        Point p_pch1 = p - pch1;
-        Point pch2_p = pch2 - p;
+        pch2_1 = polygon[i] - polygon[j];
+        p_pch1 = p - polygon[j];
+        pch2_p = polygon[i] - p;
         double r = dot( pch2_1, p_pch1 ) / dot( pch2_1, pch2_1 );
         double D;
         if (0 < r && r < 1) {
