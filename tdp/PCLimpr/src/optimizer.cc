@@ -331,14 +331,21 @@ void Optimizer::updateJacobian()
     // Sum over correspondences
     Matrix sum = ColumnVector(6);
     sum << 0 << 0 << 0 << 0 << 0 << 0; // just to be sure.
+    Point n, Tp, projection, p2d, p1, p2;
+    Point *polygon;
+
     for (const auto& cor : ps->correspondences)
     {
-        double nx = cor.second->n[0];
-        double ny = cor.second->n[1];
-        double nz = cor.second->n[2];
         double x = cor.first[0];
         double y = cor.first[1];
         double z = cor.first[2];
+        double nx = cor.second->n[0];
+        double ny = cor.second->n[1];
+        double nz = cor.second->n[2];
+        // a = {ax, ay, az} is the center point of the convex hull.
+        double ax = cor.second->x[0];
+        double ay = cor.second->x[1];
+        double az = cor.second->x[2];
 
         double phi =  X(1) ; // rot x
         double theta = X(2) ; // rot y
@@ -354,19 +361,91 @@ void Optimizer::updateJacobian()
         double ct = cos(theta);
         double cps = cos(psi);
 
-        double D = nx*(x*ct*cps - y*cph*sps + z*st + tx - cor.second->x[0])
-            + ny*(x*(cph*sps+cps*sph*st) + y*(cph*cps-sph*st*sps) - z*ct*sph + ty - cor.second->x[1])
-            + nz*(x*(sph*sps-cph*cps*st) + y*(cps*sph+cph*st*sps) + z*cph*ct + tz - cor.second->x[2]);
+        // Coordinates of the transformed point:
+        double Tpx = x*ct*cps - y*ct*sps + z*st + tx;
+        double Tpy = x*(cph*sps+cps*sph*st) + y*(cph*cps-sph*st*sps) - z*ct*sph + ty;
+        double Tpz = x*(sph*sps-cph*cps*st) + y*(cps*sph+cph*st*sps) + z*cph*ct + tz;
         
-        double dEdPhi = nx*y*sph*sps 
-            + ny*(x*(cps*cph*st-sps*sph) + y*(-sph*cps-cph*st*sps) - z*ct*cph)
+        // This part represents the gradient for minimizing point-2-plane distances.
+        // It seeks to only minimize the minimum point to plane distance, as if the
+        // plane would extend out into infinity. Polygon distance comes below.
+
+        double D = nx*(Tpx - ax)  // as you can see, this represents the distance
+                 + ny*(Tpy - ay)  // of the point to an ever extending, infinite 
+                 + nz*(Tpz - az); // plane.
+        
+        // The gradient of that distance is: 
+
+        double dEdPhi = 
+              ny*(x*(cps*cph*st-sps*sph) + y*(-sph*cps-cph*st*sps) - z*ct*cph)
             + nz*(x*(cph*sps+sph*cps*st) + y*(cps*cph-sph*st*sps) - z*ct*sph);
-        double dEdTheta = nx*(-x*st*cps+z*ct)
-            + ny*(x*(ct*cps*cph) + y*(-ct*sph*sps) + z*st*sph)
+        double dEdTheta = 
+              nx*(-x*st*cps+y*st*sps+z*ct)
+            + ny*(x*(ct*cps*sph) + y*(-ct*sph*sps) + z*st*sph)
             + nz*(-x*ct*cph*cps + y*ct*cph*sps - z*st*cph);
-        double dEdPsi = nx*(-x*sps*ct - y*cps*cph)
+        double dEdPsi = 
+              nx*(-x*sps*ct - y*cps*ct)
             + ny*(x*(cps*cph-sps*sph*st) + y*(-sps*cph-cps*sph*st))
             + nz*(x*(cps*sph+sps*cph*st) + y*(-sps*sph+cps*cph*st));
+
+        // This part represents the gradient for holding the points onto the convex hull.
+        // The upper part sometimes just moves the scan very far away, because it thinks that the
+        // plane would extend out to infinity - which it doenst.
+
+        // First, check if the projected point is inside the polygon.
+
+        char direction = cor.second->direction;
+        n = Point(nx, ny, nz);
+        Tp = Point(Tpx, Tpy, Tpz);
+
+        // Project the transformed 3D point onto the corresponding plane 
+        // by shifting it in normal direction with the min distance to the plane.
+        projection = Point( Tp - D*n );
+
+        // Project the 3D polygon (which represents a 2D plane) and 
+        // the projected point into a 2D representation.  
+        int polysize = cor.second->hull.size();
+        polygon = cor.second->hullAsPointArr();
+        Point polygon2d[polysize];
+        NormalPlane::convert3Dto2D(
+            projection, // input: 3D projection onto the corresponding plane.
+            direction, // direction of plane normal.
+            p2d // output: 2D projection of the 3D projection
+        );
+        NormalPlane::convert3Dto2D(
+            cor.second->hullAsPointArr(), // input: the 3D convex hull of the plane.
+            polysize, // the size of the convex hull.
+            direction, // the direction of plane normal.
+            polygon2d // output: 2D projection of the convex hull.
+        );
+        
+        // // In the 2D representation, use winding number algorithm to check
+        // // if the point is inside or outside of the polygon.
+        bool outside = NormalPlane::wn_PnPoly(p2d, polygon2d, polysize) == 0;
+
+        // // If the point is outside the polygon in 2D representation, it needs to
+        // // get closer to the plane, therefore we seek to minimize point-2-polygon
+        // // distance.
+        if (outside)
+        {   
+            double DIST = NormalPlane::nearestLineSegment(projection, polygon, polysize, p1, p2);
+            //cout << DIST << endl;
+            double D1x = Tpx*(1-nx*nx)-ax*nx*nx-p1.x; 
+            double D1y = Tpx*(1-nx*nx)-ax*nx*nx-p1.x;
+            double D1z = Tpx*(1-nx*nx)-ax*nx*nx-p1.x;
+            double D_out =  0;
+        }
+        else // point projection is inside the polygon, only minimize normal distance
+        {
+
+        }
+
+        // TODO: do it like that. but only use it for tx, ty, and tz.
+        // i.e. jacobians 4th , 5th and 6th elem should be dEdtx, dEdty, dEdtz
+        // TODO: think about that. maybe its not true. Mybe we should combine the whole gradient?
+        // double dE2dPhi = 2*(Tpx-ax)*y*sph*sps 
+        //     + 2*(Tpy-ay)*(x*(cps*cph*st-sps*sph) + y*(-sph*cps-cph*st*sps) - z*ct*cph)
+        //     + 2*(Tpz-az)*(x*(cph*sps+sph*cps*st) + y*(cps*cph-sph*st*sps) - z*ct*sph);
 
         Matrix jacobian = ColumnVector(6);
         jacobian << 2*D*dEdPhi
@@ -404,6 +483,7 @@ void Optimizer::reset()
 }
 
 // Finds the optimal alpha to initialize AdaDelta
+// Experimental, usually this is very agressive.
 void Optimizer::iterateAuto()
 {
     a = 0.01;
