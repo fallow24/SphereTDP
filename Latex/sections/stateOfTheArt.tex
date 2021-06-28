@@ -33,7 +33,7 @@ Favre et al.~\cite{favre2021} use point-to-plane correspondences after preproces
 
 Both approaches use plane-to-plane correspondences to pre-register the scans.
 However, for pre-registration the classical point-to-point registration is also very effective. 
-One advantage that point-to-point correspondences have over plane-to-plane correspondences is that they do not require a long stop in each pose.
+One advantage that point-to-point correspondences have over plane-to-plane correspondences is that they do not require a long stop in order to obtain enough points to detect planes in each pose.
 For plane-to-plane correspondences, this is necessary to gather enough data to measure planes in each scan robustly.
 The resulting scan procedure is stop-scan-and-go.
 In particular, for the application of a spherical robot this standstill in each pose cannot be guaranteed or even approximated, making continuous-time approaches using point-to-plane correspondences the method of choice.

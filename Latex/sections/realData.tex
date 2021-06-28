@@ -1,13 +1,14 @@
 %!TEX root = ../main.tex
 \section{Experimental Setup}\label{sec:experimentalSetup}
 
-We also tested out algorithm on a real-world dataset that adheres to different motion profiles and laser scanners type with different scanning patterns than the simulated data.  
+We also tested our algorithm on a real-world dataset that adheres to different motion profiles and laser scanners type with different scanning patterns than the simulated data.  
 
 The dataset is collected by a line scanner, in particular a SICK LMS141 industrial scanner, inside a sphere of a diameter of \SI{20}{\centi\meter} that lies on a floating desk, which is air-pressurized, such that the sphere is hovering.
 On this floating desk, the sphere can rotate freely about all axis while being fixed in position. 
 Hence, in this experiment the optimization space can be reduced to a rotation.
 Further, without the motion, the 2D laser cannot obtain a 3D model from the environment, thus requiring registration. 
-The sphere is equipped with a low-cost IMU, i.e., a PhidgetSpatial Precision 3/3/3, to estimate the orientation, a battery pack and a raspberry pie for processing. 
+The sphere is equipped with a low-cost IMU, i.e., a PhidgetSpatial Precision 3/3/3, to estimate the orientation, a battery pack and a raspberry pie for processing.
+This IMU provides a precision of \SI{76.3}{\micro g} in linear acceleration, \SI{0.02}{\degree\per\second} in angular velocity about the x and y axis, and \SI{0.013}{\degree\per\second} in angular velocity about the z axis \cite{PhidgetSpatial}.  
 
 Figure~\ref{fig:float-sat-sphere} shows the experimental setup. The left column of figure~\ref{fig:cylon-corrected} shows the pre-registered resulting point cloud. 
 We see that the point cloud is rather noisy, and in particular, the walls are sensed multiple times, hence appearing very blurry. 

@@ -10,7 +10,7 @@ This yields scan results similar to the ones obtained in the real world.
 \subsection{Simulated Sensor}
 
 The Livox-Mid100 laser scanner consists of three Mid40 scanners arranged to provide an overall field-of-view of \SI{98.4}{\degree} (horizontal) by \SI{38.4}{\degree} (vertical).
-With a range precision of \SI{2}{\centi\meter} up to \SI{20}{\meter} range it provides \SI[per-mode=symbol]{300,000}{\pts\per\second} with a range precision of \SI{2}{\centi\meter} up to \SI{20}{\meter} range.
+It provides \SI[per-mode=symbol]{300,000}{\pts\per\second} with a range precision of \SI{2}{\centi\meter} up to \SI{20}{\meter} range~\cite{LivoxMid40-100}.
 A particular advantage of the Livox laser scanners is their unique scanning pattern.
 The scanners use two motorized, so-called Risley prisms to steer the beam deflectance.
 For the specific ratio of rotation speeds used in the Livox scanners, the beam traces out a non-repetitive, flower-shaped scanning pattern~\cite{thorlabs}.
@@ -35,12 +35,13 @@ This is equivalent to a case where a slightly shifted ground plane or an unbalan
 
 Accordingly, a spherical robot that is assumed to be translating exactly along one axis by rotating about one other axis at an angular velocity $\omega$  experiences random disturbance torques at each time instant that accelerate the rotation of the sphere about the respective axes. 
 This additional motion is determined by integrating the disturbance torques, which are sampled from some normal distribution $n_\phi, n_\psi \in \mathcal{N}(\mu,\sigma^2)$ each.  
-The pose update in the discrete simulation is therefore given by: 
+The pose update after a discrete time step $\Delta t$ in the simulation is therefore given by: 
 \begin{align}
 	\begin{bmatrix}\varphi\\\vartheta\\\psi\\x\\y\\z\end{bmatrix}_{k+1} = 
 	\begin{bmatrix}\varphi\\\vartheta\\\psi\\x\\y\\z\end{bmatrix}_{k} 
 	+ \begin{bmatrix}1\\0\\0\\R\\0\\0\end{bmatrix}\omega \Delta t  + \Delta t \underbrace{\sum_{i = 0}^k \begin{bmatrix}n_\varphi[i] \Delta t\\0\\n_\psi[i]\Delta t\\0\\0\\0\end{bmatrix}}_{\substack{\text{Difference in}\\\text{angular velocity}}}
 \end{align}
+where $\Delta t$ is generally chosen as some small value (e.g. \SI{1}{\milli\second})
 
 Assuming intended locomotion along the $z$-axis and unintended locomotion along the $x$-axis where $R$ is the sphere radius.
 No upwards movement is possible since the robot moves on a flat ground, hence the entry is zero.
@@ -62,7 +63,8 @@ Also, the further the sensed points are, the noisier they appear, which is consi
 	\includegraphics[width=0.495\textwidth]{images/noisy_pose_and_range_top}\\
 	\includegraphics[width=0.495\textwidth]{images/perfect_top_view}\hfill
 	\includegraphics[width=0.495\textwidth, height=0.1825\textwidth]{images/noisy_pose_and_range_top_view}
-	\caption{Two simulated datasets of a long hallway of size $\SI{4}{\meter}\times\SI{3}{\meter}\times\SI{100}{\meter}$. Ideal noise free (left), noisy pose ($\mathcal{N}_\varphi = \mathcal{N}_\psi(\mu = 0.0001, \sigma= 0.00001)$) and noisy range measurements ($\mathcal{N}_r(\mu = 0, \sigma = 0.001)$) (right).}
+	\caption{Two simulated datasets of a long hallway of size $\SI{4}{\meter}\times\SI{3}{\meter}\times\SI{100}{\meter}$. Ideal noise free (left), noisy pose ($\mathcal{N}_\varphi = \mathcal{N}_\psi(\mu = 0.0001, \sigma= 0.00001)$) and noisy range measurements ($\mathcal{N}_r(\mu = 0, \sigma = 0.001)$) (right). 
+	The normal distributions are define in such a way, that in the resulting dataset plane detection is still possible.}
 	\label{fig:simulatedDatasets}
 \end{figure*}
 

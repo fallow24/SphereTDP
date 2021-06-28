@@ -5,7 +5,7 @@
 
 The plane-based registration is applied to the simulated dataset with noisy pose and range measurements (cf. Figure~\ref{fig:simulatedDatasets}) without further processing.
 Assuming this represents a coarsely pre-registered 3D point cloud, the distances to the ground truth were evaluated before and after the plane-based registration. 
-Figure~\ref{fig:simulatedEvaluation} shows the different point-to-point distances. 
+Figure~\ref{fig:simulatedEvaluation} \todo{REDO experiments!!!} shows the different point-to-point distances. 
 
 \begin{figure*}
  	\centering
@@ -21,7 +21,7 @@ Figure~\ref{fig:simulatedEvaluation} shows the different point-to-point distance
 		\includegraphics[width=\textwidth]{./images/corr_side_view}\\
   		\includegraphics[width=\textwidth]{./images/corr_hist}
   	\end{minipage} 	
- 	\caption{Evaluation of point distances before (left) and after (right) the plane-based registration on a simulated dataset. A maximal distance of \SI{2}{m} is set, such that all points that display a higher distance value are excluded from the analysis. Further, the histogram joins all values with a distance greater than \SI{1}{m} into the last bucket. The top two columns show a heat map of distances, while the bottom shows the corresponding histogram. The color mapping is equivalent in both. An animation of the matching process is given at \url{https://youtu.be/0ps5Pg4qo4E} .}
+ 	\caption{Evaluation of point distances before (left) and after (right) the plane-based registration on a simulated dataset. Lateral images always have the same orientation. A maximal distance of \SI{2}{m} is set, such that all points that display a higher distance value are excluded from the analysis. Further, the histogram joins all values with a distance greater than \SI{1}{m} into the last bucket. The top two columns show a heat map of distances, while the bottom shows the corresponding histogram. The color mapping is equivalent in both. An animation of the matching process is given at \url{https://youtu.be/0ps5Pg4qo4E}.}
  	\label{fig:simulatedEvaluation}
 \end{figure*} 
 
@@ -43,6 +43,8 @@ Table~\ref{tab:percentiles} shows the comparison of further percentiles of both 
 	\label{tab:percentiles}
 \end{table}
 
+The second significant peak in the right hand histogram in figure~\ref{fig:simulatedEvaluation} \todo{Explain this peak. Not sure right now.}
+
 Further, the square and straight shape of the corridor is restored well, and especially the large spike at errors of greater than \SI{1}{m} is removed. 
 Any such errors tend to occur at the back and the front of the corridor where the measured range is the largest hence has the largest contribution of the range error. 
 
@@ -50,9 +52,11 @@ Any such errors tend to occur at the back and the front of the corridor where th
 
 Figure~\ref{fig:cylon-corrected} shows the results obtained before and after employing the plane based registration on the dataset acquired by the floating sphere.
 The pre-registration is obtained by determining the orientation of the sphere via Madgwick filtered~\cite{madgwick2010efficient} IMU measurements.
-We combine ten scans into one meta-scan, which is then globally registered.
+To increase the number of possible point-to-plane correspondences we combine ten temporally successive scans into one meta-scan, which is then globally registered. 
+For this we must assume constant pose over this time duration. 
+However, given the high measurement frequency of the Lidar this introduces only a small error. 
 This does not only speed up convergence due to the proportional effect on the error function but also decreases the risk of transforming the scan in a senseless way.
-Transformations like these happen when incorrectly labeled points have a huge effect on the error gradient, which is especially the case when considering only a few points.
+Transformations like these happen in particular for a small collection of points as outliers have more influence.
 
 \begin{figure*}
 	\centering

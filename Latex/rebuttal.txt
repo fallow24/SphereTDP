@@ -216,69 +216,69 @@
 > 
 > Further open questions/comments are:
 > Page 1, Line 15: Double use of "protect", which should be replaced
-> by another word.
+> by another word. -> Removed first instance
 > Page 1, Line 21: The link for the "second option" to the use of an
-> IMU is not necessarily obvious.
+> IMU is not necessarily obvious. -> added IMU as sensor for coarse estimation
 > Page 1, Column 2, Line 52-56: Complicated sentence which should be
-> reformulated.
+> reformulated. -> Split into two sentences
 > Page 2, Column 2, Line 15: The term "long stop" is not to be
 > interpreted clearly in this context. How is "long" defined in this
-> sense in terms of time or space?
+> sense in terms of time or space? -> Specified stop is required to find enough points for plane detection
 > Page 3, Column 1, Line 6-8: A specific reference should be given for
 > the first half of the sentence, as reference 19 probably only refers
-> to the second part.
+> to the second part. -> Added todo for Dorit/Andreas as they wrote this
 > Page 3, Column 1, Line 23-26: Not all variables were introduced
-> accurately
-> Page 3, Column 1, Line 33-34: Selection of references for this?
+> accurately -> Introduced missing variables and and clarified rho
+> Page 3, Column 1, Line 33-34: Selection of references for this? -> Added plane segmentation sources
 > Page 3, Column 1, Line 34-35: But what demands are made on the
 > assignment? This is unclear to the reader, also in connection with
-> the general quality requirements of the whole approach.
+> the general quality requirements of the whole approach. -> Added specification "good enough for plane detection"
 > Page 3, Column 1, Line 38: How can the threshold value be specified,
 > since it is probably not identical for all applications and
 > environments? Later, there is also no indication of the choice of
-> the value in the own simulated and real data sets.
+> the value in the own simulated and real data sets. -> Added todo for Fabi
 > Page 3, Column 1, Line 50: What does the index k describe and what
-> is the difference to the index i from Section 3.2?
+> is the difference to the index i from Section 3.2? -> clarified indeces k=planes i=points
 > Page 3, Equation (1): Again, some variables are not specified. For
-> example, the source of tx ty tz is unclear.
+> example, the source of tx ty tz is unclear. -> introduced tx ty tz properly
 > Page 3, Equation (3): Equation unclear regarding the use of the 2 in
-> the exponent as well as the index.
+> the exponent as well as the index. -> Specified that we're using the square of the L2 norm
 > Page 3, Equations (4)-(5): Here I don't understand how to get to the
 > elements of the normal vector through the transformation. Moreover,
-> these individual elements were not introduced in advance.
+> these individual elements were not introduced in advance. -> Corrected indeces and introduced elements
 > Page 3, Equation (9): The variable alpha is not described and
-> explained
+> explained -> explained alpha
 > Page 4, Equation (10): Description of the individual variables is
 > missing and, moreover, rho has already been used as the distance
-> parameter of the Hesse-normal form
+> parameter of the Hesse-normal form -> replaced rho with zeta, introduced variables
 > Page 4, Equation (12): Is epsilon here the same variable as the
-> threshold in Section 3.3? Probably not.
+> threshold in Section 3.3? Probably not.-> renamed epsilon, clarified difference to sec 3.3
 > Page 4, Column 2, Line 15: "some dimensions": Which ones and why
-> exactly are they chosen? Are they the same ones all the time?
-> Page 4, Column 2, Line 20-25: Reference is missing
+> exactly are they chosen? Are they the same ones all the time? -> chose better example, added todo for Fabi
+> Page 4, Column 2, Line 20-25: Reference is missing -> added source
 > Page 4, Column 2, Line 55: Doubled information regarding the
-> distance measurement precision
+> distance measurement precision -> removed duplicates
 > Page 5, Column 1, Equation (18): Delta t is not introduced and there
-> is no indication of how large the time steps are in the simulation.
-> Page 5, Column 2, Line 14: Should it be "out" or "our"?
+> is no indication of how large the time steps are in the simulation. -> introduced delta t and gave default value
+> Page 5, Column 2, Line 14: Should it be "out" or "our"? -> corrected
 > Page 5, Column 2, Line 27-28: What are the specifications of the
-> used IMU with regard to its uncertainty budget?
+> used IMU with regard to its uncertainty budget? -> added precision of IMU + source
 > Page 6, Figure 1: How are these values to be interpreted and from
-> where are they derived? This is unclear.
+> where are they derived? This is unclear.-> specified (chosen to still allow plane detection)
 > Page 8, Column 1, Table 1: What is missing is a classification of
 > the values in relation to the expectations / demands...which are,
-> however, still missing in advance
+> however, still missing in advance -> I don't understand this comment? TODO 
 > Page 8, Column 1, Line 37-43: At this point, an interpretation of
 > the significant second peak in the right-hand diagram in Figure 4
-> should be made. This has not been discussed so far.
+> should be made. This has not been discussed so far. -> added todo REDO experiment
 > Page 8, Column 1, Line 51: "ten scans" means ten individual scan
 > lines or 10 epochs or is this identical? What kind of temporal
 > offset is there in between and wouldn't a motion model have to be
 > taken into account for this or is an identical pose assumed for the
-> ten scans?
-> Page 8, Column 1, Line 55-56: What could be the cause of this?
+> ten scans? -> Specified which scans and that we assuem constant pose
+> Page 8, Column 1, Line 55-56: What could be the cause of this?-> specified outlier dependence
 > Page 8, Column 2, Line 44: This sentence always applies and should
-> not remain here.
+> not remain here. -> removed :(
 > Page 9, Figure 4: The two point clouds in the middle of figure 4 are
 > difficult to interpret in terms of their orientation. Could it be an
-> option to add a coordinate system?
+> option to add a coordinate system? -> specified in the figure label that lateral images have the same orientation

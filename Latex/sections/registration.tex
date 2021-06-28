@@ -26,7 +26,7 @@ We then find the planes in the pre-registered point cloud and then optimize the 
 For the plane extraction the linescans need to be transformed into the project coordinate system.
 Various pre-registration methods are suitable for this.
 The most simple method is to use the data from an intertial measurement unit for a coarse alignment.
-Alternative solutions combine multiple linescans into a metascan and perform registration methods known from terrestrial laser scanning or use a small number of iterations of continuous-time SLAM approaches such as the one presented in~\cite{REMSEN2013}.
+Alternative solutions combine multiple linescans into a metascan and perform registration methods known from terrestrial laser scanning \todo{add source here} or use a small number of iterations of continuous-time SLAM approaches such as the one presented in~\cite{REMSEN2013}.
 This yields maps that can be used for plane registration and hence a point-to-plane correspondences based registration.
 
 \subsection{Plane Extraction}
@@ -34,72 +34,73 @@ This yields maps that can be used for plane registration and hence a point-to-pl
 After having done the pre-registration, the scans are aligned well enough to make statements about the potential planes in the environment.
 To find the planes in the environment, a Randomized Hough transform with an accumulator ball as described in~\cite{3DRESEARCH2011} is used as this method prefers dominant planes such as the building structure over smaller planar surfaces.
 In the next subsection, the Hesse-normal form of the plane is required.
-For an ideal plane the distance parameter $\rho_{\mathcal{P}_i}$ is computed via $\vec{n}_{\mathcal{P}_i}\cdot\vec{x}_i$, where $\vec{x}_i$ is an arbitrary point on the plane.
+For an ideal plane the orthogonal distance from the origin $\rho_{\mathcal{P}_k}$ is computed via $\vec{n}_{\mathcal{P}_k}\cdot\vec{p}_i$, where $\vec{p}_i = \begin{bmatrix}x_i&y_i&z_i\end{bmatrix}^T$ is an arbitrary point on the plane and $\vec{n}_{\mathcal{P}_k} = \begin{bmatrix}n_{\mathcal{P}_k}^x&n_{\mathcal{P}_k}^y&n_{\mathcal{P}_k}^z\end{bmatrix}^T$ is the normal vector of that plane.
 To find this point, we first define a convex hull that encloses the plane.
 It is defined by the points that lie on the plane with the furthest distance to one another.
-We then choose the center point of the convex hull of the plane as $\vec{x}_i$.
+We then choose the center point of the convex hull of the plane as $\vec{p}_i$.
 
-\subsection{Point-to-Plane Correspondences}
+\subsection{Point-to-Plane Correspondences}\label{sec:point-to-plane-correspondences}
 
-There are many ways of finding correspondences between points and planes.
-However, even with the result not being perfect, we assume already globally registered scans, which is why a simple algorithm is sufficient:
+There are many ways of solving the segmentation problem of assigning each point to a plane often based on the RANSAC method \cite{Honti2018}, \cite{Gaspers2011} but also deep learning approaches \cite{Engelmann2018}.
+The quality of the preregistration directly influences the quality of the plane detection and therefore the quality of the final registration result. 
+We assume small enough errors in pre-registration to allow for plane detection.
+Which is why a simple algorithm is sufficient:
 For each plane, consider adding a correspondence for all points closer to the plane than a threshold $\epsilon$.
-Depending on the threshold value, some points now have multiple correspondences if their distance to multiple planes is less than $\epsilon$. We then omit all points with correspondences to multiple planes from the optimization to avoid introducing errors due to the plane ambiguity.
+Depending on the threshold value, some points now have multiple correspondences if their distance to multiple planes is less than $\epsilon$ \todo{@Fabi add actual $\epsilon$ values to the experiments}. We then omit all points with correspondences to multiple planes from the optimization to avoid introducing errors due to the plane ambiguity.
 
 \subsection{Optimization}
 
 Assuming we know now the Hesse-normal form of all planes and all assigned points to these planes, we register the points to have a minimal distance to their respective planes.
-The transformation $T(\vec{p}_k)$ of each point $\vec{p}_k$ with respect to a 6 DoF motion is described in homogeneous coordinates using the roll-pitch-yaw ($\varphi-\vartheta-\psi$) Tait-Brian angles as in~\cite{diebel2006representing}. Transforming the result back from homogeneous coordinates and using $C_k$ and $S_k$ to denote the cosine and sine of the angle in the subscript yields:
+The transformation $T(\vec{p}_i)$ of each point $\vec{p}_i$ with respect to a 6 DoF motion is described in homogeneous coordinates using the roll-pitch-yaw ($\varphi-\vartheta-\psi$) Tait-Brian angles as in~\cite{diebel2006representing}. Transforming the result back from homogeneous coordinates and using $C_a$ and $S_a$ to denote the cosine and sine of the angle in the subscript, and $t_a$ denoting the translation along the axis in the subscript yields:
 \begin{align}
-	T(\vec{p}_k)  =
+	T(\vec{p}_i)  =
     \resizebox{0.35\textwidth}{!}{$\begin{bmatrix}
-        x C_\vartheta C_\psi - yC_\varphi S_\psi + z S_\vartheta + t_x\\
-        x (C_\varphi S_\psi + C_\psi S_\varphi S_\vartheta) + y(C_\varphi C_\psi - S_\varphi S_\vartheta S_\psi) - z C_\vartheta S_\varphi + t_y\\
-        x(S_\varphi S_\psi - C_\varphi C_\psi S_\vartheta) + y(C_\psi S_\varphi + C_\varphi S_\vartheta S_\psi) + z C_\varphi C_\vartheta + t_z
+        x_i C_\vartheta C_\psi - y_iC_\vartheta S_\psi + z_i S_\vartheta + t_x\\
+        x_i (C_\varphi S_\psi + C_\psi S_\varphi S_\vartheta) + y_i(C_\varphi C_\psi - S_\varphi S_\vartheta S_\psi) - z_i C_\vartheta S_\varphi + t_y\\
+        x_i(S_\varphi S_\psi - C_\varphi C_\psi S_\vartheta) + y_i(C_\psi S_\varphi + C_\varphi S_\vartheta S_\psi) + z_i C_\varphi C_\vartheta + t_z
     \end{bmatrix}$}
 \end{align}
-From this we define the function $D(\varphi,\vartheta,\psi,t_x,t_y,t_z, \vec{p}_k)$ that computes the distance of a point $\vec{p}_k$ to its corresponding plane $\mathcal{P}_i$.
- Omitting the arguments of the function for simplicity:
+From this we define the function $D(\varphi,\vartheta,\psi,t_x,t_y,t_z, \vec{p}_i)$ that computes the distance of a point $\vec{p}_i$ to its corresponding plane $\mathcal{P}_k$.
+Omitting the arguments of the function for simplicity:
 \begin{align}
 \begin{aligned}
-    D &= T(\vec{p}_k) \cdot \vec{n}_{\mathcal{P}_i} \\
-      &= n_{\mathcal{P}_i}^x (x C_\vartheta C_\psi - yC_\varphi S_\psi + z S_\vartheta + t_x)\\
-       &+ n_{\mathcal{P}_i}^y(x (C_\varphi S_\psi + C_\psi S_\varphi S_\vartheta)\\
-       &\qquad+ y(C_\varphi C_\psi - S_\varphi S_\vartheta S_\psi) - z C_\vartheta S_\varphi + t_y)\\
-       &+ n_{\mathcal{P}_i}^z (x(S_\varphi S_\psi - C_\varphi C_\psi S_\vartheta)\\
-       &\qquad+ y(C_\psi S_\varphi + C_\varphi S_\vartheta S_\psi) + z C_\varphi C_\vartheta + t_z)\\
-       &- \rho_{\mathcal{P}_i}
+    D &= T(\vec{p}_i) \cdot \vec{n}_{\mathcal{P}_k} \\
+      &= n_{\mathcal{P}_k}^x (x_i C_\vartheta C_\psi - y_iC_\vartheta S_\psi + z_i S_\vartheta + t_x)\\
+       &+ n_{\mathcal{P}_k}^y(x_i (C_\varphi S_\psi + C_\psi S_\varphi S_\vartheta)\\
+       &\qquad+ y_i(C_\varphi C_\psi - S_\varphi S_\vartheta S_\psi) - z_i C_\vartheta S_\varphi + t_y)\\
+       &+ n_{\mathcal{P}_k}^z (x_i(S_\varphi S_\psi - C_\varphi C_\psi S_\vartheta)\\
+       &\qquad+ y_i(C_\psi S_\varphi + C_\varphi S_\vartheta S_\psi) + z_i C_\varphi C_\vartheta + t_z)\\
+       &- \rho_{\mathcal{P}_k}
 \end{aligned}
 \end{align}
 
 This distance function is what we want to minimize for all points and their respective planes.
-Hence the error function $E$ is chosen as follows:
+Hence the error function $E$ is chosen as the square of the L2-norm of the distance:
 \begin{align}
-	E = \sum_{\forall \mathcal{P}_i}\sum_{\vec{p}_k \in \mathcal{P}_i} \norm[2]{D(\varphi,\vartheta,\psi,t_x,t_y,t_z, \vec{p}_k)}^2
+	E = \sum_{\forall \mathcal{P}_k}\sum_{\vec{p}_i \in \mathcal{P}_k} \norm[2]{D(\varphi,\vartheta,\psi,t_x,t_y,t_z, \vec{p}_i)}^2
 \end{align}
 Its gradient follows then immediately:
 \begin{align}
-	&\nabla E =  \sum_{\forall \mathcal{P}_i}\sum_{\vec{p}_k \in \mathcal{P}_i} \resizebox{0.28\textwidth}{!}{$\begin{bmatrix}\pardiff{\varphi} E&\pardiff{\vartheta} E&\pardiff{\psi} E&\pardiff{t_x} E&\pardiff{t_y} E&\pardiff{t_z} E\end{bmatrix}^T$}\\
-    &\Rightarrow\nabla E = \resizebox{0.35\textwidth}{!}{$\sum_{\forall \mathcal{P}_i} \sum_{\vec{p}_k \in \mathcal{P}_i}2D(\vec{\Pi}, \vec{p}_k)\begin{bmatrix}\nabla E_\varphi &\nabla E_\vartheta & \nabla E_\psi & n_{\mathcal{P}_i}^x&n_{\mathcal{P}_i}^y&n_{\mathcal{P}_i}^z\end{bmatrix}^T$}
+	&\nabla E =  \sum_{\forall \mathcal{P}_k}\sum_{\vec{p}_i \in \mathcal{P}_k} \resizebox{0.28\textwidth}{!}{$\begin{bmatrix}\pardiff{\varphi} E&\pardiff{\vartheta} E&\pardiff{\psi} E&\pardiff{t_x} E&\pardiff{t_y} E&\pardiff{t_z} E\end{bmatrix}^T$}\\
+    &\Rightarrow\nabla E = \resizebox{0.35\textwidth}{!}{$\sum_{\forall \mathcal{P}_k} \sum_{\vec{p}_i\in \mathcal{P}_k}2D(\vec{\Pi}, \vec{p}_i)\begin{bmatrix}\nabla E_\varphi &\nabla E_\vartheta & \nabla E_\psi & n_{\mathcal{P}_k}^x&n_{\mathcal{P}_k}^y&n_{\mathcal{P}_k}^z\end{bmatrix}^T$}
 \end{align}
 Where
 \begin{align}
     &\begin{alignedat}{3}
-        \nabla E_\varphi = & n_{\mathcal{P}_i}^x&&y S_\varphi S_\psi \\
-        &+ n_{\mathcal{P}_i}^y&&(x[-S_\varphi S_\psi+C_\varphi C_\psi S_\vartheta] \\&&&+y[-S_\varphi C_\psi -C_\varphi S_\vartheta S\psi] \\&&&- z C_\varphi C_\vartheta)\\
-        &+ n_{\mathcal{P}_i}^z&&(x[C_\varphi S_\psi+C_\varphi C_\psi S_\vartheta] \\&&&+y[C_\varphi C_\psi -S_\varphi S_\vartheta S\psi] \\&&&- z S_\varphi C_\vartheta)
+        \nabla E_\varphi = &n_{\mathcal{P}_k}^y&&(x_i[-S_\varphi S_\psi+C_\varphi C_\psi S_\vartheta] \\&&&+y_i[-S_\varphi C_\psi -C_\varphi S_\vartheta S\psi] \\&&&- z_i C_\varphi C_\vartheta)\\
+        &+ n_{\mathcal{P}_k}^z&&(x_i[C_\varphi S_\psi+C_\varphi C_\psi S_\vartheta] \\&&&+y_i[C_\varphi C_\psi -S_\varphi S_\vartheta S\psi] \\&&&- z_i S_\varphi C_\vartheta)
     \end{alignedat} \\
     &\begin{alignedat}{3}
-        \nabla E_\vartheta = & n_{\mathcal{P}_i}^x(-xS_\vartheta C_\psi + zC_\vartheta) \\
-        &+ n_{\mathcal{P}_i}^y(xC_\psi S_\varphi C_\vartheta - yS_\varphi C_\vartheta S_\psi + z S_\vartheta S_\varphi)  \\
-        &+ n_{\mathcal{P}_i}^z(-xC_\varphi C_\psi C_\vartheta + yC_\varphi C_\vartheta S_\psi - z C_\varphi S_\vartheta)
+        \nabla E_\vartheta = & n_{\mathcal{P}_k}^x(-x_iS_\vartheta C_\psi + y_i S_\vartheta S_\psi + z_iC_\vartheta) \\
+        &+ n_{\mathcal{P}_k}^y(x_iC_\psi S_\varphi C_\vartheta - y_iS_\varphi C_\vartheta S_\psi + z_i S_\vartheta S_\varphi)  \\
+        &+ n_{\mathcal{P}_i}^z(-x_iC_\varphi C_\psi C_\vartheta + y_iC_\varphi C_\vartheta S_\psi - z_i C_\varphi S_\vartheta)
     \end{alignedat}\\
     &\begin{alignedat}{3}
-       \nabla E_\psi =& n_{\mathcal{P}_i}^x&&\left(-xC_\vartheta S_\psi - yC_\varphi C_\psi\right) \\
-       &+ n_{\mathcal{P}_i}^y&&(x[C_\varphi C_\psi - S_\varphi S_\vartheta S_\psi] \\
-       &&&+ y[-C_\varphi S_\psi - S_\varphi S_\theta C_\psi]) \\
-       &+ n_{\mathcal{P}_i}^z&&(x[S_\varphi C_\psi + C_\varphi S_\psi S_\theta] \\
-       &&&+ y[-S_\psi S_ \varphi + C_\varphi S_\vartheta C_\psi]) 
+       \nabla E_\psi =& n_{\mathcal{P}_k}^x&&\left(-x_iC_\vartheta S_\psi - y_iC_\vartheta C_\psi\right) \\
+       &+ n_{\mathcal{P}_k}^y&&(x_i[C_\varphi C_\psi - S_\varphi S_\vartheta S_\psi] \\
+       &&&+ y_i[-C_\varphi S_\psi - S_\varphi S_\theta C_\psi]) \\
+       &+ n_{\mathcal{P}_k}^z&&(x_i[S_\varphi C_\psi + C_\varphi S_\psi S_\theta] \\
+       &&&+ y_i[-S_\psi S_ \varphi + C_\varphi S_\vartheta C_\psi]) 
     \end{alignedat}
 \end{align}
 and $\vec{\Pi}=\begin{bmatrix}\varphi & \vartheta & \psi & t_x & t_y & t_z\end{bmatrix}^T$.
@@ -109,6 +110,7 @@ The commonly used, well-known stochastic gradient descent (SDG) algorithm comput
 \begin{align}
     \vec{\Pi}_{k+1} = \vec{\Pi}_{k} - \alpha \nabla E
 \end{align}
+where $\alpha$ is the learning rate.
 To accelerate convergence and to improve the found solution further modifications are made.
 
 Since we have vastly different effects on the error function by each dimension, the first consideration for improving the SDG is the following:
@@ -122,24 +124,24 @@ Another consideration to speed up SDG is to adaptively recalculate $\boldsymbol\
 We employ and modify ADADELTA as a technique to do so, which is described in detail in~\cite{zeiler2012adadelta}.
 The main idea is the following:
 It extends the SDG algorithm by two terms.
-First, an exponentially decaying average of past gradients, which is recursively defined as
+First, an exponentially decaying average of past gradients $\vec{G}_k$, which is recursively defined as
 \begin{align}
-    \vec{G}_{k+1} = \rho \vec{G}_{k} + (1 - \rho) {\nabla E}^2
+    \vec{G}_{k+1} = \zeta \vec{G}_{k} + (1 - \zeta) {\nabla E}^2
 \end{align}
-and second, an exponentially decaying average of past changes, which is defined as
+and second, an exponentially decaying average of past changes $\vec{X}_k$, which is defined as
 \begin{align}
-    \vec{X}_{k+1} = \rho \vec{X}_{k} + (1 - \rho) {\boldsymbol\alpha \nabla E}^2
+    \vec{X}_{k+1} = \zeta \vec{X}_{k} + (1 - \zeta) {\boldsymbol\alpha \nabla E}^2
 \end{align}
-where $\rho \leq 1$ is a decay constant, typically close to $1$.
+where $\zeta \leq 1$ is a decay constant, typically close to $1$.
 The root mean squared (RMS) of these quantities are
 \begin{align}
-    RMS[\vec{G}]_{k} = \sqrt{\vec{G}_{k} + \epsilon}
+    RMS[\vec{G}]_{k} = \sqrt{\vec{G}_{k} + \epsilon_{num}}
 \end{align}
 and 
 \begin{align}
-    RMS[\vec{X}]_{k} = \sqrt{\vec{X}_{k} + \epsilon}
+    RMS[\vec{X}]_{k} = \sqrt{\vec{X}_{k} + \epsilon_{num}}
 \end{align}
-where $\epsilon > 0$ is a very small constant, typically close to $0$.
+where $\epsilon_{num} > 0$ is a very small constant, typically close to $0$ (Note: this is a different threshold as the one used in section~\ref{sec:point-to-plane-correspondences}).
 It will prevent dividing by zero in the recalculation of $\boldsymbol\alpha$, which is as follows:
 \begin{align}
     \boldsymbol\alpha_{k} = \frac{RMS[X]_{k-1}}{RMS[G]_{k}}
@@ -167,9 +169,9 @@ Re-assigning point-to-plane correspondences this way $k$ times, with a large eno
 
 The algorithm was extended by two further optimizations, which are helpful in different scenarios.
 
-Firstly, we introduce a lock on some dimensions from being optimized by setting the corresponding $\alpha_i$ to zero.
+Firstly, we introduce the possibility to choose a lock on some dimensions from being optimized by setting the corresponding $\alpha_i$ to zero.
 Although 6D optimization generally works, reducing the optimization space is particularly useful if the source of error in the system is known and a model exists.
-That way, e.g., a point cloud from a terrestrial laserscanner that experiences irregularities in its spinning mirror is registered by optimizing only over the axis of rotation as no other movement is to be expected.
+That way, e.g., as we expect a spherical robot to move on a plane the position along the axis perpendicular to the plane is constant and should not be used for optimization.\todo{@Fabi clarify in experiments which locks were active.} 
 
 Secondly, we employ a continuous iteration, where the scans are processed sequentially. 
 This is especially useful for mobile systems, where pose errors accumulate due to increasing tracking uncertainties.
