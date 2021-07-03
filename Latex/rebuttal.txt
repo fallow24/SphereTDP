@@ -58,29 +58,40 @@
 > of the system. So in principle this does not change the situation
 > from using protective covers on "traditional" mobile mapping
 > systems.
-> 
+
+We clarified that the shell can enclose all sensor without requiring a 
+number of points of connection as individual enlosings for all sensors
+would. Further we added the requirement, that the shell is very 
+durable.
+ 
 > Lines 111-116: Modern kinematic scanning systems collect point cloud
 > data with high speed, so also kinematic point clouds are often dense
 > enough for robust plane determination. And on the other hand, sparse
 > point clouds are not optimal for point-to-point matching due to the
 > long distances between adjacent points.
-> 
+
+We clarified that also the lilmited FOV plays a role in not finding 
+planes for robust correspondences. 
+FIXME @Andreas and @Dorit: I (Anton) disagree can you double check?
+
 > Lines 244-246: The Livox ranging precision is given twice in this
 > sentence.
 > 
 > Figure 4: The x-scale is given in figure caption, but I would
 > suggest adding it to the figure also.
-> 
+
+FIXME Redoing the experiment anyways
+
 > Conclusion: Whereas the title, Abstract and Introduction concentrate
 > mostly on the spherical mobile mapping, Conclusion deals almost
 > entirely with the topic of registration, thus feeling somewhat
 > separated from the rest of the manuscript. Reading the Conclusion,
 > one could not expect that the title of the manuscript is "Towards
-> Spherical Robots For Mobile Mapping In Human Made Environments".
-> 
-> 
-> 
-> 
+> Spherical Robots For Mobile Mapping In Human Made Environments". 
+
+We added more context about spherical robots and put the registration 
+method into context. 
+ 
 > 
 > Reviewer 2: The authors have written a very interesting paper on the
 > topic of mobile mapping with a spherical robot in human-made
