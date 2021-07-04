@@ -5,7 +5,7 @@
 
 The plane-based registration is applied to the simulated dataset with noisy pose and range measurements (cf. Figure~\ref{fig:simulatedDatasets}) without further processing.
 Assuming this represents a coarsely pre-registered 3D point cloud, the distances to the ground truth were evaluated before and after the plane-based registration. 
-Figure~\ref{fig:simulatedEvaluation} \todo[inline]{Reupload matching process} shows the different point-to-point distances. 
+Figure~\ref{fig:simulatedEvaluation} shows the different point-to-point distances. 
 
 \begin{figure*}
  	\centering
@@ -21,7 +21,7 @@ Figure~\ref{fig:simulatedEvaluation} \todo[inline]{Reupload matching process} sh
 		\includegraphics[width=\textwidth]{./images/corr_side_view}\\
   		\includegraphics[width=\textwidth]{./images/corr_hist}
   	\end{minipage} 	
- 	\caption{Evaluation of point distances before (left) and after (right) the plane-based registration on a simulated dataset. Lateral images always have the same orientation. A maximal distance of \SI{30}{m} is set, such that all points that display a higher distance value are excluded from the analysis. Both point-clouds were reduced before evaluating point-to-point distances to the ground-truth. Further, the color-space maps all values with a distance greater than \SI{1}{m} to the same color. The top two columns show a heat map of distances, while the bottom shows the corresponding histogram. The color mapping is equivalent in both. An animation of the matching process is given at \url{https://youtu.be/0ps5Pg4qo4E}.} 
+ 	\caption{Evaluation of point distances before (left) and after (right) the plane-based registration on a simulated dataset. Lateral images always have the same orientation. A maximal distance of \SI{30}{m} is set, such that all points that display a higher distance value are excluded from the analysis. Both point-clouds were reduced before evaluating point-to-point distances to the ground-truth. Further, the color-space maps all values with a distance greater than \SI{1}{m} to the same color. The top two columns show a heat map of distances, while the bottom shows the corresponding histogram. The color mapping is equivalent in both. An animation of the matching process is given at \url{https://youtu.be/7igQdEeCsYk}.} 
  	\label{fig:simulatedEvaluation}
 \end{figure*} 
 
