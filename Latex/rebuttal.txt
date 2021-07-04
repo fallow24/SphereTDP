@@ -80,7 +80,7 @@ FIXME @Andreas and @Dorit: I (Anton) disagree can you double check?
 > Figure 4: The x-scale is given in figure caption, but I would
 > suggest adding it to the figure also.
 
-FIXME Redoing the experiment anyways
+We added a label to the x-scale
 
 > Conclusion: Whereas the title, Abstract and Introduction concentrate
 > mostly on the spherical mobile mapping, Conclusion deals almost
@@ -355,7 +355,10 @@ FIXME: -> I don't understand this comment? TODO
 > the significant second peak in the right-hand diagram in Figure 4
 > should be made. This has not been discussed so far.
 
-FIXME: -> added todo REDO experiment
+We redid the experiment with a larger amount of points (all that have
+a point-to-point distance of less than 3000 cm). The second significant
+peak was a artifact of the previous thresholding and hence is now not 
+significant anymore. 
 
 > Page 8, Column 1, Line 51: "ten scans" means ten individual scan
 > lines or 10 epochs or is this identical? What kind of temporal

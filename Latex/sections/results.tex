@@ -5,7 +5,7 @@
 
 The plane-based registration is applied to the simulated dataset with noisy pose and range measurements (cf. Figure~\ref{fig:simulatedDatasets}) without further processing.
 Assuming this represents a coarsely pre-registered 3D point cloud, the distances to the ground truth were evaluated before and after the plane-based registration. 
-Figure~\ref{fig:simulatedEvaluation} \todo{REDO experiments!!!} shows the different point-to-point distances. 
+Figure~\ref{fig:simulatedEvaluation} \todo[inline]{Reupload matching process} shows the different point-to-point distances. 
 
 \begin{figure*}
  	\centering
@@ -21,31 +21,29 @@ Figure~\ref{fig:simulatedEvaluation} \todo{REDO experiments!!!} shows the differ
 		\includegraphics[width=\textwidth]{./images/corr_side_view}\\
   		\includegraphics[width=\textwidth]{./images/corr_hist}
   	\end{minipage} 	
- 	\caption{Evaluation of point distances before (left) and after (right) the plane-based registration on a simulated dataset. Lateral images always have the same orientation. A maximal distance of \SI{2}{m} is set, such that all points that display a higher distance value are excluded from the analysis. Further, the histogram joins all values with a distance greater than \SI{1}{m} into the last bucket. The top two columns show a heat map of distances, while the bottom shows the corresponding histogram. The color mapping is equivalent in both. An animation of the matching process is given at \url{https://youtu.be/0ps5Pg4qo4E}.}
+ 	\caption{Evaluation of point distances before (left) and after (right) the plane-based registration on a simulated dataset. Lateral images always have the same orientation. A maximal distance of \SI{30}{m} is set, such that all points that display a higher distance value are excluded from the analysis. Both point-clouds were reduced before evaluating point-to-point distances to the ground-truth. Further, the color-space maps all values with a distance greater than \SI{1}{m} to the same color. The top two columns show a heat map of distances, while the bottom shows the corresponding histogram. The color mapping is equivalent in both. An animation of the matching process is given at \url{https://youtu.be/0ps5Pg4qo4E}.} 
  	\label{fig:simulatedEvaluation}
 \end{figure*} 
 
 Before the registration, the corridor is only represented acceptably in the front part. 
 The further into the corridor, i.e., the longer the robot accumulates errors, the more imprecise the data becomes. 
-Finally, we see that a large portion of the data even exceeds either the \SI{1}{\meter} error, contributing to the large spike in the histogram or even the \SI{2}{\meter} error limit; thus, being cut from the representation. 
+Finally, we see that many points exceed the threshold of \SI{1}{\meter} and thus being mapped to the same color value.
 After registration, we see that, qualitatively, the ideal corridor was nearly restored from the noisy data. 
-In particular a very large portion of points (95\%) have distances of less than \SI{16.6}{\centi\meter}.
+In particular a very large portion of points (90\%) have distances of less than \SI{35.9}{\centi\meter}.
 Table~\ref{tab:percentiles} shows the comparison of further percentiles of both datasets. 
 
 \begin{table}
 	\centering
 	\begin{tabular}{@{}lccc@{}}\hline
 		& P90 & P95 & P98 \\ \hline\hline
-		Uncorrected & \SI{24.2}{\centi\meter} &  \SI{38.2}{\centi\meter} &  \SI{61.5}{\centi\meter} \\%& \SI{9.7}{\centi\meter}\\
-		Corrected & \SI{12.8}{\centi\meter} &  \SI{16.6}{\centi\meter} &  \SI{21.6}{\centi\meter} \\\hline%& \SI{6.3}{\centi\meter}\\ \hline
+		Uncorrected & \SI{372.1}{\centi\meter} &  \SI{553.4}{\centi\meter} &  \SI{827.9}{\centi\meter} \\%& \SI{9.7}{\centi\meter}\\
+		Corrected & \SI{35.9}{\centi\meter} &  \SI{64.1}{\centi\meter} &  \SI{122.8}{\centi\meter} \\\hline%& \SI{6.3}{\centi\meter}\\ \hline
 	\end{tabular}
 	\caption{Comparison of point-distances in the uncorrected and corrected simulated dataset.}
 	\label{tab:percentiles}
 \end{table}
 
-The second significant peak in the right hand histogram in figure~\ref{fig:simulatedEvaluation} \todo{Explain this peak. Not sure right now.}
-
-Further, the square and straight shape of the corridor is restored well, and especially the large spike at errors of greater than \SI{1}{m} is removed. 
+Further, the square and straight shape of the corridor is restored well, and especially the large amount of points with an errors of greater than \SI{1}{m} is removed. 
 Any such errors tend to occur at the back and the front of the corridor where the measured range is the largest hence has the largest contribution of the range error. 
 
 \subsection{Floating Sphere Results}
