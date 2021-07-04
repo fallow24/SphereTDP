@@ -1,0 +1,8 @@
+./histogram ../dist2cor_red/scan000.3d hist.txt 3000 0.1
+Creating data ...../dist2cor_red/scan000.3d
+Writing data ...hist.txt
+P90: 35.9
+P95: 64.1
+P98: 122.8
+Mean: 24.4972 Std: 0.0924754
+ done.
