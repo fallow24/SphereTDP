@@ -17,11 +17,22 @@ Secondly, a spherical shell that encloses all sensors protects these from possib
 For example, the shell stops any dust that deteriorates sensors or actuators when settling at sensitive locations.
 In contrast to an usual enclosing the shell can separate the sensors entirely from the environment without the need for a number of points-of-connection. 
 A strict requirement then is that the shell is very durable.
-This is particularly useful for unknown and dangerous environments.
-E.g., for space applications, in the DAEDALUS study~\cite{RossiMaurelliUnnithanetal.2021}, a spherical robot is proposed that is to be lowered into a lunar cave and create a 3D map of the environment. The authors choose this format as the present moon regolith is known to damage instruments and other components.
+This is particularly useful for unknown or dangerous environments.
+E.g., old buildings that are in danger of collapsing, narrow underground funnels, construction sites, or mining shafts. 
+The spherical format is, in fact, also suited for space applications.
+In the DAEDALUS study~\cite{RossiMaurelliUnnithanetal.2021}, such a robot is proposed that is to be lowered into a lunar cave and create a 3D map of the environment. The authors choose this format as the moon regolith is known to damage instruments and other components.
+They also present an approach to protect the shell from accumulating dust and dirt.
+However, the spherical format also comes with some disadvantages.
+Lidar sensors often have a minimum scan distance, resulting in a less dense (or empty) point cloud when the scanner looks on the ground, whereas density is higher when looking in other directions.
+The ground itself is likely to be less populated with points, due to weak angles of incidence while mapping it.
+Furthermore, relying on IMU based odometry as a localization technique alone yields inaccurate and noisy pose measurements.
+Therefore, a robust registration procedure is needed for spherical robots, that is able to cope with vast differences is point cloud density and high noise regarding pose measurements.
 
 This paper proposes to use such a spherical robot for mobile mapping man-made environments.
 In such environments, one advantage are architectural shapes following standard conventions arising from tradition or utility. In particular, there are many flat surfaces such as walls, floors, etc. that are sensed.
 Exploiting this fact yields more opportunities for registration as point-to-plane correspondences can be used.
 The proposed registration method minimizes the distances of each point to its corresponding plane as an objective function.
-The method is evaluated on a simulated dataset as well as on experimentally acquired datasets.
+
+The next sections introduce you to the state of the art SLAM algorithms for spherical robots and plane based registration.
+We then present our approach, which includes global plane extraction, point to plane correspondences, and an optimized gradient descent that minimizes point to plane distances.
+Furthermore, we show the results on simulated, as well on real world datasets. 

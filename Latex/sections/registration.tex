@@ -1,6 +1,15 @@
 %!TEX root = ../main.tex
 \section{Registration Algorithm}
 
+This section describes the presented algorithm.
+We first pre-register all individual scans to align them in one global coordinate system.
+Then, planes are extracted from this global scan model.
+The key to improving map quality is to find a model for each individual scan, where each point is correctly identified to belong to one of the globally extracted planes.
+Then, each scan is optimized by finding a 6D pose-transformation that minimizes the distance of each correspondence.
+Note that all of this takes place on a reduced version of the scan, i.e. an octree based reduction where each voxel is only allowed to have a certain amount of points.
+This ensures a homogenous point density, which is favourable for the error function.
+It also decreases runtime, while preserving the planar features of the environment. 
+ 
 Consider a line scan as the smallest chunk of range data we obtain from the scanner device driver.
 In the case of a SICK LMS1xx it is a line, and in case of a Livox scanner it has a flower shape.
 More details are provided in the following sections.
@@ -32,15 +41,27 @@ This yields maps that can be used for plane registration and hence a point-to-pl
 \subsection{Plane Extraction}
 
 After having done the pre-registration, the scans are aligned well enough to make statements about the potential planes in the environment.
-To find the planes in the environment, a Randomized Hough transform with an accumulator ball as described in~\cite{3DRESEARCH2011} is used as this method prefers dominant planes such as the building structure over smaller planar surfaces.
+We extract planes only once from the global scan model, or a portion of that global scan model.
+Sometimes, the first few line scans, or the first half of the global model, is sufficient for plane extration.
+This is because within the initial movements of the robot system, pose error has not accumulated for very long, resulting in a less dense, yet less distorted representation of the environment.
+For mobile robots this yields a quite consistent strategy for global plane extraction, since all the subsequent scans (where pose error keeps accumulating) get matched with the initial planar representation.
+However, especially for large datasets, it is necessary to update the global plane model multiple times while establishing point to plane correspondences.  
+Currently, this is not done, and is one of the primary objectives for future works.
+
+To find the planes in the environment, a Randomized Hough transform (RHT) with an accumulator ball as described in~\cite{3DRESEARCH2011} is used as this method prefers dominant planes such as the building structure over smaller planar surfaces.
+The RHT is combined with a region growing approach, similar plane merging, and a flatness filter that is based on principal component analysis (PCA).
+Once a plane is identified, we calculate the convex hull of that plane, representing the extent in all directions. 
+This way, large planar structures such as walls or the ceiling get identified.
+Note that smaller, non-perpendicular planes such as doors or cupboards potentially get identified, too, if they pass the PCA filter.
+
 In the next subsection, the Hesse-normal form of the plane is required.
 For an ideal plane the orthogonal distance from the origin $\rho_{\mathcal{P}_k}$ is computed via $\vec{n}_{\mathcal{P}_k}\cdot\vec{p}_i$, where $\vec{p}_i = \begin{bmatrix}x_i&y_i&z_i\end{bmatrix}^T$ is an arbitrary point on the plane and $\vec{n}_{\mathcal{P}_k} = \begin{bmatrix}n_{\mathcal{P}_k}^x&n_{\mathcal{P}_k}^y&n_{\mathcal{P}_k}^z\end{bmatrix}^T$ is the normal vector of that plane.
-To find this point, we first define a convex hull that encloses the plane.
-It is defined by the points that lie on the plane with the furthest distance to one another.
-We then choose the center point of the convex hull of the plane as $\vec{p}_i$.
+To find this point, we use the convex hull, as it is defined by the points that lie on the plane with the furthest distance to one another.
+We choose the center point of the convex hull of the plane as $\vec{p}_i$.
 
 \subsection{Point-to-Plane Correspondences}\label{sec:point-to-plane-correspondences}
 
+\todo{@fabi Introduce PPD, think about clustering?}
 There are many ways of solving the segmentation problem of assigning each point to a plane often based on the RANSAC method \cite{Honti2018}, \cite{Gaspers2011} but also deep learning approaches \cite{Engelmann2018}.
 The quality of the preregistration directly influences the quality of the plane detection and therefore the quality of the final registration result. 
 We assume small enough errors in pre-registration to allow for plane detection.
