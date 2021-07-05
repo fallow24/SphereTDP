@@ -22,9 +22,9 @@ We then find the planes in the pre-registered point cloud and then optimize the 
 
 \begin{algorithm}
     \SetAlgoLined
-    \KwResult{A corrected map}
+    \KwResult{A corrected map and 6D path.}
     1. Pre-register the scans\;
-    2. Extract planes from the registered map\;
+    2. Extract planes from the registered map globally\;
     3. Further improve map by solving the optimization that minimizes the distance of all points to their respective planes\;
     \caption{Registration algorithm for man-made environments}
     \label{algo:registration-algorithm}
@@ -42,7 +42,7 @@ This yields maps that can be used for plane registration and hence a point-to-pl
 
 After having done the pre-registration, the scans are aligned well enough to make statements about the potential planes in the environment.
 We extract planes only once from the global scan model, or a portion of that global scan model.
-Sometimes, the first few line scans, or the first half of the global model, is sufficient for plane extration.
+The first few line scans, e.g. the first half of the global model, is sufficient for plane extration.
 This is because within the initial movements of the robot system, pose error has not accumulated for very long, resulting in a less dense, yet less distorted representation of the environment.
 For mobile robots this yields a quite consistent strategy for global plane extraction, since all the subsequent scans (where pose error keeps accumulating) get matched with the initial planar representation.
 However, especially for large datasets, it is necessary to update the global plane model multiple times while establishing point to plane correspondences.  
@@ -57,17 +57,85 @@ Note that smaller, non-perpendicular planes such as doors or cupboards potential
 In the next subsection, the Hesse-normal form of the plane is required.
 For an ideal plane the orthogonal distance from the origin $\rho_{\mathcal{P}_k}$ is computed via $\vec{n}_{\mathcal{P}_k}\cdot\vec{p}_i$, where $\vec{p}_i = \begin{bmatrix}x_i&y_i&z_i\end{bmatrix}^T$ is an arbitrary point on the plane and $\vec{n}_{\mathcal{P}_k} = \begin{bmatrix}n_{\mathcal{P}_k}^x&n_{\mathcal{P}_k}^y&n_{\mathcal{P}_k}^z\end{bmatrix}^T$ is the normal vector of that plane.
 To find this point, we use the convex hull, as it is defined by the points that lie on the plane with the furthest distance to one another.
-We choose the center point of the convex hull of the plane as $\vec{p}_i$.
+We choose the center point of the convex hull of the plane as $\vec{a}_{\rho_k}$.
 
 \subsection{Point-to-Plane Correspondences}\label{sec:point-to-plane-correspondences}
 
-\todo{@fabi Introduce PPD, think about clustering?}
+\begin{figure*}
+	\centering
+	\includegraphics[width=\textwidth]{images/project}
+	\caption{Illustration of the Hesse- and polygon projection distance. The point p (red) gets projected onto the infinitley extending global plane. Both the point projection (green) and the global planes convex hull (blue) get projected into 2D space (grey). The Hesse distance, i.e. the shortest distance to the infinitley extending plane (red), is shown as well as the minimum distance from the 2D point projection to the polygon (purple).}
+	\label{fig:proj}
+\end{figure*}
+
 There are many ways of solving the segmentation problem of assigning each point to a plane often based on the RANSAC method \cite{Honti2018}, \cite{Gaspers2011} but also deep learning approaches \cite{Engelmann2018}.
 The quality of the preregistration directly influences the quality of the plane detection and therefore the quality of the final registration result. 
 We assume small enough errors in pre-registration to allow for plane detection.
 Which is why a simple algorithm is sufficient:
-For each plane, consider adding a correspondence for all points closer to the plane than a threshold $\epsilon$.
-Depending on the threshold value, some points now have multiple correspondences if their distance to multiple planes is less than $\epsilon$ \todo{@Fabi add actual $\epsilon$ values to the experiments}. We then omit all points with correspondences to multiple planes from the optimization to avoid introducing errors due to the plane ambiguity.
+For each globaly extracted plane, consider adding a correspondence for all points that are close to that plane.
+To do this, we employ two distance models to represent the distance from a point to a plane.
+
+The Hesse-normal form describes the distance from the $i$-th transformed point $T(\vec{p}_i)$ to the ever extending, infinetly large $k$-th plane in 3D vector space
+\begin{equation}\label{eq:hesse}
+	D_{h}^{i,k} = \vec{n}_{\mathcal{P}_k} \cdot \left[ T(\vec{p}_i) - \vec{a}_{\mathcal{P}_k} \right] ,
+\end{equation}
+with normal $\vec{n}_{\mathcal{P}_k}$ and receiving point $\vec{a}_{\mathcal{P}_k}$ of the $k$-th plane.
+The distance $D_{h}^{i,k}$ of the $i$-th point to the $k$-th plane reflects the length of the line segment, constructed from the $i$-th point to its projection on the $k$-th plane.
+Therefore, the line segment is parallel to the normal vector of the plane by definition.
+Thus, the $i$-th points projection $\widetilde{T}(\vec{p}_i)$ onto the $k$-th plane, which is required later, is easily calculated by shifting the point against normal direction:
+\begin{equation}\label{eq:projection}
+	\widetilde{T}(\vec{p}_i) = T(\vec{p}_i) - D_{h}^{i,k} \cdot \vec{n}_{\mathcal{P}_k}
+\end{equation}
+
+The simplicity of the Hesse distance is at contrast with its inability to represent the extent of the plane.
+It becomes obvious that another distance model, based on the polygonic nature of the plane, is required: the polygon projection distance (PPD).
+The convex hull is able of representing the expansion of the plane in all directions, and thus is utilized as a distance model.
+First, the corresponding point gets projected onto the ever extending, infinetly large plane representation given by the Hesse form.
+Keeping track of the points projection $\widetilde{T}(\vec{p}_k)$ from eq. \ref{eq:projection}, i.e. the green point from figure \ref{fig:proj}, is essential for calculating a points distance to a polygon in 3D.
+It represents the points "shadow" onto the same plane where the polygon lives in. 
+Then, the 3D polygon, i.e. the points that make up the convex hull, as well as the corresponding 3D point projection, are projected again into a 2D vector space, using the direction of the plane.
+E.g. in figure \ref{fig:proj}, the blue planes normal vector has its mayor component in z-direction (upwards), thus the projection polygon distance is calculated in the xy-plane.
+Using the maximum of the absolute magnitude of the normal vector ensures that the most sensible 2D projection is used for every direction.
+Sunday \cite{pga} presents an optimal algorithm to check wether the point projection lies inside the polygon in 2D. 
+If the point is inside the polygon, its PPD is set to zero.
+If, however, the point is outside the polygon, the shortest distance to the polygon is calculated by looking at the minimum distance of the $i$-th point to each line segment, making up the convex hull of the $k$-th plane in 3D.
+Let the polygon $P_k$ be made up of line segments $s_{m, j}$.
+The line segment $s_{m, j}$ consists of the points $p_m$ and $p_j$.
+The line segment is parameterized by
+\begin{equation}
+\label{eq:line}
+	s_{m, j}(t) = p_m + t \cdot \left( p_j - p_m \right) ,  
+\end{equation}
+where $t \in \left[ 0, 1 \right]$. 
+We setup a distance function, which measures the distance from the query point $p_i$ to an arbitrary point on the line segment.
+\begin{equation}
+	\label{eq:dist}
+	d_{m, j}(t) = \lVert s_{m, j}(t) - p_i \rVert 
+\end{equation} 
+It is now possible to find the shortest distance to the line segment by finding the argument of the function that minimizes this distance.
+Therefore, we set
+\begin{equation}
+	\pardiff{t} d_{m, j}(t)^2 \overset{!}{=} 0 ,
+\end{equation}  
+resulting in 
+\begin{equation}
+	t_0 = \frac{\left( p_j - p_m \right) \cdot \left( p_i - p_m \right)}{\left( p_j - p_m \right)^2} .
+\end{equation}
+Note the possibility of $t_0 \notin \left[ 0, 1 \right]$. 
+In that case, the projection of the point $p_i$ onto the line given by eq. \ref{eq:line} is not between $p_j$ and $p_m$. 
+Instead, its projection onto the line falls outside of the segment.
+By constraining $t_0$ we get 
+\begin{equation}
+\label{eq:minmax}
+	\hat t = \min \left( \max \left( t_0, 0\right) , 1 \right) ,
+\end{equation}
+which is the argument that gives the shortest distance to the line segment, when inserted to eq. \ref{eq:dist}.
+We find the PPD from the point $p_i$ to the polygon $P_k$ by calculating the minimum shortest distance over all line segments that make up the polygon.  
+
+Now, we say that a point is "close" to a plane, if the Hesse distance is smaller than $\epsilon_H$ and the PPD is smaller than $\epsilon_P$. 
+Depending on the threshold values, some points are contemplable having correspondences with multiple planes, if both distances fall below their respective threshold. \todo{@Fabi add actual $\epsilon$ values to the experiments}. 
+We then chose to establish a correspondence to the plane with the smallest PPD.
+If there are still ambiguities, i.e. multiple PPD's with value zero, a correspondence is established with the plane having the smallest PPD and smallest Hesse distance. 
 
 \subsection{Optimization}
 
