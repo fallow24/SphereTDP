@@ -70,9 +70,12 @@ durable.
 > point clouds are not optimal for point-to-point matching due to the
 > long distances between adjacent points.
 
-We clarified that also the lilmited FOV plays a role in not finding 
+We clarified that also the limited FOV plays a role in not finding 
 planes for robust correspondences. 
 FIXME @Andreas and @Dorit: I (Anton) disagree can you double check?
+
+I (Andreas) seconds the statement, that the limited FOV plays a role
+in not finding planes for robust correspondences.
 
 > Lines 244-246: The Livox ranging precision is given twice in this
 > sentence.
@@ -175,6 +178,8 @@ There is an approach to prevent dust and dirt to accumulate on the outer shell. 
 
 Removed the false statement.
 BIG FIXME: Get more references on plane based slam.
+
+I (Andreas) has added a coupe of references.
 
 > - The introduction in Section 3 should be revised as it is not very
 > intuitive for the reader and something about the objectives and
