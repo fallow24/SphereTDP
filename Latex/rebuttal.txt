@@ -219,12 +219,16 @@ We added more detail in the plane extraction subsection.
 > difficult.
 
 TODO: Anton? Have you done it already? 
+Yes - Anton
 
 > 
 > - What orders of magnitude were finally used for the range noise
 > model in Section 4.2 and why was this not also done for the angular
 > resolution?
-> 
+
+The distributions we sample from are specified in the caption of 
+figure 3. 
+
 > - In the context of the real experiment in Section 5, a major
 > simplification is made. Even if this simplification is certainly
 > suitable for the beginning, this special case comes quite surprising
@@ -233,17 +237,28 @@ TODO: Anton? Have you done it already?
 > what is the background? At least this simplification should be
 > mentioned beforehand, otherwise the reader will have false
 > expectations.
-> 
+
+We added a further experiment that uses nearly all DoF: A sphere rolling
+on a ground plane. This was not done in the previous manuscript because
+we had issues getting the hardware shipped, assembled and the experiment 
+carried out in time.
+
 > - Wouldn't it also be interesting to compare the estimated pose
 > parameters with the nominal values from the simulation within the
 > framework of Section 6.1? So far, the focus has only been on the
 > point cloud.
-> 
+
+FIXME: Do we have space & time for this?
+
 > - Why is there no qualitative validation for the results of the real
 > data in Section 6.2? A reference scan based on a terrestrial laser
 > scanner would be a possibility or otherwise based on the flatness of
 > known planes in the registered point cloud?
-> 
+
+FIXME: Can we get a riegl scan of jaspers home? If not corona restrictions were at fault
+We couldn't access the rooms the dataset was acquired in for a terrestrial 
+reference scan. 
+
 > - In the Conclusion, the parallelism and perpendicularity within the
 > environment is mentioned again, although this did not play a role in
 > the main part of the paper. Therefore, the question arises why do
@@ -253,7 +268,10 @@ TODO: Anton? Have you done it already?
 > introduced so far. There are also already other methods available
 > that take this idea of geometric constraints for georeferencing into
 > account.
-> 
+
+We removed the initial mention of parrallelism and perpendicularity of the planes
+as it is of no further interest in the rest of the manuscript. 
+ 
 > Further open questions/comments are:
 > Page 1, Line 15: Double use of "protect", which should be replaced
 > by another word.

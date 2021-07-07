@@ -51,8 +51,8 @@ Any such errors tend to occur at the back and the front of the corridor where th
 Figure~\ref{fig:cylon-corrected} shows the results obtained before and after employing the plane based registration on the dataset acquired by the floating sphere.
 The pre-registration is obtained by determining the orientation of the sphere via Madgwick filtered~\cite{madgwick2010efficient} IMU measurements.
 To increase the number of possible point-to-plane correspondences we combine twenty temporally successive scans into one meta-scan, which is then globally registered. 
-We always use the middlest line scan as a reference coordinate system.
-This does not only speed up convergence due to the proportional effect on the error function but also decreases the risk of transforming the scan in a senseless way.
+We always use the scan at the median index as a reference coordinate system.
+This does not only speed up convergence due to the proportional effect on the error function but also decreases the risk of transforming a single line scan incorrectly.
 Transformations like these happen in particular for a small collection of points as outliers have more influence.
 
 \begin{figure*}
@@ -71,7 +71,7 @@ Further, the deviation of points around the walls is notably smaller as the poin
 \subsection{Rolling Sphere Results}
 
 Figure~\ref{fig:jasperhome} shows the results obtained before and after employing the presented algorithm on the dataset, acquired by the prototype in figure~\ref{fig:prototype}.
-We again combine twenty temporally successive scans into one meta-scan, using the middlest scan as a reference coordinate system, which is then globally registered.
+We again combine twenty temporally successive scans into one meta-scan, using the scan at the median index as a reference coordinate system, which is then globally registered.
 
 \begin{figure*}
         \centering
@@ -82,33 +82,33 @@ We again combine twenty temporally successive scans into one meta-scan, using th
         \caption{The point cloud acquired by the rolling sphere before (left) and after (right) applying the plane based registration. View from the interior (top) and a birds-eye view (bottom). Parameters used for optimization: $\epsilon_H = 200$, $\epsilon_P = 300$, $\epsilon_\alpha = \frac{\pi}{4}$, $K = 200$ for AKNN, $d_{growth} = 50$, $N_{c_min} = 800$, $\alpha_0 = [0.001, 0.001, 0.001, 1, 0, 1]^\tau$, $i = 1500$, $k = 1$. An animation of the registration process is given at \url{https://youtu.be/hYR3xLhIdsE}.}
         \label{fig:jasperhome}
 \end{figure*}
-After the registration, the walls of the environment are no longer ambiguous, since all the sub-sequent scans got matched with the initial plane representation.
-However, the improved path looks distorted.
+After the registration, the walls of the environment are no longer ambiguous, since all the subsequent scans are matched with the initial plane representation.
+When considering the resulting path, it looks distorted.
 This is because for some scans, especially empty ones where the sensor points to the ground, no planar features got matched with the global plane model, thus their pose is not optimized.
 Improving the path quality is an objective for future works.
 
 % This section is commented out
 \iffalse
-\subsection{RADLER Results}
+	\subsection{RADLER Results}
 
-\subsection{Experimental Results REMOVE THIS SECTION}
+	\subsection{Experimental Results REMOVE THIS SECTION}
 
-For the experimentally acquired datasets a similar procedure is followed. 
-The main difference being, that the scan was pre-registered using a point-to-point based method as described in section~\ref{sec:experimentalSetup}. 
-Here also the point distances to the ground truth (in this case the terrestrially acquired 3D laser scan) is evaluated before and after the plane-based registration process. 
+	For the experimentally acquired datasets a similar procedure is followed. 
+	The main difference being, that the scan was pre-registered using a point-to-point based method as described in section~\ref{sec:experimentalSetup}. 
+	Here also the point distances to the ground truth (in this case the terrestrially acquired 3D laser scan) is evaluated before and after the plane-based registration process. 
 
-\begin{figure}
-	\centering
-	\begin{minipage}[c]{0.25\textwidth}
-		\centering	
-		\includegraphics[width = \textwidth]{./images/distances_fire}\\
-		\includegraphics[width = \textwidth]{./images/histogram_fire}
-  	\end{minipage}\hfill
-  	\begin{minipage}[c]{0.25\textwidth}
-  	\end{minipage} 	
+	\begin{figure}
+		\centering
+		\begin{minipage}[c]{0.25\textwidth}
+			\centering	
+			\includegraphics[width = \textwidth]{./images/distances_fire}\\
+			\includegraphics[width = \textwidth]{./images/histogram_fire}
+	  	\end{minipage}\hfill
+	  	\begin{minipage}[c]{0.25\textwidth}
+	  	\end{minipage} 	
 
-	\todo[inline]{Evaluate Plane matching on firefighter school data; histogram after etc}
-	\caption{Evaluation of point distances before (left) and after (right) the plane based registration on a experimentally acquired dataset. A maximal distance of \SI{5}{m} is set, such that all points that display a higher distance value are excluded. The left column shows a heat map of distances while the right shows the corresponding histogram. The color mapping is equivalent in both. An animation of the matching process can be seen \href{todo}{here}}
-	\label{fig:experimentalEvaluation}
-\end{figure}
+		\todo[inline]{Evaluate Plane matching on firefighter school data; histogram after etc}
+		\caption{Evaluation of point distances before (left) and after (right) the plane based registration on a experimentally acquired dataset. A maximal distance of \SI{5}{m} is set, such that all points that display a higher distance value are excluded. The left column shows a heat map of distances while the right shows the corresponding histogram. The color mapping is equivalent in both. An animation of the matching process can be seen \href{todo}{here}}
+		\label{fig:experimentalEvaluation}
+	\end{figure}
 \fi

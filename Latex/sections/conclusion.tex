@@ -2,11 +2,11 @@
 \section{Conclusion}
 
 In this paper, we proposed an approach to mobile mapping using a spherical robot. 
-Using the inherent rotation of the sphere used for locomotion to also rotate a laser scanner also for measurements of the entire environment.
+Given that a spherical robot inherently rotates for locomotion, we use this movement to also rotate a laser scanner, that consequently measures the robots entire environment.
 We propose to post-process the acquire data using a novel registration method for man made environments that exploits the structure of those environments. 
-Given that in human-made environments straight planes are abundantly available, we employ point-to-plane correspondences to improve a pre-registered 3D point cloud. 
-We have evaluated the procedure on a simulated dataset and on an experimentally acquired dataset with different motion profiles. 
-In this evaluation, we have shown that the procedure improves both datasets and yields maps that better resemble human-made, structures. 
+In human-made environments straight planes are abundantly available, hence we employ point-to-plane correspondences to improve a pre-registered 3D point cloud. 
+We have evaluated the procedure on a simulated dataset and on two experimentally acquired datasets with different laser scanners and motion profiles. 
+In this evaluation, we have shown that the procedure improves all datasets and yields maps that better resemble human-made, structures. 
 In particular, the qualitative structure of the environments is reconstructed well. 
 In the resulting maps, the parallel walls are clearly improved.
 
@@ -17,10 +17,10 @@ One approach is to introduce soft-locks for the optimization dimensions.
 I.e., instead of locking some dimensions entirely from being used for optimization, they are weighted based on the dynamics of the system that encode which noise source is more likely.  
 
 %
-The biggest issue with the presented algorithm currently is that the global plane model is established only once as initialization, but never updated afterwards.
+The biggest issue with the presented algorithm currently is that the global plane model is established only once at initialization, but never updated afterwards.
 Utilizing the local planar clustering (LPC) of the individual line scans for updating the global plane model step by step is currently the primary objective of future studies.
 One idea is to calculate the convex hulls of the LPC, and combine them with the global planes sequentially.
 Therefore, we expect to increase robustness and autonomy of the registration procedure.
 
 %
-Furthermore, we will test our rolling and scanning spheres on a rail system to achieve repeatable trajectories. 
+Furthermore, more experimental evaluation is required, hence we will test our rolling and scanning spheres on a rail system to achieve repeatable trajectories. 

@@ -216,8 +216,10 @@ Its gradient follows then immediately:
 Where
 \begin{equation}
 \begin{split}
-\nabla E_\varphi = n_{\mathcal{P}_k}^y(x_i[-S_\varphi S_\psi+C_\varphi C_\psi S_\vartheta]+y_i[-S_\varphi C_\psi -C_\varphi S_\vartheta S\psi] - z_i C_\varphi C_\vartheta)\\
-        + n_{\mathcal{P}_k}^z(x_i[C_\varphi S_\psi+C_\varphi C_\psi S_\vartheta] +y_i[C_\varphi C_\psi -S_\varphi S_\vartheta S\psi] - z_i S_\varphi C_\vartheta)
+\nabla E_\varphi = &n_{\mathcal{P}_k}^y(x_i[-S_\varphi S_\psi+C_\varphi C_\psi S_\vartheta]\\
+			       & +y_i[-S_\varphi C_\psi -C_\varphi S_\vartheta S\psi] - z_i C_\varphi C_\vartheta)\\
+                   &+ n_{\mathcal{P}_k}^z(x_i[C_\varphi S_\psi+C_\varphi C_\psi S_\vartheta] \\
+                   &+y_i[C_\varphi C_\psi -S_\varphi S_\vartheta S\psi] - z_i S_\varphi C_\vartheta)
 \end{split} \;\; ,
 \end{equation}
 \begin{equation}
@@ -231,10 +233,10 @@ Where
 \begin{equation}
 \begin{split}
 	\nabla E_\psi = &n_{\mathcal{P}_k}^x\left(-x_iC_\vartheta S_\psi - y_iC_\vartheta C_\psi\right) \\
-       &+ n_{\mathcal{P}_k}^y(x_i[C_\varphi C_\psi - S_\varphi S_\vartheta S_\psi] 
-       + y_i[-C_\varphi S_\psi - S_\varphi S_\theta C_\psi]) \\
-       &+ n_{\mathcal{P}_k}^z(x_i[S_\varphi C_\psi + C_\varphi S_\psi S_\theta] 
-       + y_i[-S_\psi S_ \varphi + C_\varphi S_\vartheta C_\psi]) 
+       &+ n_{\mathcal{P}_k}^y(x_i[C_\varphi C_\psi - S_\varphi S_\vartheta S_\psi]\\
+       &+ y_i[-C_\varphi S_\psi - S_\varphi S_\theta C_\psi]) \\
+       &+ n_{\mathcal{P}_k}^z(x_i[S_\varphi C_\psi + C_\varphi S_\psi S_\theta] \\
+       &+ y_i[-S_\psi S_ \varphi + C_\varphi S_\vartheta C_\psi]) 
 \end{split}
 \end{equation}
 and $\vec{\Pi}=\begin{bmatrix}\varphi & \vartheta & \psi & t_x & t_y & t_z\end{bmatrix}^T$.
@@ -305,7 +307,7 @@ The algorithm was extended by two further optimizations, which are helpful in di
 
 Firstly, we introduce the possibility to choose a lock on some dimensions from being optimized by setting the corresponding $\alpha_i$ to zero.
 Although 6D optimization generally works, reducing the optimization space is particularly useful if the source of error in the system is known and a model exists.
-That way, e.g., as we expect a spherical robot to move on a plane the position along the axis perpendicular to the plane is constant and should not be used for optimization.\todo{@Fabi clarify in experiments which locks were active.} 
+That way, e.g., as we expect a spherical robot to move on a plane the position along the axis perpendicular to the plane is constant and should not be used for optimization.
 
 Secondly, we employ a continuous iteration, where the scans are processed sequentially. 
 This is especially useful for mobile systems, where pose errors accumulate due to increasing tracking uncertainties.

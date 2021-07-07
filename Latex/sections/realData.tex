@@ -33,18 +33,18 @@ We see that the point cloud is rather noisy, and in particular, the walls are se
 	\label{fig:float-sat-sphere}
 \end{figure}
 
-The second datasets is collected by a 3D scanner, namely the LIVOX MID 100, which is the same sensor that the simulation uses.
-We put the laserscanner into an acrylic glass spherical shell together with three IMUs and roll it by hand with a slow, constant motion in a home indoor environment.
-Thus, this time almost all six degrees of freedom are used for optimization.
-We exlude a translation in the global up- or downwards direction, though, since we also locked that dimension when collecting the data.
-Figure~\ref{fig:prototype} shows the prototpye.
-The left column of figure~\ref{fig:jasperhome} shows the pre-registered point cloud, applying only the pure transformation found by the recorded pose.
-Although the robot has been moved carefully slow, you see that pose error accumulates in such a way that the same wall is visible multiple times.   
+The second datasets is collected by a 3D scanner, namely the LIVOX MID 100, which is the same sensor the simulation uses.
+We put the laser scanner into an acrylic glass spherical shell together with three IMUs  (same specifications as in the first dataset) and manually roll it with a slow, constant motion in a home indoor environment.
+Thus, this time nearly all six degrees of freedom are used for optimization.
+We exclude a translation in the global up- or downwards direction as the sphere rolls on the ground surface, without possibility for up- or downwards motion-
+Figure~\ref{fig:prototype} shows the prototype.
+The left column of figure~\ref{fig:jasperhome} shows the pre-registered point cloud, applying only the transformation defined by the recorded poses.
+Although the robot has been moved carefully, you see that pose error accumulates in such a way that the same wall is sensed multiple times.   
 
 \begin{figure}
   \includegraphics[width=0.49\linewidth]{./images/photoReal1.jpeg}
   \includegraphics[width=0.50\linewidth]{./images/photoReal3.jpeg}
-  \caption{Prototype used for data acquisition with the rolling sphere. The main payload is the Livox Mid-100 laser-scanner. For pose-estimation, three IMUs of the manufacturer Phidget are placed inside and a Raspberry Pi 4 for the calculations. On the top are two batteries, and on the bottom one voltage stabilizer and breakout box of the laser-scanner. }
+  \caption{Prototype used for data acquisition with the rolling sphere. The main payload is the Livox Mid-100 laser scanner. For pose-estimation, three IMUs of the manufacturer Phidget are placed inside and a Raspberry Pi 4 for the calculations. On the top are two batteries, and on the bottom one voltage stabilizer and the breakout box of the laser scanner. }
   \label{fig:prototype}
 \end{figure}
 
