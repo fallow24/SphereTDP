@@ -62,7 +62,7 @@ Transformations like these happen in particular for a small collection of points
 	\includegraphics[width=0.495\textwidth]{./images/cylon_corr_corner}\\
 	\includegraphics[width=0.495\textwidth]{./images/cylon_uncorr_top}\hfill
 	\includegraphics[width=0.495\textwidth]{./images/cylon_corr_top}
-	\caption{The point cloud acquired by the floating sphere before (left) and after (right) applying the plane based registration. View from the interior that shows the used planes (top) and a birds-eye view (bottom). Parameters used for optimization: $\epsilon_H = 50$, $\epsilon_P = 200$, $\epsilon_\alpha = \frac{\pi}{4}$, $K = 20$ for AKNN, $N_{c_min} = 200$, $\alpha_0 = [0.01, 0.01, 0.01, 0, 0, 0]^\tau$, $i = 800$, $k = 1$. An animation of the registration process is given at \url{https://youtu.be/Qa2Qi8z0KEk} .}
+	\caption{The point cloud acquired by the floating sphere before (left) and after (right) applying the plane based registration. View from the interior that shows the used planes (top) and a birds-eye view (bottom). Parameters used for optimization: $\epsilon_H = 50$, $\epsilon_P = 200$, $\epsilon_\alpha = \frac{\pi}{4}$, $K = 20$ for AKNN, $d_{growth} = 50$, $N_{c_min} = 200$, $\alpha_0 = [0.01, 0.01, 0.01, 0, 0, 0]^\tau$, $i = 800$, $k = 1$. An animation of the registration process is given at \url{https://youtu.be/Qa2Qi8z0KEk} .}
 	\label{fig:cylon-corrected}
 \end{figure*}
 After the registration, the walls of the room are significantly more prominent in the point cloud. 
