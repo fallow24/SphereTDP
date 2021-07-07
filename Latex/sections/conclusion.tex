@@ -10,18 +10,18 @@ In this evaluation, we have shown that the procedure improves both datasets and 
 In particular, the qualitative structure of the environments is reconstructed well. 
 In the resulting maps, the parallel walls are clearly improved.
 
-However, as section~\ref{sec:experimentalSetup} shows, some outliers remain in the registered point cloud due to the simplistic point-to-plane correspondence model.
-This is to be improved in future studies.
-One idea to do so is to employ a local clustering technique onto the individual scans before registering them globally. 
-Points from the scan with a similar normal get clustered together if their distance is small enough.
-This way, a cluster represents a local plane while at the same time storing all the points that belong to that plane.
-Point-to-plane correspondences then arise from the intersection of local clusters with global planes.
-
 %
 Right now, not all steps in the procedure are autonomous, in particular the parameter tuning. 
 In the future, one goal is to increase the autonomy of the system.
 One approach is to introduce soft-locks for the optimization dimensions.
 I.e., instead of locking some dimensions entirely from being used for optimization, they are weighted based on the dynamics of the system that encode which noise source is more likely.  
+
+%
+The biggest issue with the presented algorithm currently is that the global plane model is established only once as initialization, but never updated afterwards.
+Utilizing the local planar clustering (LPC) of the individual line scans for updating the global plane model step by step is currently the primary objective of future studies.
+One idea is to calculate the convex hulls of the LPC, and combine them with the global planes sequentially.
+Therefore, we expect to increase robustness and autonomy of the registration procedure.
+
 %
 Currently, we are assembling the sphere of Figure~\ref{fig:robotRender} to test it in real environments.
 Unfortunately, this sphere will be too large to fit our floating setup, thus it will be tested in an office like environment.

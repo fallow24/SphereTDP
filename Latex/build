@@ -1,0 +1,1 @@
+latexmk -cd -f -xelatex -interaction=nonstopmode -synctex=1 main.tex

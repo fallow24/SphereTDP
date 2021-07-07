@@ -61,19 +61,20 @@ We choose the center point of the convex hull of the plane as $\vec{a}_{\rho_k}$
 
 \subsection{Point-to-Plane Correspondences}\label{sec:point-to-plane-correspondences}
 
+
+There are many ways of solving the segmentation problem of assigning each point to a plane. They are often based on the RANSAC method \cite{Honti2018}, \cite{Gaspers2011} but also deep learning approaches \cite{Engelmann2018} have been successful.
+The quality of the preregistration directly influences the quality of the plane detection and therefore the quality of the final registration result.
+We assume small enough errors in pre-registration to allow for plane detection.
+We employ two distance models to represent the distance from a point to a plane, and combine them with a local planar clustering (LPC) approach to establish point-to-plane correspondences.
+
+\subsubsection{Distance Models}
+
 \begin{figure*}
 	\centering
 	\includegraphics[width=\textwidth]{images/project}
 	\caption{Illustration of the Hesse- and polygon projection distance. The point p (red) gets projected onto the infinitely extending global plane. Both the point projection (green) and the global planes convex hull (blue) get projected into 2D space (grey). The Hesse distance, i.e. the shortest distance to the infinitely extending plane (red), is shown as well as the minimum distance from the 2D point projection to the polygon (purple).}
 	\label{fig:proj}
 \end{figure*}
-
-There are many ways of solving the segmentation problem of assigning each point to a plane. They are often based on the RANSAC method \cite{Honti2018}, \cite{Gaspers2011} but also deep learning approaches \cite{Engelmann2018} have been successful.
-The quality of the preregistration directly influences the quality of the plane detection and therefore the quality of the final registration result. 
-We assume small enough errors in pre-registration to allow for plane detection.
-Therefore, a simple algorithm is sufficient:
-For each globally extracted plane, consider adding a correspondence for all points that are close to that plane.
-To do this, we employ two distance models to represent the distance from a point to a plane.
 
 The Hesse-normal form describes the distance from the $i$-th transformed point $T(\vec{p}_i)$ to infinitely extending, $k$-th plane in 3D vector space
 \begin{equation}\label{eq:hesse}
@@ -131,10 +132,52 @@ By constraining $t_0$ we get
 which is the argument that gives the shortest distance to the line segment, when inserted to eq. \ref{eq:dist}.
 We find the PPD from the point $p_i$ to the polygon $P_k$ by calculating the minimum shortest distance over all line segments that make up the polygon.  
 
-We consider a point as ``close'' to a plane, if the Hesse distance is smaller than some threshold $\epsilon_H$ and the PPD is additionally smaller than some other threshold $\epsilon_P$. 
-Depending on the threshold values, some points might have correspondences with multiple planes, if both distances fall below their respective threshold. \todo{@Fabi add actual $\epsilon$ values to the experiments}. 
-We then choose to establish a correspondence to the plane with the smallest PPD.
-If there are still ambiguities, i.e. multiple PPD's with value zero, a correspondence is established with the plane having the smallest PPD and smallest Hesse distance. 
+\subsubsection{Local Planar Clustering}
+
+The presented algorithm employs LPC on each individual line scan.
+The idea is to find planar features utilizing an optimized approximate k nearest neighbour (AKNN) search for normal calculation as in~\cite{aknnbbs}.
+Thus, normals are calculated for every point in the respective line scan.
+Then, the local normal model is combined with a region growing approach.
+The region growing is implemented by storing the k-nearest neighbors in a queue, which represents the iteration order of the clustering algorithm.
+A region grows if one of these neighbors has a distance shorter then a treshold $d_{growth}$ and additionally has a similar normal.
+The angle between two normalized vectors is
+\begin{equation}
+\label{eq:smallestalpha}
+	\alpha(\vec{n}_1, \vec{n}_2) = \arccos(\vec{n}_1 \cdot \vec{n}_2) \; .
+\end{equation}
+However, the \textit{smallest} angle between two \textit{normal} vectors is 
+\begin{equation}
+\label{eq:alphahat}
+\hat \alpha(\vec{n}_1, \vec{n}_2) = 
+\begin{cases}
+	2\pi - \alpha(\vec{n}_1, \vec{n}_2) & \text{if  } \alpha(\vec{n}_1, \vec{n}_2) > \frac{3}{2} \pi \\
+	\alpha(\vec{n}_1, \vec{n}_2) - \pi & \text{if  } \alpha(\vec{n}_1, \vec{n}_2) > \pi \\
+	\pi - \alpha(\vec{n}_1, \vec{n}_2) & \text{if  } \alpha(\vec{n}_1, \vec{n}_2) > \frac{\pi}{2} 
+\end{cases}
+\; ,
+\end{equation}
+because the opposing normals $-\vec{n}_1$ and $-\vec{n}_2$ always have to be considered, since they correspond to the same plane.
+We say that two normals are similar if the angle $\hat \alpha$ from eq. \ref{eq:alphahat} is smaller than a threshold $\epsilon_{\alpha}$. 
+
+Planar areas like walls are therefore connected in one large cluster, while non-feature parts, i.e. non-planar or detached parts of the scan will have their own, smaller cluster.
+You are then left with a rather easy task: filtering the clusters.
+The filtering has two parts.
+First, to combine clusters that are similar, i.e. have a short distance ($d_{growth}$) to each other and similar mean normals.
+Second, to filter out all clusters that contain non-feature points.
+Since all the non-feature points belong to small clusters, the presented algorihtm does this by putting a minimum threshold $N_{c,min}$ on the cluster size.
+Figure \ref{fig:clustering} shows this concept on a real world dataset.
+It was obtained by a floating sphere on a desk in an office environment, as described later in section \ref{sec:experimentalSetup}.
+
+\begin{figure*}
+	\includegraphics[width=\linewidth]{images/clustering}
+	\caption{(Left) Point normals using the AKNN method with $K = 20$. (Middle) Result of the region growing, before applying the second filter. (Right) Resulting clusters after applying the second filter, using $N_{c,min} = 300$. }
+	\label{fig:clustering}
+\end{figure*}
+
+Point-to-Plane correspondences are now established.
+The distance models (Hesse + PPD) are utilized to check wether a cluster overlaps with any of the global planes, i.e. any point in the cluster has a Hesse distance smaller than some threshold $\epsilon_H$ and a PPD smaller than some additional threshold $\epsilon_P$, to the global plane.
+For each overlap, we find the smallest angle between the corresponding cluster normal and the global plane normal, according to eq. \ref{eq:alphahat}.
+Finally, a correspondence is established between all points in the cluster and the global plane, if the minimum angle between their normals is smaller than $\epsilon_\alpha$. 
 
 \subsection{Optimization}
 
