@@ -214,24 +214,29 @@ Its gradient follows then immediately:
     &\Rightarrow\nabla E = \resizebox{0.35\textwidth}{!}{$\sum_{\forall \mathcal{P}_k} \sum_{\vec{p}_i\in \mathcal{P}_k}2D(\vec{\Pi}, \vec{p}_i)\begin{bmatrix}\nabla E_\varphi &\nabla E_\vartheta & \nabla E_\psi & n_{\mathcal{P}_k}^x&n_{\mathcal{P}_k}^y&n_{\mathcal{P}_k}^z\end{bmatrix}^T$}
 \end{align}
 Where
-\begin{align}
-    &\begin{alignedat}{3}
-        \nabla E_\varphi = &n_{\mathcal{P}_k}^y&&(x_i[-S_\varphi S_\psi+C_\varphi C_\psi S_\vartheta] \\&&&+y_i[-S_\varphi C_\psi -C_\varphi S_\vartheta S\psi] \\&&&- z_i C_\varphi C_\vartheta)\\
-        &+ n_{\mathcal{P}_k}^z&&(x_i[C_\varphi S_\psi+C_\varphi C_\psi S_\vartheta] \\&&&+y_i[C_\varphi C_\psi -S_\varphi S_\vartheta S\psi] \\&&&- z_i S_\varphi C_\vartheta)
-    \end{alignedat} \\
-    &\begin{alignedat}{3}
-        \nabla E_\vartheta = & n_{\mathcal{P}_k}^x(-x_iS_\vartheta C_\psi + y_i S_\vartheta S_\psi + z_iC_\vartheta) \\
+\begin{equation}
+\begin{split}
+\nabla E_\varphi = n_{\mathcal{P}_k}^y(x_i[-S_\varphi S_\psi+C_\varphi C_\psi S_\vartheta]+y_i[-S_\varphi C_\psi -C_\varphi S_\vartheta S\psi] - z_i C_\varphi C_\vartheta)\\
+        + n_{\mathcal{P}_k}^z(x_i[C_\varphi S_\psi+C_\varphi C_\psi S_\vartheta] +y_i[C_\varphi C_\psi -S_\varphi S_\vartheta S\psi] - z_i S_\varphi C_\vartheta)
+\end{split} \;\; ,
+\end{equation}
+\begin{equation}
+\begin{split}
+ \nabla E_\vartheta = & n_{\mathcal{P}_k}^x(-x_iS_\vartheta C_\psi + y_i S_\vartheta S_\psi + z_iC_\vartheta) \\
         &+ n_{\mathcal{P}_k}^y(x_iC_\psi S_\varphi C_\vartheta - y_iS_\varphi C_\vartheta S_\psi + z_i S_\vartheta S_\varphi)  \\
-        &+ n_{\mathcal{P}_i}^z(-x_iC_\varphi C_\psi C_\vartheta + y_iC_\varphi C_\vartheta S_\psi - z_i C_\varphi S_\vartheta)
-    \end{alignedat}\\
-    &\begin{alignedat}{3}
-       \nabla E_\psi =& n_{\mathcal{P}_k}^x&&\left(-x_iC_\vartheta S_\psi - y_iC_\vartheta C_\psi\right) \\
-       &+ n_{\mathcal{P}_k}^y&&(x_i[C_\varphi C_\psi - S_\varphi S_\vartheta S_\psi] \\
-       &&&+ y_i[-C_\varphi S_\psi - S_\varphi S_\theta C_\psi]) \\
-       &+ n_{\mathcal{P}_k}^z&&(x_i[S_\varphi C_\psi + C_\varphi S_\psi S_\theta] \\
-       &&&+ y_i[-S_\psi S_ \varphi + C_\varphi S_\vartheta C_\psi]) 
-    \end{alignedat}
-\end{align}
+        &+ n_{\mathcal{P}_i}^z(-x_iC_\varphi C_\psi C_\vartheta + y_iC_\varphi C_\vartheta S_\psi - z_i C_\varphi 
+\end{split}
+\;\; ,
+\end{equation} 
+\begin{equation}
+\begin{split}
+	\nabla E_\psi = &n_{\mathcal{P}_k}^x\left(-x_iC_\vartheta S_\psi - y_iC_\vartheta C_\psi\right) \\
+       &+ n_{\mathcal{P}_k}^y(x_i[C_\varphi C_\psi - S_\varphi S_\vartheta S_\psi] 
+       + y_i[-C_\varphi S_\psi - S_\varphi S_\theta C_\psi]) \\
+       &+ n_{\mathcal{P}_k}^z(x_i[S_\varphi C_\psi + C_\varphi S_\psi S_\theta] 
+       + y_i[-S_\psi S_ \varphi + C_\varphi S_\vartheta C_\psi]) 
+\end{split}
+\end{equation}
 and $\vec{\Pi}=\begin{bmatrix}\varphi & \vartheta & \psi & t_x & t_y & t_z\end{bmatrix}^T$.
 
 As the gradient is well-defined we minimize the error function with any gradient based method. 

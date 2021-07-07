@@ -50,9 +50,8 @@ Any such errors tend to occur at the back and the front of the corridor where th
 
 Figure~\ref{fig:cylon-corrected} shows the results obtained before and after employing the plane based registration on the dataset acquired by the floating sphere.
 The pre-registration is obtained by determining the orientation of the sphere via Madgwick filtered~\cite{madgwick2010efficient} IMU measurements.
-To increase the number of possible point-to-plane correspondences we combine ten temporally successive scans into one meta-scan, which is then globally registered. 
-For this we must assume constant pose over this time duration. 
-However, given the high measurement frequency of the Lidar this introduces only a small error. 
+To increase the number of possible point-to-plane correspondences we combine twenty temporally successive scans into one meta-scan, which is then globally registered. 
+We always use the middlest line scan as a reference coordinate system.
 This does not only speed up convergence due to the proportional effect on the error function but also decreases the risk of transforming the scan in a senseless way.
 Transformations like these happen in particular for a small collection of points as outliers have more influence.
 
@@ -62,18 +61,31 @@ Transformations like these happen in particular for a small collection of points
 	\includegraphics[width=0.495\textwidth]{./images/cylon_corr_corner}\\
 	\includegraphics[width=0.495\textwidth]{./images/cylon_uncorr_top}\hfill
 	\includegraphics[width=0.495\textwidth]{./images/cylon_corr_top}
-	\caption{The point cloud acquired by the floating sphere before (left) and after (right) applying the plane based registration. View from the interior that shows the used planes (top) and a birds-eye view (bottom). Parameters used for optimization: $\epsilon_H = 50$, $\epsilon_P = 200$, $\epsilon_\alpha = \frac{\pi}{4}$, $K = 20$ for AKNN, $d_{growth} = 50$, $N_{c_min} = 200$, $\alpha_0 = [0.01, 0.01, 0.01, 0, 0, 0]^\tau$, $i = 800$, $k = 1$. An animation of the registration process is given at \url{https://youtu.be/Qa2Qi8z0KEk} .}
+	\caption{The point cloud acquired by the floating sphere before (left) and after (right) applying the plane based registration. View from the interior (top) and a birds-eye view (bottom). Parameters used for optimization: $\epsilon_H = 50$, $\epsilon_P = 200$, $\epsilon_\alpha = \frac{\pi}{4}$, $K = 20$ for AKNN, $d_{growth} = 50$, $N_{c_min} = 200$, $\alpha_0 = [0.01, 0.01, 0.01, 0, 0, 0]^\tau$, $i = 8$, $k = 100$. An animation of the registration process is given at \url{https://youtu.be/Qa2Qi8z0KEk} .}
 	\label{fig:cylon-corrected}
 \end{figure*}
 After the registration, the walls of the room are significantly more prominent in the point cloud. 
 In particular, the noise in the top left corner of the top view (cf. figure~\ref{fig:cylon-corrected}) has been visibly reduced.
 Further, the deviation of points around the walls is notably smaller as the points are moved on the plane.
 
-However, some imprecisions remain. 
-In particular, at the initially very noisy top left corner of the top view, a few points cannot be matched to the plane. 
-The scans that cause these imprecisions are problematic as they measure a number of plane-like structures in the interior of the room. 
-When relabeling those scans, the interior points are associated with a plane, and hence the corresponding distance is minimized. 
+\subsection{Rolling Sphere Results}
 
+Figure~\ref{fig:jasperhome} shows the results obtained before and after employing the presented algorithm on the dataset, acquired by the prototype in figure~\ref{fig:prototype}.
+We again combine twenty temporally successive scans into one meta-scan, using the middlest scan as a reference coordinate system, which is then globally registered.
+
+\begin{figure*}
+        \centering
+        \includegraphics[width=0.495\textwidth]{./images/jasper_uncorr_corner}\hfill
+        \includegraphics[width=0.495\textwidth]{./images/jasper_corr_corner}\\
+        \includegraphics[width=0.495\textwidth]{./images/jasper_uncorr_top}\hfill
+        \includegraphics[width=0.495\textwidth]{./images/jasper_corr_top}
+        \caption{The point cloud acquired by the rolling sphere before (left) and after (right) applying the plane based registration. View from the interior (top) and a birds-eye view (bottom). Parameters used for optimization: $\epsilon_H = 200$, $\epsilon_P = 300$, $\epsilon_\alpha = \frac{\pi}{4}$, $K = 200$ for AKNN, $d_{growth} = 50$, $N_{c_min} = 800$, $\alpha_0 = [0.001, 0.001, 0.001, 1, 0, 1]^\tau$, $i = 1500$, $k = 1$. An animation of the registration process is given at \url{https://youtu.be/hYR3xLhIdsE}.}
+        \label{fig:jasperhome}
+\end{figure*}
+After the registration, the walls of the environment are no longer ambiguous, since all the sub-sequent scans got matched with the initial plane representation.
+However, the improved path looks distorted.
+This is because for some scans, especially empty ones where the sensor points to the ground, no planar features got matched with the global plane model, thus their pose is not optimized.
+Improving the path quality is an objective for future works.
 
 % This section is commented out
 \iffalse

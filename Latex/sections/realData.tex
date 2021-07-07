@@ -1,15 +1,14 @@
 %!TEX root = ../main.tex
 \section{Experimental Setup}\label{sec:experimentalSetup}
 
-We also tested our algorithm on a real-world dataset that adheres to different motion profiles and laser scanners type with different scanning patterns than the simulated data.  
+We also tested our algorithm on two real-world datasets that adhere to different motion profiles and laser scanner types with different scanning patterns.
 
-The dataset is collected by a line scanner, in particular a SICK LMS141 industrial scanner, inside a sphere of a diameter of \SI{20}{\centi\meter} that lies on a floating desk, which is air-pressurized, such that the sphere is hovering.
+The first dataset is collected by a line scanner, in particular a SICK LMS141 industrial scanner, inside a sphere of a diameter of \SI{20}{\centi\meter} that lies on a floating desk, which is air-pressurized, such that the sphere is hovering.
 On this floating desk, the sphere can rotate freely about all axis while being fixed in position. 
 Hence, in this experiment the optimization space can be reduced to a rotation.
 Further, without the motion, the 2D laser cannot obtain a 3D model from the environment, thus requiring registration. 
 The sphere is equipped with a low-cost IMU, i.e., a PhidgetSpatial Precision 3/3/3, to estimate the orientation, a battery pack and a raspberry pie for processing.
 This IMU provides a precision of \SI{76.3}{\micro g} in linear acceleration, \SI{0.02}{\degree\per\second} in angular velocity about the x and y axis, and \SI{0.013}{\degree\per\second} in angular velocity about the z axis \cite{PhidgetSpatial}.  
-
 Figure~\ref{fig:float-sat-sphere} shows the experimental setup. The left column of figure~\ref{fig:cylon-corrected} shows the pre-registered resulting point cloud. 
 We see that the point cloud is rather noisy, and in particular, the walls are sensed multiple times, hence appearing very blurry. 
 
@@ -33,6 +32,22 @@ We see that the point cloud is rather noisy, and in particular, the walls are se
 	\caption{Data acquisition using floating sphere. Top: A sequence of orientations the sphere assumes during data acquisition. Bottom: Hardware setup of the sphere.} 
 	\label{fig:float-sat-sphere}
 \end{figure}
+
+The second datasets is collected by a 3D scanner, namely the LIVOX MID 100, which is the same sensor that the simulation uses.
+We put the laserscanner into an acrylic glass spherical shell together with three IMUs and roll it by hand with a slow, constant motion in a home indoor environment.
+Thus, this time almost all six degrees of freedom are used for optimization.
+We exlude a translation in the global up- or downwards direction, though, since we also locked that dimension when collecting the data.
+Figure~\ref{fig:prototype} shows the prototpye.
+The left column of figure~\ref{fig:jasperhome} shows the pre-registered point cloud, applying only the pure transformation found by the recorded pose.
+Although the robot has been moved carefully slow, you see that pose error accumulates in such a way that the same wall is visible multiple times.   
+
+\begin{figure}
+  \includegraphics[width=0.49\linewidth]{./images/photoReal1.jpeg}
+  \includegraphics[width=0.50\linewidth]{./images/photoReal3.jpeg}
+  \caption{Prototype used for data acquisition with the rolling sphere. The main payload is the Livox Mid-100 laser-scanner. For pose-estimation, three IMUs of the manufacturer Phidget are placed inside and a Raspberry Pi 4 for the calculations. On the top are two batteries, and on the bottom one voltage stabilizer and breakout box of the laser-scanner. }
+  \label{fig:prototype}
+\end{figure}
+
 
 \iffalse % This is commented out because we couldn't produce results
 	\subsection{RADLER}
