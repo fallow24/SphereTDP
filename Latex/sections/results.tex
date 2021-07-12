@@ -72,11 +72,17 @@ Further, the deviation of points around the walls is notably smaller as the poin
 
 Figure~\ref{fig:jasperhome} shows the results obtained before and after employing the presented algorithm on the dataset, acquired by the prototype in figure~\ref{fig:prototype}.
 We again combine twenty temporally successive scans into one meta-scan, using the scan at the median index as a reference coordinate system, which is then globally registered.
+We used the first seven of these meta-scans, corresponding to the first full rotation of the spher, to extract global planes.
+All subsequent meta-scans are then matched against the initial global plane model.
+We use both optimizations from section \ref{ssec:furtheropts}, introducing a global up/down lock for gradient descent and applying sequential iteration to eliminate accumulating pose error.
+
 
 \begin{figure*}
         \centering
         \includegraphics[width=0.495\textwidth]{./images/jasper_uncorr_corner}\hfill
         \includegraphics[width=0.495\textwidth]{./images/jasper_corr_corner}\\
+	\includegraphics[width=0.495\textwidth]{./images/jasper_uncorr_color}\hfill
+	\includegraphics[width=0.495\textwidth]{./images/jasper_corr_color}\\
         \includegraphics[width=0.495\textwidth]{./images/jasper_uncorr_top}\hfill
         \includegraphics[width=0.495\textwidth]{./images/jasper_corr_top}
         \caption{The point cloud acquired by the rolling sphere before (left) and after (right) applying the plane based registration. View from the interior (top) and a birds-eye view (bottom). Parameters used for optimization: $\epsilon_H = 200$, $\epsilon_P = 300$, $\epsilon_\alpha = \frac{\pi}{4}$, $K = 200$ for AKNN, $d_{growth} = 50$, $N_{c_min} = 800$, $\alpha_0 = [0.001, 0.001, 0.001, 1, 0, 1]^\tau$, $i = 1500$, $k = 1$. An animation of the registration process is given at \url{https://youtu.be/hYR3xLhIdsE}.}

@@ -302,6 +302,7 @@ That is unless you consider updating the correspondence model after $i$ iteratio
 Re-assigning point-to-plane correspondences this way $k$ times, with a large enough $k$, leads to an optimal solution after maximum $n = k\cdot i$ iterations of gradient descent.
 
 \subsection{Further Optimizations of the Algorithm}
+\label{ssec:furtheropts}
 
 The algorithm was extended by two further optimizations, which are helpful in different scenarios.
 
@@ -309,7 +310,7 @@ Firstly, we introduce the possibility to choose a lock on some dimensions from b
 Although 6D optimization generally works, reducing the optimization space is particularly useful if the source of error in the system is known and a model exists.
 That way, e.g., as we expect a spherical robot to move on a plane the position along the axis perpendicular to the plane is constant and should not be used for optimization.
 
-Secondly, we employ a continuous iteration, where the scans are processed sequentially. 
+Secondly, we employ a sequential iteration, where the scans are processed one after another. 
 This is especially useful for mobile systems, where pose errors accumulate due to increasing tracking uncertainties.
 The assumption is that the error in one scan is also present in the following scan, plus some unknown new error.
 We eliminate the error from scan $m$ which is also present in scan $m+1$ by applying the pose change from scan $m$, $\vec{\Pi}_{n,m} - \vec{\Pi}_{0,m}$ after $n$ gradient descent iterations, to scan $m+1$, before restarting gradient descent.
