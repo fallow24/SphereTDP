@@ -176,12 +176,8 @@ There is an approach to prevent dust and dirt to accumulate on the outer shell. 
 > Navigation. In: IEEE/RSJ International Conference on Intelligent Robots
 > and Systems, DOI: https://doi.org/10.1109/IROS.2006.282527
 
-<<<<<<< HEAD
-I (Andreas) has added a coupe of references.
-=======
 Removed the false statement.
-We have added a couple of references.
->>>>>>> c3f28e1703726c0b5957beacd807c86c10d52310
+Instread, I (Andreas) has added a coupe of references.
 
 > - The introduction in Section 3 should be revised as it is not very
 > intuitive for the reader and something about the objectives and
