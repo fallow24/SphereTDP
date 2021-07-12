@@ -191,10 +191,10 @@ The transformation $T(\vec{p}_i)$ of each point $\vec{p}_i$ with respect to a 6 
         x_i(S_\varphi S_\psi - C_\varphi C_\psi S_\vartheta) + y_i(C_\psi S_\varphi + C_\varphi S_\vartheta S_\psi) + z_i C_\varphi C_\vartheta + t_z
     \end{bmatrix}$}
 \end{align}
-From this we define the function $D(\varphi,\vartheta,\psi,t_x,t_y,t_z, \vec{p}_i)$ that computes the distance of a point $\vec{p}_i$ to its corresponding plane $\mathcal{P}_k$.
+From this we define the function $D(\varphi,\vartheta,\psi,t_x,t_y,t_z, \vec{p}_{i})$ that computes the distance of a point $\vec{p}_{i}$ to its corresponding plane $\mathcal{P}_k$.
 Omitting the arguments of the function for simplicity:
-\begin{align}
-\begin{aligned}
+\begin{equation}
+\begin{split}
     D &= T(\vec{p}_i) \cdot \vec{n}_{\mathcal{P}_k} \\
       &= n_{\mathcal{P}_k}^x (x_i C_\vartheta C_\psi - y_iC_\vartheta S_\psi + z_i S_\vartheta + t_x)\\
        &+ n_{\mathcal{P}_k}^y(x_i (C_\varphi S_\psi + C_\psi S_\varphi S_\vartheta)\\
@@ -202,8 +202,8 @@ Omitting the arguments of the function for simplicity:
        &+ n_{\mathcal{P}_k}^z (x_i(S_\varphi S_\psi - C_\varphi C_\psi S_\vartheta)\\
        &\qquad+ y_i(C_\psi S_\varphi + C_\varphi S_\vartheta S_\psi) + z_i C_\varphi C_\vartheta + t_z)\\
        &- \rho_{\mathcal{P}_k}
-\end{aligned}
-\end{align}
+\end{split}
+\end{equation}
 
 This distance function is what we want to minimize for all points and their respective planes.
 Hence the error function $E$ is chosen as the square of the L2-norm of the distance:
