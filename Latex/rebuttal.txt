@@ -119,9 +119,7 @@ We added a short outline, introducing you to the next sections.
 > determination and the final point cloud, which in my view requires
 > at least a rough classification.
 
-FIXME: I dont understand. How should we make any statement about the accuracy potential?
-It depends on the motion profile and hardware being used, thus is not easy to generalize.
-Or am I getting this wrong? 
+Unfortunatley we could not extract a 'ground trouth' scan for the real world datasets, due to covid pandemic issues. Both rooms were inaccessible, thus we evaluate the accuracy of the real world dataset on a later point in time. 
 
 > - For the short state of the art of existing mobile systems, which
 > is mainly based on the authors' own systems, in my opinion, at least
@@ -175,9 +173,6 @@ There is an approach to prevent dust and dirt to accumulate on the outer shell. 
 > (2006). Orthogonal SLAM: A Step Toward Lightweight Indoor Autonomous
 > Navigation. In: IEEE/RSJ International Conference on Intelligent Robots
 > and Systems, DOI: https://doi.org/10.1109/IROS.2006.282527
-
-Removed the false statement.
-BIG FIXME: Get more references on plane based slam.
 
 I (Andreas) has added a coupe of references.
 
@@ -320,7 +315,7 @@ We have added a specification for "good enough for plane detection".
 > environments? Later, there is also no indication of the choice of
 > the value in the own simulated and real data sets.
 
-FIXME: Added todo for Fabi
+We indicated that we observed the noise level around the expected planes by the naked eye, as an educated guess. You find that part in the 'Local Planar Clustering' section.
 
 > Page 3, Column 1, Line 50: What does the index k describe and what
 > is the difference to the index i from Section 3.2?
