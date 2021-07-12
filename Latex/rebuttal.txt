@@ -60,7 +60,7 @@
 > systems.
 
 We clarified that the shell can enclose all sensor without requiring a 
-number of points of connection as individual enlosings for all sensors
+number of points of connection as individual enclosing for all sensors
 would. Further we added the requirement, that the shell is very 
 durable.
  
@@ -72,10 +72,6 @@ durable.
 
 We clarified that also the limited FOV plays a role in not finding 
 planes for robust correspondences. 
-FIXME @Andreas and @Dorit: I (Anton) disagree can you double check?
-
-I (Andreas) seconds the statement, that the limited FOV plays a role
-in not finding planes for robust correspondences.
 
 > Lines 244-246: The Livox ranging precision is given twice in this
 > sentence.
@@ -119,9 +115,9 @@ We added a short outline, introducing you to the next sections.
 > determination and the final point cloud, which in my view requires
 > at least a rough classification.
 
-FIXME: I dont understand. How should we make any statement about the accuracy potential?
-It depends on the motion profile and hardware being used, thus is not easy to generalize.
-Or am I getting this wrong? 
+The accuracy potential strongly depends on the motion profile and 
+hardware being used, thus is not easy to generalize. Therefore it is 
+still omitted. 
 
 > - For the short state of the art of existing mobile systems, which
 > is mainly based on the authors' own systems, in my opinion, at least
@@ -140,7 +136,7 @@ We added the NavVis VLX as a reference in the state of the art section.
 > which better motivate the future use and justification of such
 > systems for the reader.
 
-We added four more terrestial, human-made environments as dangerous examples where a compact, spherical robot would really unfold its potential.
+We added four more terrestrial, human-made environments as dangerous examples where a compact, spherical robot would really unfold its potential.
  
 > - The advantages of a spherical mobile platforms are discussed, but
 > nothing is said about possible disadvantages or
@@ -177,9 +173,7 @@ There is an approach to prevent dust and dirt to accumulate on the outer shell. 
 > and Systems, DOI: https://doi.org/10.1109/IROS.2006.282527
 
 Removed the false statement.
-BIG FIXME: Get more references on plane based slam.
-
-I (Andreas) has added a coupe of references.
+We have added a couple of references.
 
 > - The introduction in Section 3 should be revised as it is not very
 > intuitive for the reader and something about the objectives and
@@ -218,8 +212,7 @@ We added more detail in the plane extraction subsection.
 > interpretation of the individual equations is unfortunately very
 > difficult.
 
-TODO: Anton? Have you done it already? 
-Yes - Anton
+We clarified the equations.
 
 > 
 > - What orders of magnitude were finally used for the range noise
@@ -268,7 +261,7 @@ reference scan in the time given.
 > that take this idea of geometric constraints for georeferencing into
 > account.
 
-We removed the initial mention of parrallelism and perpendicularity of the planes
+We removed the initial mention of parallelism and perpendicularity of the planes
 as it is of no further interest in the rest of the manuscript. 
 
 > Further open questions/comments are:
@@ -325,7 +318,7 @@ FIXME: Added todo for Fabi
 > Page 3, Column 1, Line 50: What does the index k describe and what
 > is the difference to the index i from Section 3.2?
 
-We have clarified indeces k=planes i=points.
+We have clarified indices k=planes i=points.
 
 > Page 3, Equation (1): Again, some variables are not specified. For
 > example, the source of tx ty tz is unclear.
@@ -341,12 +334,12 @@ We have specified that we're using the square of the L2 norm.
 > elements of the normal vector through the transformation. Moreover,
 > these individual elements were not introduced in advance.
 
-We have corrected indeces and introduced the elements.
+We have corrected indices and introduced the elements.
 
 > Page 3, Equation (9): The variable alpha is not described and
 > explained
 
-An explaination of alpha was added.
+An explanation of alpha was added.
 
 > Page 4, Equation (10): Description of the individual variables is
 > missing and, moreover, rho has already been used as the distance
@@ -396,7 +389,8 @@ We have specified this. It is chosen to still allow plane detection.
 > the values in relation to the expectations / demands...which are,
 > however, still missing in advance
 
-FIXME: -> I don't understand this comment? TODO 
+This table was given to quantify the improvement of the map via the algorithm.
+In particular they are put forward as evidence of the improvement.  
 
 > Page 8, Column 1, Line 37-43: At this point, an interpretation of
 > the significant second peak in the right-hand diagram in Figure 4
@@ -413,7 +407,7 @@ significant anymore.
 > taken into account for this or is an identical pose assumed for the
 > ten scans?
 
-We have specified which scans and that we assuem constant pose.
+We have specified which scans and that we assume constant pose.
 
 > Page 8, Column 1, Line 55-56: What could be the cause of this?
 
