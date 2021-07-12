@@ -248,16 +248,15 @@ carried out in time.
 > framework of Section 6.1? So far, the focus has only been on the
 > point cloud.
 
-FIXME: Do we have space & time for this?
+Unfortunately we couldn't add this due to time constraints.
 
 > - Why is there no qualitative validation for the results of the real
 > data in Section 6.2? A reference scan based on a terrestrial laser
 > scanner would be a possibility or otherwise based on the flatness of
 > known planes in the registered point cloud?
 
-FIXME: Can we get a riegl scan of jaspers home? If not corona restrictions were at fault
 We couldn't access the rooms the dataset was acquired in for a terrestrial 
-reference scan. 
+reference scan in the time given. 
 
 > - In the Conclusion, the parallelism and perpendicularity within the
 > environment is mentioned again, although this did not play a role in
@@ -271,7 +270,7 @@ reference scan.
 
 We removed the initial mention of parrallelism and perpendicularity of the planes
 as it is of no further interest in the rest of the manuscript. 
- 
+
 > Further open questions/comments are:
 > Page 1, Line 15: Double use of "protect", which should be replaced
 > by another word.
@@ -363,11 +362,11 @@ We have renamed epsilon and clarified the difference to sec 3.3.
 > Page 4, Column 2, Line 15: "some dimensions": Which ones and why
 > exactly are they chosen? Are they the same ones all the time?
 
-FIXME: chose better example, added todo for Fabi
+We chose a better example to clarify the use case.
 
 > Page 4, Column 2, Line 20-25: Reference is missing
 
-We haded a citation.
+We added a citation.
 
 > Page 4, Column 2, Line 55: Doubled information regarding the
 > distance measurement precision 
