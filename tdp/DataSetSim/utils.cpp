@@ -99,7 +99,7 @@ double eucl_dist(vector<double> first, vector<double> second)
 }
 
 /* Helper to normalize a vector */
-void normalize(vector<double> vec)
+void normalize(vector<double> & vec)
 {
   double mag = 0;
   for(double val: vec){ mag += val*val;}

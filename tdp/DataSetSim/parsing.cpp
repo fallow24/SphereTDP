@@ -214,12 +214,10 @@ bool parse_options(int argc, char const *argv[],
     // entry
     while(pose_mean.size() < 2){
       pose_mean.push_back(0.0);
-
     }
 
     while(pose_std.size() < 2){
-      pose_mean.push_back(0.0);
-
+      pose_std.push_back(0.0);
     }
 
     if(pose_mean.size() != 2)

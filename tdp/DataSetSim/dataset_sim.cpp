@@ -2,7 +2,7 @@
 #include <iomanip>
 #include <fstream>
 #include <sstream>
-#include <omp.h>
+//#include <omp.h>
 
 #include "dataset_sim.hpp"
 #include "constants.hpp"
@@ -172,6 +172,7 @@ int main(int argc, char const *argv[])
       //Close Files
       scan_file.close();
       pose_file.close();
+      delete[] file_name;
 
       // Console Logging
       if(VERBOSITY_LEVEL == 1)

@@ -16,7 +16,7 @@ void world2robot_frame(vector<double> pose, bool rotate_only, vector<double> &wo
 /* Helper function for computing the distance between two
  * points in space using the euclidean distance */
 double eucl_dist(vector<double> first, vector<double> second);
-void normalize(vector<double> vec);
+void normalize(vector<double> & vec);
 
 /* Helper for Radians and degree conversion */
 double deg_to_rad(double deg);
