@@ -71,6 +71,10 @@ def main():
 
     position_diff, orientation_diff = compute_diff(true_traj, other_traj)
 
+    print(f"Sum of Position Difference: {np.sum(position_diff):.2f} cm")
+    print(f"Sum of Orientation Difference: {np.sum(orientation_diff):.2f} °")
+
+
     plt.figure(1)
     plt.plot(position_diff)
     plt.grid()
