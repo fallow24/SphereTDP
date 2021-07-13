@@ -58,8 +58,7 @@ recommendations should, however, be easy to implement.
 
 The authors thank the reviewers for their time to review the paper and to
 provide valuable input. The following lists how we improved the manuscript based
-on their thoughtful comments. Minor remarks have been integrated into the
-document without further comments.
+on their thoughtful comments.
 
 \begin{itquote}
 Reviewer 1: The manuscript presents the concept of a spherical
@@ -298,7 +297,9 @@ framework of Section 6.1? So far, the focus has only been on the
 point cloud.
 \end{itquote}
 
-Unfortunately we couldn't add this due to time constraints.
+Whenever the scanner is looking into the ground the number of points is too small
+and thus neglected in the optimization step. This leads to jumps in the
+trajectory, which make the comparison results less meaningful than expected. Due to time constraints this issue could not be resolved.
 
 \begin{itquote}
 - Why is there no qualitative validation for the results of the real

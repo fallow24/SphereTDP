@@ -39,7 +39,7 @@ The pose update after a discrete time step $\Delta t$ in the simulation is there
 \begin{align}
 	\begin{bmatrix}\varphi\\\vartheta\\\psi\\x\\y\\z\end{bmatrix}_{k+1} = 
 	\begin{bmatrix}\varphi\\\vartheta\\\psi\\x\\y\\z\end{bmatrix}_{k} 
-	+ \begin{bmatrix}1\\0\\0\\R\\0\\0\end{bmatrix}\omega \Delta t  + \Delta t \underbrace{\sum_{i = 0}^k \begin{bmatrix}n_\varphi[i] \Delta t\\0\\n_\psi[i]\Delta t\\0\\0\\0\end{bmatrix}}_{\substack{\text{Difference in}\\\text{angular velocity}}}
+	+ \begin{bmatrix}1\\0\\0\\0\\0\\R\end{bmatrix}\omega \Delta t  + \Delta t \underbrace{\sum_{i = 0}^k \begin{bmatrix}n_\varphi[i] \Delta t\\0\\n_\psi[i]\Delta t\\n_\varphi[i] \Delta t R\\0\\n_\psi[i]\Delta tR\end{bmatrix}}_{\substack{\text{Difference in}\\\text{angular velocity}}}
 \end{align}
 where $\Delta t$ is generally chosen as some small value (e.g. \SI{1}{\milli\second})
 
