@@ -194,7 +194,7 @@ The transformation $T(\vec{p}_i)$ of each point $\vec{p}_i$ with respect to a 6 
 From this we define the function $D(\varphi,\vartheta,\psi,t_x,t_y,t_z, \vec{p}_{i})$ that computes the distance of a point $\vec{p}_{i}$ to its corresponding plane $\mathcal{P}_k$.
 Omitting the arguments of the function for simplicity:
 \begin{align}
-\begin{split}
+\begin{aligned}
     D &= T(\vec{p}_i) \cdot \vec{n}_{\mathcal{P}_k} \\
       &= n_{\mathcal{P}_k}^x (x_i C_\vartheta C_\psi - y_iC_\vartheta S_\psi + z_i S_\vartheta + t_x)\\
        &+ n_{\mathcal{P}_k}^y(x_i (C_\varphi S_\psi + C_\psi S_\varphi S_\vartheta)\\
@@ -202,7 +202,7 @@ Omitting the arguments of the function for simplicity:
        &+ n_{\mathcal{P}_k}^z (x_i(S_\varphi S_\psi - C_\varphi C_\psi S_\vartheta)\\
        &\qquad+ y_i(C_\psi S_\varphi + C_\varphi S_\vartheta S_\psi) + z_i C_\varphi C_\vartheta + t_z)\\
        &- \rho_{\mathcal{P}_k}
-\end{split}
+\end{aligned}
 \end{align}
 
 This distance function is what we want to minimize for all points and their respective planes.
@@ -217,29 +217,26 @@ Its gradient follows then immediately:
 \end{align}
 Where
 \begin{align}
-\begin{split}
+&\begin{aligned}
 \nabla E_\varphi = &n_{\mathcal{P}_k}^y(x_i[-S_\varphi S_\psi+C_\varphi C_\psi S_\vartheta]\\
 			       & +y_i[-S_\varphi C_\psi -C_\varphi S_\vartheta S\psi] - z_i C_\varphi C_\vartheta)\\
                    &+ n_{\mathcal{P}_k}^z(x_i[C_\varphi S_\psi+C_\varphi C_\psi S_\vartheta] \\
                    &+y_i[C_\varphi C_\psi -S_\varphi S_\vartheta S\psi] - z_i S_\varphi C_\vartheta)
-\end{split} \;\; ,
+\end{aligned} \;\; ,
 \end{align}
 \begin{align}
-\begin{split}
- \nabla E_\vartheta = & n_{\mathcal{P}_k}^x(-x_iS_\vartheta C_\psi + y_i S_\vartheta S_\psi + z_iC_\vartheta) \\
+&\begin{aligned}
+\nabla E_\vartheta = & n_{\mathcal{P}_k}^x(-x_iS_\vartheta C_\psi + y_i S_\vartheta S_\psi + z_iC_\vartheta) \\
         &+ n_{\mathcal{P}_k}^y(x_iC_\psi S_\varphi C_\vartheta - y_iS_\varphi C_\vartheta S_\psi + z_i S_\vartheta S_\varphi)  \\
-        &+ n_{\mathcal{P}_i}^z(-x_iC_\varphi C_\psi C_\vartheta + y_iC_\varphi C_\vartheta S_\psi - z_i C_\varphi 
-\end{split}
-\;\; ,
-\end{align} 
-\begin{align}
-\begin{split}
+        &+ n_{\mathcal{P}_i}^z(-x_iC_\varphi C_\psi C_\vartheta + y_iC_\varphi C_\vartheta S_\psi - z_i C_\varphi)
+\end{aligned}\;\; ,\\
+&\begin{aligned}
 	\nabla E_\psi = &n_{\mathcal{P}_k}^x\left(-x_iC_\vartheta S_\psi - y_iC_\vartheta C_\psi\right) \\
        &+ n_{\mathcal{P}_k}^y(x_i[C_\varphi C_\psi - S_\varphi S_\vartheta S_\psi]\\
-       &+ y_i[-C_\varphi S_\psi - S_\varphi S_\theta C_\psi]) \\
+       &\quad+ y_i[-C_\varphi S_\psi - S_\varphi S_\theta C_\psi]) \\
        &+ n_{\mathcal{P}_k}^z(x_i[S_\varphi C_\psi + C_\varphi S_\psi S_\theta] \\
-       &+ y_i[-S_\psi S_ \varphi + C_\varphi S_\vartheta C_\psi]) 
-\end{split}
+       &\quad+ y_i[-S_\psi S_ \varphi + C_\varphi S_\vartheta C_\psi]) 
+\end{aligned}
 \end{align}
 and $\vec{\Pi}=\begin{bmatrix}\varphi & \vartheta & \psi & t_x & t_y & t_z\end{bmatrix}^T$.
 
