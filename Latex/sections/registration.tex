@@ -77,16 +77,16 @@ We employ two distance models to represent the distance from a point to a plane,
 \end{figure*}
 
 The Hesse-normal form describes the distance from the $i$-th transformed point $T(\vec{p}_i)$ to infinitely extending, $k$-th plane in 3D vector space
-\begin{equation}\label{eq:hesse}
+\begin{align}\label{eq:hesse}
 	D_{h}^{i,k} = \vec{n}_{\mathcal{P}_k} \cdot \left[ T(\vec{p}_i) - \vec{a}_{\mathcal{P}_k} \right] ,
-\end{equation}
+\end{align}
 with normal $\vec{n}_{\mathcal{P}_k}$ and supporting point $\vec{a}_{\mathcal{P}_k}$ of the $k$-th plane.
 The distance $D_{h}^{i,k}$ of the $i$-th point to the $k$-th plane reflects the length of the line segment, constructed from the $i$-th point to its projection on the $k$-th plane.
 Therefore, by definition the line segment is parallel to the normal vector of the plane.
 Thus, the $i$-th points projection $\widetilde{T}(\vec{p}_i)$ onto the $k$-th plane, which is required later, is easily calculated by shifting the point against normal direction:
-\begin{equation}\label{eq:projection}
+\begin{align}\label{eq:projection}
 	\widetilde{T}(\vec{p}_i) = T(\vec{p}_i) - D_{h}^{i,k} \vec{n}_{\mathcal{P}_k}
-\end{equation}
+\end{align}
 
 The simplicity of the Hesse distance is at contrast with its inability to take the extent of the plane into account.
 Therefore, a second distance model is introduced: the polygon projection distance (PPD).
@@ -102,33 +102,33 @@ If, however, the point is outside the polygon, the shortest distance to the poly
 Let the polygon $P_k$ be made up of line segments $s_{m, j}$.
 The line segment $s_{m, j}$ consists of the points $p_m$ and $p_j$.
 The line segment is parameterized by
-\begin{equation}
+\begin{align}
 \label{eq:line}
 	s_{m, j}(t) = p_m + t \cdot \left( p_j - p_m \right) ,  
-\end{equation}
+\end{align}
 where $t \in \left[ 0, 1 \right]$. 
 We set up a distance function, which measures the distance from the query point $p_i$ to an arbitrary point on the line segment.
-\begin{equation}
+\begin{align}
 	\label{eq:dist}
 	d_{m, j}(t) = \lVert s_{m, j}(t) - p_i \rVert 
-\end{equation} 
+\end{align} 
 It is now possible to find the shortest distance to the line segment by finding the argument of the function that minimizes this distance.
 Therefore, we set
-\begin{equation}
+\begin{align}
 	\pardiff{t} d_{m, j}(t)^2 \overset{!}{=} 0 ,
-\end{equation}  
+\end{align}  
 resulting in 
-\begin{equation}
+\begin{align}
 	t_0 = \frac{\left( p_j - p_m \right) \cdot \left( p_i - p_m \right)}{\left( p_j - p_m \right)^2} .
-\end{equation}
+\end{align}
 Note the possibility of $t_0 \notin \left[ 0, 1 \right]$. 
 In that case, the projection of the point $p_i$ onto the line given by eq.~\ref{eq:line} is not between $p_j$ and $p_m$. 
 Instead, its projection onto the line falls outside of the segment.
 By constraining $t_0$ we get 
-\begin{equation}
+\begin{align}
 \label{eq:minmax}
 	\hat t = \min \left( \max \left( t_0, 0\right) , 1 \right) ,
-\end{equation}
+\end{align}
 which is the argument that gives the shortest distance to the line segment, when inserted to eq. \ref{eq:dist}.
 We find the PPD from the point $p_i$ to the polygon $P_k$ by calculating the minimum shortest distance over all line segments that make up the polygon.  
 
@@ -141,12 +141,12 @@ Then, the local normal model is combined with a region growing approach.
 The region growing is implemented by storing the k-nearest neighbors in a queue, which represents the iteration order of the clustering algorithm.
 A region grows if one of these neighbors has a distance shorter then a threshold $d_{growth}$ and additionally has a similar normal.
 We define similarity of two normals via the angle between them, which is:
-\begin{equation}
+\begin{align}
 \label{eq:smallestalpha}
 	\alpha(\vec{n}_1, \vec{n}_2) = \arccos(\vec{n}_1 \cdot \vec{n}_2) \; .
-\end{equation}
+\end{align}
 However, the \textit{smallest} angle between two \textit{normal} vectors is 
-\begin{equation}
+\begin{align}
 \label{eq:alphahat}
 \hat \alpha(\vec{n}_1, \vec{n}_2) = 
 \begin{cases}
@@ -155,7 +155,7 @@ However, the \textit{smallest} angle between two \textit{normal} vectors is
 	\pi - \alpha(\vec{n}_1, \vec{n}_2) & \text{if  } \alpha(\vec{n}_1, \vec{n}_2) > \frac{\pi}{2} 
 \end{cases}
 \; ,
-\end{equation}
+\end{align}
 because the opposing normals $-\vec{n}_1$ and $-\vec{n}_2$ always have to be considered, since they correspond to the same plane.
 We say that two normals are similar if the angle $\hat \alpha$ from eq. \ref{eq:alphahat} is smaller than a threshold $\epsilon_{\alpha}$. 
 
@@ -193,7 +193,7 @@ The transformation $T(\vec{p}_i)$ of each point $\vec{p}_i$ with respect to a 6 
 \end{align}
 From this we define the function $D(\varphi,\vartheta,\psi,t_x,t_y,t_z, \vec{p}_{i})$ that computes the distance of a point $\vec{p}_{i}$ to its corresponding plane $\mathcal{P}_k$.
 Omitting the arguments of the function for simplicity:
-\begin{equation}
+\begin{align}
 \begin{split}
     D &= T(\vec{p}_i) \cdot \vec{n}_{\mathcal{P}_k} \\
       &= n_{\mathcal{P}_k}^x (x_i C_\vartheta C_\psi - y_iC_\vartheta S_\psi + z_i S_\vartheta + t_x)\\
@@ -203,7 +203,7 @@ Omitting the arguments of the function for simplicity:
        &\qquad+ y_i(C_\psi S_\varphi + C_\varphi S_\vartheta S_\psi) + z_i C_\varphi C_\vartheta + t_z)\\
        &- \rho_{\mathcal{P}_k}
 \end{split}
-\end{equation}
+\end{align}
 
 This distance function is what we want to minimize for all points and their respective planes.
 Hence the error function $E$ is chosen as the square of the L2-norm of the distance:
@@ -216,23 +216,23 @@ Its gradient follows then immediately:
     &\Rightarrow\nabla E = \resizebox{0.35\textwidth}{!}{$\sum_{\forall \mathcal{P}_k} \sum_{\vec{p}_i\in \mathcal{P}_k}2D(\vec{\Pi}, \vec{p}_i)\begin{bmatrix}\nabla E_\varphi &\nabla E_\vartheta & \nabla E_\psi & n_{\mathcal{P}_k}^x&n_{\mathcal{P}_k}^y&n_{\mathcal{P}_k}^z\end{bmatrix}^T$}
 \end{align}
 Where
-\begin{equation}
+\begin{align}
 \begin{split}
 \nabla E_\varphi = &n_{\mathcal{P}_k}^y(x_i[-S_\varphi S_\psi+C_\varphi C_\psi S_\vartheta]\\
 			       & +y_i[-S_\varphi C_\psi -C_\varphi S_\vartheta S\psi] - z_i C_\varphi C_\vartheta)\\
                    &+ n_{\mathcal{P}_k}^z(x_i[C_\varphi S_\psi+C_\varphi C_\psi S_\vartheta] \\
                    &+y_i[C_\varphi C_\psi -S_\varphi S_\vartheta S\psi] - z_i S_\varphi C_\vartheta)
 \end{split} \;\; ,
-\end{equation}
-\begin{equation}
+\end{align}
+\begin{align}
 \begin{split}
  \nabla E_\vartheta = & n_{\mathcal{P}_k}^x(-x_iS_\vartheta C_\psi + y_i S_\vartheta S_\psi + z_iC_\vartheta) \\
         &+ n_{\mathcal{P}_k}^y(x_iC_\psi S_\varphi C_\vartheta - y_iS_\varphi C_\vartheta S_\psi + z_i S_\vartheta S_\varphi)  \\
         &+ n_{\mathcal{P}_i}^z(-x_iC_\varphi C_\psi C_\vartheta + y_iC_\varphi C_\vartheta S_\psi - z_i C_\varphi 
 \end{split}
 \;\; ,
-\end{equation} 
-\begin{equation}
+\end{align} 
+\begin{align}
 \begin{split}
 	\nabla E_\psi = &n_{\mathcal{P}_k}^x\left(-x_iC_\vartheta S_\psi - y_iC_\vartheta C_\psi\right) \\
        &+ n_{\mathcal{P}_k}^y(x_i[C_\varphi C_\psi - S_\varphi S_\vartheta S_\psi]\\
@@ -240,7 +240,7 @@ Where
        &+ n_{\mathcal{P}_k}^z(x_i[S_\varphi C_\psi + C_\varphi S_\psi S_\theta] \\
        &+ y_i[-S_\psi S_ \varphi + C_\varphi S_\vartheta C_\psi]) 
 \end{split}
-\end{equation}
+\end{align}
 and $\vec{\Pi}=\begin{bmatrix}\varphi & \vartheta & \psi & t_x & t_y & t_z\end{bmatrix}^T$.
 
 As the gradient is well-defined we minimize the error function with any gradient based method. 
