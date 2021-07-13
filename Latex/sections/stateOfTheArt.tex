@@ -22,7 +22,7 @@ For low-cost LiDARs, this implies slow motion and long integration time.
 \subsection{Point Cloud Registration Using Plane Based Correspondences}
 
 The de-facto standard for many SLAM algorithms is the Iterative-Closest-Point (ICP) algorithm~\cite{Besl1992} that employs point-to-point correspondences using closest points, as the name suggests. 
-To overcome the requirements on point-density imposed by the point-to-point correspondences instead other correspondences are used. 
+To overcome the requirements on point-density imposed by the point-to-point corres\-pon\-den\-ces instead other correspondences are used. 
 In human-made environments, planes are abundantly available and hence provide an attractive base for correspondences.
 
 Pathak et al.~\cite{Pathak:2010} propose to reduce the complexity of the registration by using correspondences between planar patches instead of points.
@@ -43,12 +43,12 @@ In particular this pause is needed when the field-of-view (FOV) is limited, as t
 The resulting scan procedure is stop-scan-and-go.
 In particular, for the application of a spherical robot this standstill in each pose cannot be guaranteed or even approximated, making continuous-time approaches using point-to-plane correspondences the method of choice.
 
-LOAM~\cite{Zhang2014} is the baseline-algorthm that provides a real-time and lowdrift solution based on two parallel registration algorithms using planes and lines.
+LOAM~\cite{Zhang2014} is the baseline-algorithm that provides a real-time and lowdrift solution based on two parallel registration algorithms using planes and lines.
 Unfortunately, it is not open-source anymore.
 LOAM livox extends the LOAM framework to the the rotating prism scanner with small FoV~\cite{Lin_2020}.
 Zhou, Wang, and Kaess write that it also adopts the parallel computing to achieve real-time global registration.
 Parallel computing needs a powerful CPU, it may be not suitable for an embedded system which has limited computational resources~\cite{Zhou_2021}.
-Thus, they extens their smoothing and mapping to the LiDAR and planes case.
+Thus, they extend their smoothing and mapping to the LiDAR and planes case.
 In their experiments they used a VLP-16 LiDAR to collect indoor datasets.
 
 Further recent planar SLAM approaches include~\cite{Jung_2015,Grant_2018,Geneva_2018, Zhou_2021,   wei2021groundslam}.

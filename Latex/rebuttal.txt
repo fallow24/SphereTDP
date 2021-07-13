@@ -41,7 +41,13 @@
 > recommendations to improve the readability of your manuscript. Given
 > the number of recommendations, I ask for a major revision. The
 > recommendations should, however, be easy to implement.
->  
+> 
+
+The authors thank the reviewers for their time to review the paper and to
+provide valuable input. The following lists how we improved the manuscript based
+on their thoughtful comments. Minor remarks have been integrated into the
+document without further comments.
+
 >   
 > Reviewer 1: The manuscript presents the concept of a spherical
 > mobile mapping system, and a data registration method utilizing the
@@ -73,8 +79,12 @@ durable.
 We clarified that also the limited FOV plays a role in not finding 
 planes for robust correspondences. 
 
+I (Dorit) agree, that the FOV is a more important factor.
+
 > Lines 244-246: The Livox ranging precision is given twice in this
 > sentence.
+
+Corrected.
 > 
 > Figure 4: The x-scale is given in figure caption, but I would
 > suggest adding it to the figure also.
@@ -115,13 +125,12 @@ We added a short outline, introducing you to the next sections.
 > determination and the final point cloud, which in my view requires
 > at least a rough classification.
 
-<<<<<<< HEAD
 Unfortunatley we could not extract a 'ground trouth' scan for the real world datasets, due to covid pandemic issues. Both rooms were inaccessible, thus we evaluate the accuracy of the real world dataset on a later point in time. 
-=======
-The accuracy potential strongly depends on the motion profile and 
-hardware being used, thus is not easy to generalize. Therefore it is 
-still omitted. 
->>>>>>> c3f28e1703726c0b5957beacd807c86c10d52310
+The accuracy potential depends heavily on the motion profile, the environment
+and the hardware being used, thus is not easy to generalize. However, the
+simulation results show that the algorithm has the potential to improve the map
+quality based on point-distances by approximately a factor of ten. We added this
+to the conclusions.
 
 > - For the short state of the art of existing mobile systems, which
 > is mainly based on the authors' own systems, in my opinion, at least
@@ -176,15 +185,16 @@ There is an approach to prevent dust and dirt to accumulate on the outer shell. 
 > Navigation. In: IEEE/RSJ International Conference on Intelligent Robots
 > and Systems, DOI: https://doi.org/10.1109/IROS.2006.282527
 
-Removed the false statement.
-Instread, I (Andreas) has added a coupe of references.
+The authors thank the reviewer for spotting this false statement. The state
+of the art has been extended with approaches that consider the structural
+properties of human-made environments.
 
 > - The introduction in Section 3 should be revised as it is not very
 > intuitive for the reader and something about the objectives and
 > motivation for this section is missing. However, this is also
 > directly related to the general lack of outline beforehand.
 
-We added an outline for section 3.
+The introduction in Section 3 has been revised and includes now an outline.
  
 > - In section 3, the authors introduce their own algorithm for
 > registration, but they do not give any further information about the
@@ -195,7 +205,7 @@ We added an outline for section 3.
 > only locally in relation from the current epoch to the last epoch or
 > with a window approach or even globally?
 
-Globally. I hope we made that clear in the introduction of section 3 now.
+The registration is performed globally. The explanation has been adjusted to clarify this.
 
 > - Section 3.2 deals with the extraction of planes, but the following
 > questions remain unclear: Are the planes always searched for only in
@@ -295,7 +305,7 @@ detection.
 > the first half of the sentence, as reference 19 probably only refers
 > to the second part.
 
-FIXME! Added todo for Dorit/Andreas as they wrote this
+Two references were added as examples for the first half of the sentence.
 
 > Page 3, Column 1, Line 23-26: Not all variables were introduced
 > accurately

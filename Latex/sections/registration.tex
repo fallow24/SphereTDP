@@ -35,7 +35,7 @@ We then find the planes in the pre-registered point cloud and then optimize the 
 For the plane extraction the linescans need to be transformed into the project coordinate system.
 Various pre-registration methods are suitable for this.
 The most simple method is to use the data from an intertial measurement unit for a coarse alignment.
-Alternative solutions combine multiple linescans into a metascan and perform registration methods known from terrestrial laser scanning or use a small number of iterations of continuous-time SLAM approaches such as the one presented in~\cite{REMSEN2013}.
+Alternative solutions combine multiple linescans into a metascan and perform registration methods known from terrestrial laser scanning and distribute the error over the trajectory~\cite{Stoyanov2009,Bosse2009} or use a small number of iterations of continuous-time SLAM approaches such as the one presented in~\cite{REMSEN2013}.
 This yields maps that can be used for plane registration and hence a point-to-plane correspondences based registration.
 
 \subsection{Plane Extraction}
