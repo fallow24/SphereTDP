@@ -3,7 +3,7 @@
 
 \subsection{Simulated Results}
 
-The plane-based registration is applied to the simulated dataset with noisy pose and range measurements (cf. Figure~\ref{fig:simulatedDatasets}) without further processing.
+The plane-based registration is applied to the simulated dataset with noisy pose and range measurements (cf. figure~\ref{fig:simulatedDatasets}) without further processing.
 Assuming this represents a coarsely pre-registered 3D point cloud, the distances to the ground truth were evaluated before and after the plane-based registration. 
 Figure~\ref{fig:simulatedEvaluation} shows the different point-to-point distances. 
 
@@ -72,7 +72,7 @@ Further, the deviation of points around the walls is notably smaller as the poin
 
 Figure~\ref{fig:jasperhome} shows the results obtained before and after employing the presented algorithm on the dataset, acquired by the prototype in figure~\ref{fig:prototype}.
 We again combine twenty temporally successive scans into one meta-scan, using the scan at the median index as a reference coordinate system, which is then globally registered.
-We used the first seven of these meta-scans, corresponding to the first full rotation of the spher, to extract global planes.
+We used the first seven of these meta-scans, corresponding to the first full rotation of the sphere, to extract global planes.
 All subsequent meta-scans are then matched against the initial global plane model.
 We use both optimizations from section \ref{ssec:furtheropts}, introducing a global up/down lock for gradient descent and applying sequential iteration to eliminate accumulating pose error.
 

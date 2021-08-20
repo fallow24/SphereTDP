@@ -7,12 +7,14 @@ While there exist camera-based approaches~\cite{9233654}, to the best of our kno
 However, laser-based SLAM algorithms for motions in six degrees of freedom (DoF) have been thoroughly studied.
 For outdoor environments~\cite{JFR2006} provides a first baseline.
 Adding a heuristic for closed-loop detection and a global relaxation Borrmann et al. yield highly precise maps of the scanned environment~\cite{RAS2007}.
+Thereby they reduce the position and orientation error of the scanning poses by orders of magnitude in the range of centimeters and hundreds of a degree.
 Zhang et al. propose a real-time solution to the SLAM problem in~\cite{Zhang2014}.
 They achieve the performance at a lower computational load by dividing the SLAM algorithm into two different algorithms: one performing odometry at a high frequency but low fidelity and another running at a lower frequency performing fine matching and registration of the point clouds.
 More recently Dröschel et al. also propose an online method using a novel combination of a hierarchical graph structure with local multi-resolution maps to overcome problems due to sparse scans~\cite{Droeschel2018}.
 Another intriguing example is the NavVis VLX system~\cite{navvis}.
 They perform real time SLAM on a mobile, wearable platform, producing colored point clouds with high accuracy by combining it with a camera system.
 However, this platform has to be moved by a human operator. 
+In particular, they are able to achieve one sigma of measurements within three millimeters difference the measurements of a ground truth terrestrial laser scan~\cite{navvisAcc}. 
 They also employ artificial markers that can be placed in the environment, which get recognized by the camera system to further improve registration accuracy.
 Obviously, this is not possible in inaccessible, or dangerous environments.
 
@@ -43,9 +45,9 @@ In particular this pause is needed when the field-of-view (FOV) is limited, as t
 The resulting scan procedure is stop-scan-and-go.
 In particular, for the application of a spherical robot this standstill in each pose cannot be guaranteed or even approximated, making continuous-time approaches using point-to-plane correspondences the method of choice.
 
-LOAM~\cite{Zhang2014} is the baseline-algorithm that provides a real-time and lowdrift solution based on two parallel registration algorithms using planes and lines.
+Lidar odometry and mapping (LOAM)~\cite{Zhang2014} is the baseline-algorithm that provides a real-time and lowdrift solution based on two parallel registration algorithms using planes and lines.
 Unfortunately, it is not open-source anymore.
-LOAM livox extends the LOAM framework to the the rotating prism scanner with small FoV~\cite{Lin_2020}.
+LOAM livox extends the LOAM framework to the rotating prism scanner with small FoV~\cite{Lin_2020}.
 Zhou, Wang, and Kaess write that it also adopts the parallel computing to achieve real-time global registration.
 Parallel computing needs a powerful CPU, it may be not suitable for an embedded system which has limited computational resources~\cite{Zhou_2021}.
 Thus, they extend their smoothing and mapping to the LiDAR and planes case.
@@ -55,7 +57,7 @@ Further recent planar SLAM approaches include~\cite{Jung_2015,Grant_2018,Geneva_
 While Wei et al. uses only the ground plane in outdoor experiments.
 Indoors, Jung et al. used in 2015 several Hokuyo laser scanners for their kinematic scanning system~\cite{Jung_2015}, while Grant used a single Velodyne HDL-32E sensor with 32 rotating laser/receiver pairs mounted on a backpack and walked through different environments~\cite{Grant_2018}.
 The LIPS system~\cite{Geneva_2018} employes a so-called Closest Point Plane Representation with an Anchor Plane Factor.
-RANSAC is used to find the places.
+Random sample consensus (RANSAC) is used to find the planes.
 Their system couples an eight channel Quanergy M8 LiDAR operating at 10Hz with a Microstrain 3DM-GX3-25 IMU attached to the bottom of the LiDAR operating at 500Hz.
 
 \bigskip

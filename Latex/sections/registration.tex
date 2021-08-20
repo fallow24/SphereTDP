@@ -72,7 +72,7 @@ We employ two distance models to represent the distance from a point to a plane,
 \begin{figure*}
 	\centering
 	\includegraphics[width=\textwidth]{images/project}
-	\caption{Illustration of the Hesse- and polygon projection distance. The point p (red) gets projected onto the infinitely extending global plane. Both the point projection (green) and the global planes convex hull (blue) get projected into 2D space (grey). The Hesse distance, i.e. the shortest distance to the infinitely extending plane (red), is shown as well as the minimum distance from the 2D point projection to the polygon (purple).}
+	\caption{Illustration of the Hesse- and polygon projection distance. The point p (red) gets projected onto the infinitely extending global plane. Both the point projection (green) and the global planes convex hull (blue) get projected into 2D space (grey). The Hesse distance, i.e. the shortest distance to the infinitely extending plane (red), is shown as well as the minimum distance from the 3D point projection to the polygon (purple).}
 	\label{fig:proj}
 \end{figure*}
 
@@ -92,7 +92,7 @@ The simplicity of the Hesse distance is at contrast with its inability to take t
 Therefore, a second distance model is introduced: the polygon projection distance (PPD).
 The convex hull represents the extend of a plane by forming a polygon with the outer most points that are assigned to a given plane. 
 It is able to represent the expansion of the plane in all directions, and thus is utilized as a distance model.
-To find the PPD, first a corresponding point gets projected onto the infinitely extending plane representation given by the Hesse form, i.e. $\widetilde{T}(\vec{p}_k)$ is found from eq.~\eqref{eq:projection} (green point in~\ref{fig:proj}).
+To find the PPD, first a corresponding point gets projected onto the infinitely extending plane representation given by the Hesse form, i.e. $\widetilde{T}(\vec{p}_k)$ is found from eq.~\eqref{eq:projection} (green point in figure~\ref{fig:proj}).
 Then, the 3D polygon, i.e. the points that make up the convex hull, as well as the corresponding 3D point projection, are projected again into a 2D vector space, using the maximal component of the normal vector of the plane.
 E.g. in figure~\ref{fig:proj}, the blue planes normal vector has its mayor component in z-direction (upwards), thus the projection polygon distance is calculated in the xy-plane.
 Using the maximum of the absolute magnitude of the normal vector ensures that the most sensible 2D projection is used for every direction.
@@ -122,14 +122,14 @@ resulting in
 	t_0 = \frac{\left( p_j - p_m \right) \cdot \left( p_i - p_m \right)}{\left( p_j - p_m \right)^2} .
 \end{align}
 Note the possibility of $t_0 \notin \left[ 0, 1 \right]$. 
-In that case, the projection of the point $p_i$ onto the line given by eq.~\ref{eq:line} is not between $p_j$ and $p_m$. 
+In that case, the projection of the point $p_i$ onto the line given by eq.~\eqref{eq:line} is not between $p_j$ and $p_m$. 
 Instead, its projection onto the line falls outside of the segment.
 By constraining $t_0$ we get 
 \begin{align}
 \label{eq:minmax}
 	\hat t = \min \left( \max \left( t_0, 0\right) , 1 \right) ,
 \end{align}
-which is the argument that gives the shortest distance to the line segment, when inserted to eq. \ref{eq:dist}.
+which is the argument that gives the shortest distance to the line segment, when inserted to eq. \eqref{eq:dist}.
 We find the PPD from the point $p_i$ to the polygon $P_k$ by calculating the minimum shortest distance over all line segments that make up the polygon.  
 
 \subsubsection{Local Planar Clustering}
@@ -157,7 +157,7 @@ However, the \textit{smallest} angle between two \textit{normal} vectors is
 \; ,
 \end{align}
 because the opposing normals $-\vec{n}_1$ and $-\vec{n}_2$ always have to be considered, since they correspond to the same plane.
-We say that two normals are similar if the angle $\hat \alpha$ from eq. \ref{eq:alphahat} is smaller than a threshold $\epsilon_{\alpha}$. 
+We say that two normals are similar if the angle $\hat \alpha$ from eq. \eqref{eq:alphahat} is smaller than a threshold $\epsilon_{\alpha}$. 
 
 Planar areas like walls are therefore connected in one large cluster, while non-feature parts, i.e. non-planar or detached parts of the scan will have their own, smaller cluster.
 Finally the clusters are filtered in two steps.
@@ -168,7 +168,10 @@ Figure \ref{fig:clustering} shows this concept on the real world dataset describ
 
 \begin{figure*}
 	\includegraphics[width=\linewidth]{images/clustering}
-	\caption{(Left) Point normals using the AKNN method with $K = 20$. (Middle) Result of the region growing, before applying the second filter. (Right) Resulting clusters after applying the second filter, using $N_{c,min} = 300$. }
+	\caption{(Left) Point normals using the AKNN method with $K = 20$ (number of nearest neighbors).
+	(Middle) Result of the region growing, before applying the second filter.
+	(Right) Resulting clusters after applying the second filter, using $N_{c,min} = 300$. 
+	In each image, one color represents a segment.}
 	\label{fig:clustering}
 \end{figure*}
 
@@ -176,7 +179,7 @@ Point-to-Plane correspondences are now established.
 The distance models (Hesse and PPD) are utilized to check whether a cluster overlaps with any of the global planes, i.e. any point in the cluster has a Hesse distance smaller than some threshold $\epsilon_H$ and a PPD smaller than some additional threshold $\epsilon_P$, to the global plane.
 We observe the noise level around the expected planes by the naked eye. 
 Then we set the thresholds accordingly. 
-For each overlap, we find the smallest angle between the corresponding cluster normal and the global plane normal, according to eq. \ref{eq:alphahat}.
+For each overlap, we find the smallest angle between the corresponding cluster normal and the global plane normal, according to eq. \eqref{eq:alphahat}.
 Finally, a correspondence is established between all points in the cluster and the global plane, if the minimum angle between their normals is smaller than $\epsilon_\alpha$. 
 
 \subsection{Optimization}
