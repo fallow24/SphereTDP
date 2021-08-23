@@ -140,14 +140,19 @@ First, the EKF requires a considerable amount of computational power, mainly bec
 Further, the Kalman Filter relies on input to a system to calculate an estimation of the pose for the next iterative step.
 But, as we described in the preliminary section, we can not take the input to locomotion control as a reference to pose estimation as the behavior is not linear or even predictable without exact knowledge of the surface.
 Therefore it is not possible to implement a physical behavior of the system to the filter, as easily as it is for other robotic applications.
+There exists the Error State Extended Kalman Filter, which works only with IMUs \cite{ahmadi2007orientation,}.
+Still, this requires substantial computational power.
+Furthermore, for the later introduced position estimation for spherical robots, some calculations are used for the orientation as well as position.
+After all, if computational power is not limited, Kalman Filters provide principally better results.
 \subsection{Madgwick Filter}
 The Madgwick filter is a widely used filter for orientation estimation with IMUs \cite{madgwick2010}.
 It is efficient and easy to calculate but does not consider the physics of the motion.
 It does nearly provide the sought-after classification for the orientation.
 The problem is the optimization for movement. The Madgwick filter has a jittering behavior at the standstill of the IMU.
-This does not meet the desired behavior as described in the prelimitations section (\ref{AssumptionsAndPrelimitations}).
+This does not meet the desired behavior as described in the prelimitations section~(\ref{AssumptionsAndPrelimitations}).
 The behavior is shown in comparison to the complementary filter in Figure~\ref{madgVsComp1}.
 This behavior is most prominent during standstill as the Madgwick filter was designed for movement.
+As we do not use a magentometer, we can not use the gyro bias estimation of the Madgwick filter.
 \subsection{Complementary Filter}
 A complementary filter is a fundamental approach of combining precise but not exact with nonprecise but exact data.
 Therefore it is widely used for combining noisy accelerometer data with gravity as a reference with the precise but drifting measurement of gyroscopes.
@@ -157,7 +162,9 @@ E.g., for pitch, this would result in
 \theta_n = (1-\alpha) \cdot (\theta_{n-1}+ \Delta\theta_{gyro})+ \alpha \cdot \theta_{acc}
 \end{equation}
 where $\alpha$ is the complementary gain, it determines how much weight the accelerometer data gets and how fast the value drifts towards the measurement of the accelerometer.
+Therefore the gyroscope functions as high-pass and the accelerometer as low-pass part of the basic compelemntary filter \cite{min2015complementary}.
 A commonly used value for $\alpha$ is 0.02, meaning every iteration, 2 percent of the new values come from the accelerometer.
+This correpsonds, with the used \unit{125}[hz] calculation, to frequency-border of the low and high-pass  of \unit{2.5}[hz] \cite{hajdu2017complementary}.
 An $\alpha$ of 1 means the resulting data is completely the one of the accelerometers, and the gyroscope has no influence. \\
 The complementary filter is best for orientation calculation without position change as the accelerometer value relies on calculating the gravity value.
 With an acceleration in one direction, this leads to a miscalculation of the gravitational vector and, therefore, a false orientation estimation.
@@ -265,7 +272,7 @@ The transition between the two filters is done by shifting a fixed factor among 
 Therefore the transition between $\alpha$-gain of the complementary filter and the Madgwick-gain was chosen to have quadratic behavior. 
 The value referred to as autogain $\Theta$ indicates how much impact both employed filters have on the orientation estimation. 
 Therefore we calculate factors from the gyroscope measurements and scale the autogain with the maximum $\beta$ (cf. equation \ref{eq:factors} and \ref{eq:weight_autogain}).
-The $g_{k}$ represents the gyro measurement in the corresponding an axis $k$ in rad/s. Later on, these factors will again be used for position estimation, namely to determine if the sphere rotates or not.
+The $g_{k}$ represents the gyro measurement in the corresponding axis $k$, in rad/s. Later on, these factors will again be used for position estimation, namely to determine if the sphere rotates or not.
 These factors are heuristically defined as:
 
 \begin{equation}
@@ -486,7 +493,7 @@ But it shows the overall capability of the algorithm to compensate for slip.
 
 \begin{figure}
 \includegraphics[width=\linewidth]{./graphics/LTest.eps}
-\caption{Ground position by integration of rotation and the fusion algorithm. An L-shape with 1 meter by 1 meter was performed with provoked slip(rotation without translation)}
+\caption{Ground position (Z-axis, perpendicular to the ground) by integration of rotation and the fusion algorithm. An L-shape with 1 meter by 1 meter was performed with provoked slip(rotation without translation)}
 \label{LTest}
 \end{figure}
 
@@ -504,7 +511,7 @@ With slip, this is not a problem, as, by definition, the translation cannot begi
 If so, it would be sliding.
 \begin{figure}
 \includegraphics[width=\linewidth]{./graphics/LTestSlide.eps}
-\caption{X-Y-Position by integration of rotation and the fusion algorithm. An L-shape with 1 meter by 1 meter was performed with provoked slide(translateion without rotation)}
+\caption{Ground position (Z-axis, perpendicular to the ground) by integration of rotation and the fusion algorithm. An L-shape with 1 meter by 1 meter was performed with provoked slide(translateion without rotation)}
 \label{LTestSlide}
 \end{figure}
 The experiments for sliding did not reliably detect the slide event and, on some occasions, interpreted the distance as shorter than just the integration, as the acceleration of the linear motion was missed.
