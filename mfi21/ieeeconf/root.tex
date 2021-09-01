@@ -100,7 +100,7 @@ The evaluation will also show and discuss the resulting point clouds of this pro
 
 
 \section{Assumptions and Prelimitations}
-\label{AssumptionsAndPrelimitations}
+\label{sec:AssumptionsAndPrelimitations}
 The presented approach works for any spherical robot which moves based on rotation and possesses IMUs.
 Nevertheless, it requires multiple assumptions to be beneficial in comparison to existing approaches.
 Some of these arise from the fundamental behavior of spherical robots and some more specific from the DAEDALUS project.
@@ -145,7 +145,7 @@ The Kalman Filter or the more suitable Extended Kalman Filter (EKF) uses state p
 For the defined limitations, the Kalman Filter is not suitable.
 First, the EKF requires a considerable amount of computational power, mainly because of its matrix inversion. For this, the needed calculations grow exponentially for input data.
 Further, the Kalman Filter relies on input to a system to calculate an estimation of the pose for the next iterative step.
-But, as we described in the preliminary section, we can not take the input to locomotion control as a reference to pose estimation as the behavior is not linear or even predictable without exact knowledge of the surface.
+But, as we described in the preliminary Section \ref{sec:AssumptionsAndPrelimitations}, we can not take the input to locomotion control as a reference to pose estimation as the behavior is not linear or even predictable without exact knowledge of the surface.
 Therefore it is not possible to implement a physical behavior of the system to the filter, as easily as it is for other robotic applications.
 There exists the Error State Extended Kalman Filter, which works only with IMUs \cite{ahmadi2007orientation}.
 Still, this requires substantial computational power.
@@ -157,7 +157,7 @@ It is efficient and easy to calculate but does not consider the physics of the m
 It uses a gradient descent algorithm.
 It does nearly provide the sought-after classification for the orientation.
 The problem is the optimization for movement. The Madgwick filter has a jittering behavior at the standstill of the IMU.
-This does not meet the desired behavior as described in the prelimitations section~(\ref{AssumptionsAndPrelimitations}).
+This does not meet the desired behavior as described in the prelimitations Section~(\ref{AssumptionsAndPrelimitations}).
 The behavior is shown in comparison to the complementary filter in Figure~\ref{madgVsComp1}.
 This behavior is most prominent during standstill as the Madgwick filter was designed for movement.
 As we do not use a magentometer, we can not use the gyro bias estimation of the Madgwick filter.
