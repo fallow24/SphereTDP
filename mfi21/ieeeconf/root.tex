@@ -13,6 +13,7 @@
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{hyperref}
+\usepackage{siunitx}
 %\usepackage{enumitem}
 \newcommand{\M}[1]{\mathbf{#1}} % Bold for matrix
 \newcommand{\V}[1]{\mathbf{#1}} % Bold for vector
@@ -64,9 +65,11 @@ However, in contrast to other forms, they provide some unique advantages.
 For one, the spherical shell provides protection against harsh environments, e.g., guarding the sensors and actuators against dust and solid rock.
 This is particularly useful in space applications. 
 Furthermore, the inherent rotation the robot uses for locomotion can be exploited to measure in all directions without having the sensor itself actuated.
-To exploit this rotation in combination with sensor data to create a consistent environment map, a reasonable estimation of the robot pose is required. 
-In such cases the pose estimation are done by inertial measurements from sensors such as accelerometers and gyroscopes, as interpolating instances for calculation-intensive slow algorithms such as optical localization algorithms or as initial estimate for subsequent SLAM.
-The paper presents a pose estimation procedure based on inertial measurements that exploits the known dynamics of a spherical robot. 
+A reasonable estimation of the robot pose is required to exploit this rotation in combination with sensor data to create a consistent environment map. 
+This raises the need for interpolating instances for calculation-intensive slow algorithms such as optical localization algorithms or as an initial estimate for subsequent SLAM.
+In such cases,  inertial measurements from sensors such as accelerometers and gyroscopes generate a pose estimation for these interpolation steps.
+
+The paper presents a pose estimation procedure based on inertial measurements, that exploits the known dynamics of a spherical robot. 
 It emphasizes a low jitter to maintain constant world measurements during standstill and avoids exponentially growing error in position estimates. 
 Evaluating the position and orientation estimates with given ground truth frames shows that we reduce the jitter in orientation and handle slip and partly slide behavior as other commonly used filters such as the Madgwick filter.
 
@@ -79,7 +82,7 @@ Evaluating the position and orientation estimates with given ground truth frames
 
 Spherical robots are a relatively narrow field of robotics. Still, they could be useful in situations where the measurement equipment needs to be protected against harsh environments.
 As an example, the 2021 CDF study LunarCaves by ESA about the feasibility of a spherical robot, called DAEDALUS, for exploration of lunar-lava tubes \cite{rossi2021daedalus} shows the need for orientation and position estimation of spherical robots with the limitations on resources common for space-applications.
-Although a purely Inertial Measurement Unit (IMU)-based estimation is not recommended for various reasons, the lack of an absolute reference among others, IMU-based pose estimation are used as part of an overall multi-sensor-fusion-based estimation.
+Although a purely Inertial Measurement Unit (IMU)-based estimation is not recommended for various reasons, the lack of an absolute reference among others, IMU-based pose estimation is used as part of an overall multi-sensor-fusion-based estimation.
 IMUs are sensors with higher refresh rates than Simultaneous Localization and Mapping (SLAM) based algorithms, such as optical or Light Detection and Ranging (LIDAR) SLAM. This makes them suitable for interpolating the more precise and absolute position reference points of these slower algorithms.
 The limited computational power of space-qualified CPUs further imposes the need for good orientation estimation without computational-intensive algorithms like Kalman filters.
 Lastly, the geometry of a spherical robot opens the possibility for the not often used position estimation by IMUs.
@@ -94,7 +97,7 @@ The evaluation will also show and discuss the resulting point clouds of this pro
 \begin{figure}[b]
 \includegraphics[width=0.49\linewidth]{./graphics/photoReal1.jpeg}
 \includegraphics[width=0.50\linewidth]{./graphics/photoReal3.jpeg}
-\caption{Prototype to test the algorithm in an envisaged technical environment. The main payload is the Livox Mid-100 laser-scanner. For pose-estimation, three IMUs of the manufacturer Phidget are placed on the middle plate and a Raspberry Pi 4 for the calculations. On the top are two batteries, and on the bottom one voltage stabilizer and breakout box of the laser-scanner. }
+\caption{Prototype to test the algorithm in an envisaged technical environment. The main payload is the Livox Mid-100 laser-scanner. For pose-estimation, three IMUs of the manufacturer Phidget are placed on the middle plate and a Raspberry Pi 4 for the calculations. On the top are two batteries and on the bottom one voltage stabilizer and breakout box of the laser-scanner. }
 \label{fig:prototype}
 \end{figure}
 
@@ -106,7 +109,7 @@ Nevertheless, it requires multiple assumptions to be beneficial in comparison to
 Some of these arise from the fundamental behavior of spherical robots and some more specific from the DAEDALUS project.
 Therefore we state the following assumptions and requirements for the approach to become beneficial:
 
-\paragraph*{1. Real Time Operations}The operation of the robot does not allow post-calculation of the pose. This implies the usage of the onboard computational power.
+\paragraph*{1. Real Time Operations}The operation of the robot does not allow post-calculation of the pose. This implies the usage of onboard computational power.
 \paragraph*{2. Limitation of Computational Power}
 The need for efficient code without massive bottleneck operations, as the inversion of a matrix with the extended Kalman Filter. The code must minimize the usage of non-basic operations.
 \paragraph*{3. Low Costs of Hardware}
@@ -124,16 +127,17 @@ IMUs deliver no absolute reference for a position as they do for orientation in 
 \paragraph*{9. Space Suitability}
 As the code is considered to be applied to space missions, the magnetometer data is not considered in the algorithm, despite its positive impact on orientation estimation on earth.
 \paragraph*{10. Short Term Mobility}
-As the code still relies on integration parts, the sphere is not considered to roll continiously for a long period but rather makes multiple short paths. This will also be necessary, as in further extension, the fusion of a pose estimation by the laser scanner will be merged, requiring standstill periods for scanning.
-\paragraph*{11. Non-reliablity of locomotion commands}
+As the code still relies on integration parts, the sphere is not considered to roll continuously for a long period but rather makes multiple short paths. This will also be necessary, as, in further extension, the fusion of a pose estimation by the laser scanner will be merged, requiring standstill periods for scanning.
+\paragraph*{11. Non-reliability of locomotion commands}
 For DAEDALUS, the same input of the locomotion controller leads to heavily different behaviors \cite{rossi2021daedalus}.
 Also, the DAEDALUS robot has two utterly different locomotion methods; therefore, we will not take locomotion itself, nor the controller input or output into account of pose estimation.
 
 
 
 We conclude that the generated data is a compromise between on-board simple filtration of data, while still being usable for heavy calculation post-record, e.g. map generation.
-It is easy to calculate and adapt, but due to the number of pre-assumptions, as it makes assumptions about the dynamics of the system, it still delivers reliable data which takes physical behavior into account. 
-It is real-time capable and does not rely on delay steps.
+It is easy to calculate and adapt the specific needs.
+Still, as it makes assumptions about the dynamics of the system, it delivers reliable data which takes physical behavior into account. 
+It is real-time capable and does not rely on delayed steps.
 The use is restricted to spherical or cylindrical robots. 
 It is optimized for gathering laser data where noise position while standing means a lot of calculation in the map creation, and therefore, even if slightly false, a stable position is preferred.
 
@@ -157,10 +161,10 @@ It is efficient and easy to calculate but does not consider the physics of the m
 It uses a gradient descent algorithm.
 It does nearly provide the sought-after classification for the orientation.
 The problem is the optimization for movement. The Madgwick filter has a jittering behavior at the standstill of the IMU.
-This does not meet the desired behavior as described in the prelimitations Section~(\ref{AssumptionsAndPrelimitations}).
+This does not meet the desired behavior as described in the prelimitations Section~(\ref{sec:AssumptionsAndPrelimitations}).
 The behavior is shown in comparison to the complementary filter in Figure~\ref{madgVsComp1}.
 This behavior is most prominent during standstill as the Madgwick filter was designed for movement.
-As we do not use a magentometer, we can not use the gyro bias estimation of the Madgwick filter.
+As we do not use a magnetometer, we can not use the gyro bias estimation of the Madgwick filter.
 \subsection{Complementary Filter}
 A complementary filter is a fundamental approach of combining precise but not exact with nonprecise but exact data.
 Therefore it is widely used for combining noisy accelerometer data with gravity as a reference with the precise but drifting measurement of gyroscopes.
@@ -170,7 +174,7 @@ E.g., for pitch, this results in
 \theta_n = (1-\alpha) \cdot (\theta_{n-1}+ \Delta\theta_{gyro})+ \alpha \cdot \theta_{acc}
 \end{equation}
 where $\alpha$ is the complementary gain, it determines how much weight the accelerometer data gets and how fast the value drifts towards the measurement of the accelerometer.
-Therefore the gyroscope functions as high-pass and the accelerometer as low-pass part of the basic compelemntary filter \cite{min2015complementary}.
+Therefore the gyroscope functions as high-pass and the accelerometer as low-pass part of the basic complementary filter \cite{min2015complementary}.
 A commonly used value for $\alpha$ is 0.02, meaning every iteration, 2 percent of the new values come from the accelerometer.
 This correpsonds, with the used \unit{125}[hz] calculation, to frequency-border of the low and high-pass  of \unit{2.5}[hz] \cite{hajdu2017complementary}.
 An $\alpha$ of 1 means the resulting data is completely the one of the accelerometers, and the gyroscope has no influence. \\
@@ -182,7 +186,7 @@ Simple orientation estimations of quadrocopters often just change the $\alpha$ g
 
 \begin{figure}
 \includegraphics[width=\linewidth]{./graphics/MadgwickVsComplementaryNoMovement.eps}
-\caption{Quaternion values of Madgwick filter and complementary filter with default gains when IMU is at a standstill. The Madgwick filter has clearly visible jitter, the complementary filter not.}
+\caption{Quaternion values of Madgwick filter and complementary filter with default gains when IMU is at a standstill. The Madgwick filter has clearly visible jitter, the complementary filter has not.}
 \label{madgVsComp1}
 \end{figure}
 
@@ -190,12 +194,6 @@ Simple orientation estimations of quadrocopters often just change the $\alpha$ g
 
 \subsection{Position Estimation}
 Position estimation purely by IMU is not recommended as the double integration of the accelerometer measurements leads to exponential error summation \cite{thong2004numerical}.
-Let $a$ be the real acceleration and $\epsilon_a$ the error of the measurment, then
-\begin{equation}
-\iint (a+\epsilon_a) = \iint a+  \iint \epsilon_a = \frac{1}{2}a\cdot t^2+  \frac{1}{2} \epsilon_a \cdot t^2 \,,
-\end{equation}
-shows that the position depends on $\epsilon_a$ exponentially.
-
 Therefore there are very few approaches targeting this way of position calculation \cite{kok2017IMU}.
 The very impressive work in \cite{valencia2017simpleIMU} also uses IMUs for 6D pose estimation.
 They follow a pre-specified trajectory with a manipulator and manage to estimate its pose within 10\% of the ground truth.
@@ -231,10 +229,11 @@ If the sphere slips, this approach will predict the full translation.
 Also, the other way around, if there is translation but just slight rotation because of sliding, it will predict too little translation. 
 Furthermore, integrating the rotation does not let us estimate vertical movement.
 Every rotation will be predicted as translation in a given plane, which is most likely parallel to the ground. 
-For instance, if the sphere rolls up an obstacle, the length of the path is estimated to the ground-plane.\\
+For instance, if the sphere rolls up an obstacle, the length of the path is estimated to be the ground-plane.\\
 Our algorithm uses both approaches of position estimation and combines them, and limits all components according to the other components. 
 This implies a connection between translation and rotation. 
-Overall the extreme situation (full translation, no rotation, or the other way round) will automatically lead to wrong predictions, as there is no way to tell which of the two approaches has at that moment more reliable data and therefore, the combination of both rather then only one is chosen.
+Overall the extreme situation (full translation, no rotation, or the other way round) will automatically lead to wrong predictions, as there is no way to tell which of the two approaches has at that moment more reliable data.
+Therefore, the combination of both rather than only one is chosen.
 
 
 \begin{figure}[hb]
@@ -280,7 +279,7 @@ The transition between the two filters is done by shifting a fixed factor among 
  The values of the gyroscope axes determine in which manner to shift the overall gain to both Filters. 
  The defining values are the threshold until which value the algorithm should use a purely complementary filter and at which threshold a full Madgwick filter should determine the orientation. 
  These values have been determined empirically.
- Future work will investigate on improving those values by developing a suitable heuristic for the thresholds.
+ Future work will investigate improving those values by developing a suitable heuristic for the thresholds.
  The transition between the full complementary and the full Madgwick estimation, as is required by the prelimitations,  can be done by a function suitable for the specific scenario.
  This avoids large accelerations of the orientation due to the rapid change from one algorithm to another.
  In our experiments, when starting from stillstand, the incipient Madgwick filter has a more rapid impact on the orientation values than the incipient complementary filter when stopping rotation. 
@@ -309,8 +308,8 @@ f_k =
 \intertext{The complementary filter gain $\alpha$ is calculated by}
 \alpha &= \Theta \cdot \theta \cdot(1-\beta).
 \end{align}
-Thus, the Madgwick gain has a maximum of $\Theta$ and $\alpha$ a maximum of $\theta\cdot \Theta$. This ratio $\theta$ can be adapted to the specific needs.
-We used $\theta = 0.1$ because of the the two often used standard values $\gamma = 0.2$ and $\alpha= 0.02$, which have the ration $0.1$.
+Thus, the Madgwick gain has a maximum of $\Theta$ and $\alpha$ a maximum of $\theta\cdot \Theta$. This ratio $\theta$ can be adapted to specific needs.
+We used $\theta = 0.1$ because of the two often used standard values $\gamma = 0.2$ and $\alpha= 0.02$, which have the ration $0.1$.
 Hence for adapting the position estimation to a given robot, the function for calculating the factors needs to be adapted in such a way that it is a good indication for movement or standstill.
 The ratio $\theta$ needs to be chosen in a way that the desired ratio between Madgwick and complementary gain is reached.
 And lastly, the autogain needs to be chosen to fit the specific needs in terms of how strong both filters should be able to influence the orientation.
@@ -353,7 +352,7 @@ g'_z
 \end{equation}
 These values are now coupled to the rotation of both axes other than their own.
 Therefore, the factors from the orientation step, representing the likelihood of rotation, are used as limiting factors.
-If one of the three factors is 1, this means there is translation in this direction.
+If one of the three factors is 1, this means there is a translation in this direction.
 When there is no rotation, it will set the velocity to 0.
 During fast movement, this allows exponential error integration. 
 This exponential error is taken care of later on.
@@ -389,7 +388,7 @@ g_x \\ g_y\\ g_z
 \end{align}
 The rotation around the world $z$-axis is not used to calculate the velocity.
 Its effect on the position is considered when determining the orientation in the world coordinate system.
-$\omega_{z\text{world}}$ needs not to be computed as it has no influence on the position.
+$\omega_{z\text{world}}$ does not need to be computed as it has no influence on the position.
 
 
 The resulting velocities are calculated by multiplying the circumference of the sphere:
@@ -409,7 +408,7 @@ As the gyro measures rad/s the value is divided by $2\pi$.
 Note that the two-dimensional velocities $v_{xz\text{GyroWorld}}$ and $v_{zz\text{GyroWorld}}$ do not correspond to the velocity on the ground plane but may consist of motion in $z$ direction. 
 
  
- Next the $v_{x\text{AccWorld}} $and $v_{y\text{AccWorld}} $ are limited depending on $v_{xz\text{GyroWorld}} $ and $ v_{yz\text{GyroWorld}}$, in our example this was 120 percent of the gyro calculated velocity.
+ Next, the $v_{x\text{AccWorld}} $and $v_{y\text{AccWorld}} $ are limited depending on $v_{xz\text{GyroWorld}} $ and $ v_{yz\text{GyroWorld}}$, in our example, this was 120 percent of the gyro calculated velocity.
  This ensures no exponential error integration when in motion.
  This is coupled to the physical act of sliding.
  The higher the likelihood of sliding, the higher the velocity should be compared to the velocity based on rotation.
@@ -461,7 +460,7 @@ For position experiments, the plate is put inside an acrylic glass sphere with t
 First, the fusion of Madgwick and complementary filter, here denoted as Autogain, is compared to a Madgwick only estimate. Second, the trajectory computation using both gyroscope and accelerometer is evaluated.
 
 \subsection{Orientation}
-A first experiment is performed to show the overall performance of the Autogain computation for the orientation. The IMU was manually rotated in arbitrary directions, and the orientation plotted using the Madgwick filter and the Autogain filter.
+A first experiment is performed to show the overall performance of the Autogain computation for the orientation. The IMU was manually rotated in arbitrary directions, and the orientation was plotted using the Madgwick filter and the Autogain filter.
 As expected, the overall behavior of the presented algorithm and the Madgwick filter is very similar in the dynamic case, as shown in Figure \ref{quaternion1}.
 \begin{figure}
 \includegraphics[width=\linewidth]{./graphics/AutoVsMad.eps}
@@ -481,7 +480,7 @@ For external reference, we used a precise optical tracking system.
 The definition and proposed calculation of the distance of 2 quaternions of \cite{kuffner2004effectiveDistance} was used.
 It describes the direct angle between two quaternions.
 The optical system matches the overall orientation of both IMU-based algorithms quite well and lacks the perturbations of the pure Madgwick filter.
-The transformation of the orientation by the optical tracking system and the IMU-based algorithms yield two unknown transformations, the relative orientation of the coordinate system of IMU to optical coordinate system and how the axes are interpreted on the tracked structure itself.
+The transformation of the orientation by the optical tracking system and the IMU-based algorithms yield two unknown transformations, the relative orientation of the coordinate system of IMU to the optical coordinate system and how the axes are interpreted on the tracked structure itself.
 Therefore, the algorithm proposed in \cite{dornaika1998calibration} was used to solve these two unknown transformations on basis of the resulting data, to match the orientations of optical and IMU-based data.
 As this matching of the optical system happens on basis of one of the two IMU orientation data-sets, the comparison of absolute differences may be misleading, as the transformations were matched on basis of the autogain filter. 
 To stress the jitter behavior of the Madgwick without relying on absolute orientation, which will be part of further research, Figure \ref{diffdistance} shows the derivative of the distance.
@@ -490,13 +489,13 @@ Here the change of direction due to small oscillations and the smoother fusion a
 
 \begin{figure}
 \includegraphics[width=\linewidth]{./graphics/distance.eps}
-\caption{Distance of the proposed and the Madgwick algorithm to the optical tracking system, using the distance definiton of \cite{kuffner2004effectiveDistance}.}
+\caption{Distance of the proposed and the Madgwick algorithm to the optical tracking system, using the distance definition of \cite{kuffner2004effectiveDistance}.}
 \label{distance}
 \end{figure}
 
 \begin{figure}
 \includegraphics[width=\linewidth]{./graphics/diffdistance.eps}
-\caption{Derivative of the distance of the proposed and the Madgwick algorithm to the optical tracking system, using the distance definiton of \cite{kuffner2004effectiveDistance}.}
+\caption{Derivative of the distance of the proposed and the Madgwick algorithm to the optical tracking system, using the distance definition of \cite{kuffner2004effectiveDistance}.}
 \label{diffdistance}
 \end{figure}
 
@@ -531,7 +530,7 @@ With slip, this is not a problem, as, by definition, the translation cannot begi
 If so, it would be sliding.
 \begin{figure}
 \includegraphics[width=\linewidth]{./graphics/LTestSlide.eps}
-\caption{Ground position (Z-axis, perpendicular to the ground) by integration of rotation and the fusion algorithm. An L-shape with 1 meter by 1 meter was performed with provoked slide(translation without rotation).The boxes are manually set points as a reference. The distance in meter between these points is written on the lines connecting them. The rolling started in the lower right corner and ended in the upper left corner.}
+\caption{Ground position (Z-axis, perpendicular to the ground) by integration of rotation and the fusion algorithm. An L-shape with 1 meter by 1 meter was performed with provoked slide(translation without rotation). The boxes are manually set points as a reference. The distance in meter between these points is written on the lines connecting them. The rolling started in the lower right corner and ended in the upper left corner.}
 \label{LTestSlide}
 \end{figure}
 The experiments for sliding did not reliably detect the slide event and, on some occasions, interpreted the distance as shorter than just the integration, as the acceleration of the linear motion was missed.
@@ -551,16 +550,16 @@ However, the deceleration of the sphere was still recognized while rotation exis
 \end{figure}
 
 One major design driver for the presented algorithm is the suitability for spherical SLAM purposes.
-Therefore, a pose estimate is prefered to be slightly wrong, if it is more continuous, i.e. less noisy and with less jumping values, than the exact pose has.
+Therefore, a pose estimate is preferred to be slightly wrong, if it is more continuous, i.e. less noisy and with less jumping values, than the exact pose has.
 
 To test the impact of the filter on 3D mapping, we used the prototype in Figure \ref{fig:prototype}.
-After 2 s of initial standstill, the sphere rolled aprox. 4 m within 5 s in an indoor environment from one corner of the room to the opposing one.
+After 2 s of initial standstill, the sphere rolled approx. 4 m within 5 s in an indoor environment from one corner of the room to the opposing one.
 We extracted the laserscan data, as well as the filtered pose using the presented algorithm.
 Without further pre- or post-processing, the pose data is combined with the laserscan data to create a 3D map.
 Figure \ref{fig:mapping} compares the result with another 3D map, using the in the same run recorded pose-estimation by the Madgwick filter and simple rotation integration.
 Therefore the same laserscan-data is mapped with different pose estimations.
 The presented filter improves the resulting map compared to the Madgwick/integrator approach.
-In particular, the walls and the ceiling are more recognizable, which is favourable for many SLAM algorithms.
+In particular, the walls and the ceiling are more recognizable, which is favorable for many SLAM algorithms.
 Another improvement is that points were no longer sensed below the ground, i.e. the plane on which the sphere was moving on.
 The more detailed part of the map, as seen in the bottom left corner of the above image of Figure \ref{fig:mapping}, corresponds to the initial standstill.
 It is more detailed than the rest of the map because of the non-repeating flower-shaped scanning pattern, where point density increases with time.
@@ -577,7 +576,8 @@ A first qualitative evaluation shows the functionality of the filter.
 In further experiments, a quantitative Orientation comparison with a synchronized optical system needs to be performed.
 Also, as further work, all puzzle pieces, this filter, a locomotion system, a scanning system need to be combined to an overall working prototype.
 
-The position estimation, as well as the combination of the integration by rotation of the gyroscope and the linear acceleration of the accelerometer, shows the capability to overcome the problem of the missing absolute reference of IMUs partly, which mainly improves the measurements in the ground plane with slip behavior present.
+The presented position estimation shows the capability to overcome the problem of the missing absolute reference of IMUs partly.
+It mainly improves the measurements in the ground plane with slip behavior present.
 Still, there is a need for parameter tuning. 
 Sliding was not detected all the time reliably.
 Here a mechanism for a delayed rotation needs to be investigated, that acceleration shortly before a rotation is integrated and taken into account once rotation starts.
