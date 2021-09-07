@@ -13,7 +13,7 @@
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{hyperref}
-\usepackage{siunitx}
+\usepackage{units}
 %\usepackage{enumitem}
 \newcommand{\M}[1]{\mathbf{#1}} % Bold for matrix
 \newcommand{\V}[1]{\mathbf{#1}} % Bold for vector
@@ -163,7 +163,7 @@ It does nearly provide the sought-after classification for the orientation.
 The problem is the optimization for movement. The Madgwick filter has a jittering behavior at the standstill of the IMU.
 This does not meet the desired behavior as described in the prelimitations Section~(\ref{sec:AssumptionsAndPrelimitations}).
 The behavior is shown in comparison to the complementary filter in Figure~\ref{madgVsComp1}.
-This behavior is most prominent during standstill as the Madgwick filter was designed for movement.
+This jittering behavior is most prominent during standstill as the Madgwick filter was designed for movement.
 As we do not use a magnetometer, we can not use the gyro bias estimation of the Madgwick filter.
 \subsection{Complementary Filter}
 A complementary filter is a fundamental approach of combining precise but not exact with nonprecise but exact data.
@@ -185,7 +185,8 @@ Simple orientation estimations of quadrocopters often just change the $\alpha$ g
 
 
 \begin{figure}
-\includegraphics[width=\linewidth]{./graphics/MadgwickVsComplementaryNoMovement.eps}
+%\includegraphics[width=\linewidth]{./graphics/MadgwickVsComplementaryNoMovement.eps}
+\makebox[\linewidth][c]{\includegraphics[width=1.15\linewidth]{./graphics/CompelemntaryVsMadgwick6seconds.eps}}
 \caption{Quaternion values of Madgwick filter and complementary filter with default gains when IMU is at a standstill. The Madgwick filter has clearly visible jitter, the complementary filter has not.}
 \label{madgVsComp1}
 \end{figure}
@@ -540,13 +541,13 @@ However, the deceleration of the sphere was still recognized while rotation exis
 \subsection{Impact on 3D mapping}
 
 \begin{figure}
-\begin{center}
-\includegraphics[width=\linewidth]{./graphics/jasperhome1.png} \\
-\vspace{0.2cm}
-\includegraphics[width=\linewidth]{./graphics/jasperhome1madw.png}
+%\begin{center}
+\includegraphics[width=0.52\linewidth]{./graphics/jasperhome1.png} 
+%\vspace{0.2cm}
+\includegraphics[width=0.45\linewidth]{./graphics/jasperhome1madw.png}
 \caption{Above: resulting 3D map using the presented algorithm for pose filtering. Below: resulting 3D map using Madgwick + double integrator for pose filtering. Both images were shot from the exact same point of view. Both plots use the same LIDAR data and apply one of the simultaneously generated pose estimations.}
 \label{fig:mapping}
-\end{center}
+%\end{center}
 \end{figure}
 
 One major design driver for the presented algorithm is the suitability for spherical SLAM purposes.
