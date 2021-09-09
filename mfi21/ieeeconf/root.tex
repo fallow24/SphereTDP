@@ -114,7 +114,7 @@ Due to the need for efficient code without massive bottleneck operations, such a
 \paragraph*{3. Low Costs of Hardware}
 We assume biased and noisy data in a non-negligible amount from the sensors.
 \paragraph*{4. Sphere Shape}
-The code relies heavily on the assumption of a sphercal shape with a constant radius. Accordingly, rotation on the ground leads to translation.
+The code relies heavily on the assumption of a spherical shape with a constant radius. Accordingly, rotation on the ground leads to translation.
 \paragraph*{5. Slip and Sliding}
 We assume the sphere is affected by both slip, i.e., the sphere rotates with no resulting translation, and sliding, i.e., the sphere may translate without rotating in a limited, non-permanent way. The limitation refers to the assumption that sliding and slipping reduce the amount of translation for a given rotation and vice versa, however, not for complete absence.
 \paragraph*{6. Stability of Pose}
@@ -359,7 +359,7 @@ Therefore, the factors from the orientation step, representing the likelihood of
 %TODO So würde man das programmieren, aber mathematisch ist das nicht korrekt.
 \begin{equation}
 \begin{bmatrix}
-v_{x\text{Acc}} \\ v_{y\text{Acc}} \\v_{z\text{Acc}} 
+v_{x\text{AccL}} \\ v_{y\text{AccL}} \\v_{z\text{AccL}} 
 \end{bmatrix}
  = \begin{bmatrix}
 v_{x\text{Acc}} \\ v_{y\text{Acc}} \\v_{z\text{Acc}} 
@@ -379,7 +379,7 @@ The rotation into the world frame is computed as:
 v_{x\text{\text{AccWorld}}} \\ v_{y\text{AccWorld}} \\v_{z\text{AccWorld}} 
 \end{bmatrix}
 &= \M R^T \cdot \begin{bmatrix}
-v_{x\text{Acc}} \\ v_{y\text{Acc}} \\v_{z\text{Acc}} 
+v_{x\text{AccL}} \\ v_{y\text{AccL}} \\v_{z\text{AccL}} 
 \end{bmatrix}.
 \intertext{The next step requires the velocity calculated by the rotation.
 Therefore the rotations (direct values from the gyro) are rotated into the world frame:}
